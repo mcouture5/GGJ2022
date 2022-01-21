@@ -16,4 +16,4 @@ The dev webpack build will auto build whenever changes are made. No need to rebu
 `npm run dev`
 
 ## 3) Profit
-Visit localhost:8000 to see the game
+Visit localhost:8080 to see the game
