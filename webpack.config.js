@@ -1,5 +1,5 @@
 var path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 var pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 var phaser = path.join(pathToPhaser, 'dist/phaser.js');
 
@@ -7,34 +7,46 @@ module.exports = {
     entry: './src/game.ts',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'bundle.js',
+        filename: 'bundle.[contenthash].js',
+        clean: true
+    },
+    optimization: {
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                },
+            },
+        },
     },
     plugins: [
-        new CopyPlugin([{
-            from: 'index.html',
-            to: 'index.html'
-        }, {
-            from: './assets/**/*'
-        }])
+        new HtmlWebpackPlugin({
+            title: 'Output Management',
+            template: './index.html'
+        }),
     ],
     module: {
         rules: [{
-                test: /\.ts$/,
-                loader: 'ts-loader',
-                exclude: '/node_modules/'
-            },
-            {
-                test: /phaser\.js$/,
-                loader: 'expose-loader?Phaser'
-            }
-        ]
+            test: /\.ts$/,
+            loader: 'ts-loader',
+            exclude: '/node_modules/'
+        }]
     },
     devServer: {
-        contentBase: path.resolve(__dirname, './'),
-        publicPath: '/',
+        static: {
+            directory: './',
+            watch: {
+                ignored: '/node_modules/',
+                usePolling: false
+            }
+        },
         host: '127.0.0.1',
         port: 8080,
-        open: true
+        watchFiles: ['./src/**/*', './index.html']
     },
     resolve: {
         extensions: ['.ts', '.js'],

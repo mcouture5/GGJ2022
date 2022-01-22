@@ -20,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
         gamepad: false
     },
     physics: null,
-    backgroundColor: '#a8a8a8',
+    backgroundColor: '#000000',
     render: { pixelArt: false, antialias: true }
 };
 
