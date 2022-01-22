@@ -44,7 +44,7 @@ module.exports = {
     },
     devServer: {
         static: {
-            directory: './',
+            directory: './src',
             watch: {
                 ignored: '/node_modules/',
                 usePolling: false
