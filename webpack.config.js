@@ -1,4 +1,5 @@
 var path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 var pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 var phaser = path.join(pathToPhaser, 'dist/phaser.js');
 
@@ -8,10 +9,24 @@ module.exports = {
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
     },
+    plugins: [
+        new CopyPlugin([{
+            from: 'index.html',
+            to: 'index.html'
+        }, {
+            from: './assets/**/*'
+        }])
+    ],
     module: {
-        rules: [
-            { test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/' },
-            { test: /phaser\.js$/, loader: 'expose-loader?Phaser' }
+        rules: [{
+                test: /\.ts$/,
+                loader: 'ts-loader',
+                exclude: '/node_modules/'
+            },
+            {
+                test: /phaser\.js$/,
+                loader: 'expose-loader?Phaser'
+            }
         ]
     },
     devServer: {
