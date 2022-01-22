@@ -1,14 +1,87 @@
 <!doctype html>
 <html lang="en">
+
     <head>
         <meta charset="UTF-8" />
         <meta name="author" content="digitsensitive">
         <title>Just The 4 of Us</title>
-        <link rel="stylesheet" type="text/css" href="styles/css/styles.css">
         <script src="build/bundle.js"></script>
     </head>
+    <style>
+        @font-face {
+            font-family: 'Digital';
+            src: url('../../assets/fonts/DJB-Get-Digital.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Aviator';
+            src: url('../../assets/fonts/Aviator-SansVintage.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Cavalcade';
+            src: url('../../assets/fonts/Cavalcade-Inline.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'OneNine';
+            src: url('../../assets/fonts/OneNineNineFour-Halftone.ttf') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-size: 10px;
+            color: black;
+            background-color: #6d5a5a;
+            width: 100%;
+            height: 100%;
+        }
+
+        #container {
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        #game {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hidden {
+            font-size: 0;
+        }
+
+        .digital {
+            font-family: 'Digital';
+        }
+
+        .aviator {
+            font-family: 'Aviator';
+        }
+
+        .cavalcade {
+            font-family: 'Cavalcade';
+        }
+
+        .onenine {
+            font-family: 'OneNine';
+        }
+
+        body div.container h1 {
+            font-family: 'Bough';
+            padding: 0;
+            font-size: 50px;
+        }
+    </style>
+
     <body>
-        <div class="container">
+        <div id="container">
             <!-- This is how to load fonts -->
             <div class="hidden digital">Digital</div>
             <div class="hidden aviator">Aviator</div>
@@ -17,4 +90,5 @@
             <div id="game"></div>
         </div>
     </body>
+
 </html>

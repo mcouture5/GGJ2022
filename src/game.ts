@@ -1,37 +1,32 @@
-/// <reference path='./headers/phaser.d.ts'/>
-
 import 'phaser';
 import { MainMenu } from './scenes/MainMenu';
 import { GameScene } from './scenes/GameScene';
 
 // main game configuration
-const config: GameConfig = {
-  title: 'GGJ2021',
-  width: 1024,
-  height: 768,
-  type: Phaser.WEBGL,
-  parent: 'game',
-  scene: [MainMenu, GameScene],
-  input: {
-    keyboard: true,
-    mouse: false,
-    touch: false,
-    gamepad: false
-  },
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 300 },
-      debug: false
-    }
-  },
-  backgroundColor: '#a8a8a8',
-  render: { pixelArt: false, antialias: true, autoResize: false }
+const config: Phaser.Types.Core.GameConfig = {
+    title: 'Just The 4 Of Us',
+    scale: {
+        parent: 'game',
+        mode: Phaser.Scale.FIT,
+        width: 1920,
+        height: 1080
+    },
+    parent: 'game',
+    scene: [MainMenu, GameScene],
+    input: {
+        keyboard: false,
+        mouse: true,
+        touch: true,
+        gamepad: false
+    },
+    physics: null,
+    backgroundColor: '#a8a8a8',
+    render: { pixelArt: false, antialias: true }
 };
 
 // game class
 export class Game extends Phaser.Game {
-  constructor(config: GameConfig) {
+  constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
   }
 }

@@ -2,6 +2,7 @@
   "name": "game-jame",
   "version": "1.0.0",
   "devDependencies": {
+    "css-loader": "^4.3.0",
     "expose-loader": "0.7.5",
     "ts-loader": "5.3.2",
     "typescript": "3.2.2",
@@ -10,7 +11,7 @@
     "webpack-dev-server": "3.1.14"
   },
   "dependencies": {
-    "phaser": "3.52.0"
+    "phaser": "3.55.2"
   },
   "scripts": {
     "dev": "webpack --mode development && webpack-dev-server --mode development",
