@@ -1,5 +1,6 @@
 var path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 var pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 var phaser = path.join(pathToPhaser, 'dist/phaser.js');
 
@@ -28,6 +29,11 @@ module.exports = {
             title: 'Output Management',
             template: './index.html'
         }),
+        new CopyPlugin({
+            patterns: [{
+                from: "./assets/**/*"
+            }],
+        })
     ],
     module: {
         rules: [{
