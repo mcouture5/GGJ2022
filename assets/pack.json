@@ -1,6 +1,31 @@
 {
     "preload": {
         "files": [
+            {
+                "type": "audio",
+                "key": "duality-full-ensemble",
+                "url": "assets/sounds/duality-full-ensemble.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-melodica",
+                "url": "assets/sounds/duality-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-rhythm",
+                "url": "assets/sounds/duality-rhythm.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-uke",
+                "url": "assets/sounds/duality-uke.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-vocal-guitar",
+                "url": "assets/sounds/duality-vocal-guitar.mp3"
+            }
         ]
     }
 }
