@@ -25,6 +25,31 @@
                 "type": "audio",
                 "key": "duality-vocal-guitar",
                 "url": "assets/sounds/duality-vocal-guitar.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-full-ensemble",
+                "url": "assets/sounds/today-full-ensemble.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-melodica",
+                "url": "assets/sounds/today-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-rhythm",
+                "url": "assets/sounds/today-rhythm.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-uke",
+                "url": "assets/sounds/today-uke.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-vocal-guitar",
+                "url": "assets/sounds/today-vocal-guitar.mp3"
             }
         ]
     }
