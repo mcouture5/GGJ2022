@@ -49,6 +49,31 @@
                 "type": "audio",
                 "key": "today-vocal-guitar",
                 "url": "assets/sounds/today-vocal-guitar.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-full-ensemble",
+                "url": "assets/sounds/scootch-over-full-ensemble.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-melodica",
+                "url": "assets/sounds/scootch-over-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-rhythm",
+                "url": "assets/sounds/scootch-over-rhythm.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-uke",
+                "url": "assets/sounds/scootch-over-uke.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-vocal-guitar",
+                "url": "assets/sounds/scootch-over-vocal-guitar.mp3"
             }
         ]
     },
