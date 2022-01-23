@@ -7,23 +7,18 @@
     </head>
     <style>
         @font-face {
-            font-family: 'Digital';
-            src: url('./assets/fonts/DJB-Get-Digital.ttf') format('truetype');
+            font-family: 'Voyage';
+            src: url('./assets/fonts/TheVoyageCulture-Sans.ttf') format('truetype');
         }
 
         @font-face {
-            font-family: 'Aviator';
-            src: url('./assets/fonts/Aviator-SansVintage.ttf') format('truetype');
+            font-family: 'VoyageShadow';
+            src: url('./assets/fonts/TheVoyageCulture-Shadow.ttf') format('truetype');
         }
 
         @font-face {
-            font-family: 'Cavalcade';
-            src: url('./assets/fonts/Cavalcade-Inline.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'OneNine';
-            src: url('./assets/fonts/OneNineNineFour-Halftone.ttf') format('truetype');
+            font-family: 'Ace';
+            src: url('./assets/fonts/AceofSpades-Regular.woff2') format('woff2');
         }
 
         * {
@@ -34,7 +29,7 @@
         body {
             font-size: 10px;
             color: black;
-            background-color: #6d5a5a;
+            background-color: #000;
             width: 100%;
             height: 100%;
         }
@@ -55,20 +50,16 @@
             font-size: 0;
         }
 
-        .digital {
-            font-family: 'Digital';
+        .voyage {
+            font-family: 'Voyage';
         }
 
-        .aviator {
-            font-family: 'Aviator';
+        .voyageShadow {
+            font-family: 'VoyageShadow';
         }
 
-        .cavalcade {
-            font-family: 'Cavalcade';
-        }
-
-        .onenine {
-            font-family: 'OneNine';
+        .ace {
+            font-family: 'Ace';
         }
 
         body div.container h1 {
@@ -81,10 +72,9 @@
     <body>
         <div id="container">
             <!-- This is how to load fonts -->
-            <div class="hidden digital">Digital</div>
-            <div class="hidden aviator">Aviator</div>
-            <div class="hidden cavalcade">Aviator</div>
-            <div class="hidden onenine">Aviator</div>
+            <div class="hidden voyage">Digital</div>
+            <div class="hidden voyageShadow">Aviator</div>
+            <div class="hidden ace">Ace</div>
             <div id="game"></div>
         </div>
     </body>

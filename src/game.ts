@@ -1,6 +1,10 @@
 import 'phaser';
+import { Boot } from './scenes/Boot';
 import { MainMenu } from './scenes/MainMenu';
 import { GameScene } from './scenes/GameScene';
+import { Company } from './scenes/splash/Company';
+import { PhaserSplash } from './scenes/splash/Phaser';
+import { DISPLAY_SIZE } from './constants';
 
 // main game configuration
 const config: Phaser.Types.Core.GameConfig = {
@@ -8,11 +12,11 @@ const config: Phaser.Types.Core.GameConfig = {
     scale: {
         parent: 'game',
         mode: Phaser.Scale.FIT,
-        width: 1920,
-        height: 1080
+        width: DISPLAY_SIZE.width,
+        height: DISPLAY_SIZE.height
     },
     parent: 'game',
-    scene: [MainMenu, GameScene],
+    scene: [Boot, Company, PhaserSplash, MainMenu, GameScene],
     input: {
         keyboard: false,
         mouse: true,
@@ -20,7 +24,7 @@ const config: Phaser.Types.Core.GameConfig = {
         gamepad: false
     },
     physics: null,
-    backgroundColor: '#000000',
+    backgroundColor: '#e4e4eb',
     render: { pixelArt: false, antialias: true }
 };
 

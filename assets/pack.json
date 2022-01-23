@@ -1,7 +1,6 @@
 {
-    "preload": {
-        "files": [
-            {
+    "audio": {
+        "files": [{
                 "type": "audio",
                 "key": "duality-full-ensemble",
                 "url": "assets/sounds/duality-full-ensemble.mp3"
@@ -25,6 +24,59 @@
                 "type": "audio",
                 "key": "duality-vocal-guitar",
                 "url": "assets/sounds/duality-vocal-guitar.mp3"
+            }
+        ]
+    },
+    "images": {
+        "files": [{
+                "type": "image",
+                "key": "company",
+                "url": "./assets/images/company.png"
+            },
+            {
+                "type": "image",
+                "key": "phaser",
+                "url": "./assets/images/phaser.png"
+            },
+            {
+                "type": "image",
+                "key": "mainmenu",
+                "url": "./assets/images/mainmenu.jpg"
+            },
+            {
+                "type": "image",
+                "key": "dayoverlay",
+                "url": "./assets/images/dayoverlay.png"
+            },
+            {
+                "type": "image",
+                "key": "grass",
+                "url": "./assets/images/grass.png"
+            },
+            {
+                "type": "image",
+                "key": "hills",
+                "url": "./assets/images/hills.png"
+            },
+            {
+                "type": "image",
+                "key": "mountains",
+                "url": "./assets/images/mountains.png"
+            },
+            {
+                "type": "image",
+                "key": "nightoverlay",
+                "url": "./assets/images/nightoverlay.png"
+            },
+            {
+                "type": "image",
+                "key": "road",
+                "url": "./assets/images/road.png"
+            },
+            {
+                "type": "image",
+                "key": "sky",
+                "url": "./assets/images/sky.png"
             }
         ]
     }
