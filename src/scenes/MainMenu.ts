@@ -71,8 +71,8 @@ export class MainMenu extends Phaser.Scene {
                 sound: this.sound,
                 songName: 'duality',
                 trackFlags: {
-                    'melodica': false,
-                    'ocarina': false,
+                    'melodica': true,
+                    'ocarina': true,
                     'uke': true
                 }
             });

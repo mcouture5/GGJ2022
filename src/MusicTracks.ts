@@ -10,14 +10,14 @@ export interface MusicTracksOptions {
 }
 
 export type TrackName = 'melodica' | 'ocarina' | 'rhythm' | 'uke' | 'vocal-guitar';
-export const TRACK_NAMES = ['melodica', 'ocarina', 'rhythm', 'uke', 'vocal-guitar'];
+export const TRACK_NAMES: TrackName[] = ['melodica', 'ocarina', 'rhythm', 'uke', 'vocal-guitar'];
 
 export type TrackKey =
     'melodica' | 'ocarina' | 'rhythm' | 'uke' | 'vocal-guitar' |
     'melodica-ocarina' | 'melodica-rhythm' | 'melodica-uke' |
     'ocarina-rhythm' | 'ocarina-uke' |
     'rhythm-uke'
-export const TRACK_KEYS = [
+export const TRACK_KEYS: TrackKey[] = [
     'melodica', 'ocarina', 'rhythm', 'uke', 'vocal-guitar',
     'melodica-ocarina', 'melodica-rhythm', 'melodica-uke',
     'ocarina-rhythm', 'ocarina-uke',
@@ -30,12 +30,14 @@ export class MusicTracks {
     private songName: string;
     private trackFlags: {[key in TrackName]?: boolean};
     private tracks: {[key in TrackKey]?: Phaser.Sound.BaseSound};
+    private volume: number;
 
     constructor(options: MusicTracksOptions) {
         this.sound = options.sound;
         this.songName = options.songName;
         this.trackFlags = options.trackFlags;
         this.tracks = {};
+        this.volume = 0;
 
         // gather track name pairs for CPU efficiency purposes. skip 'vocal-guitar' since that one usually always
         // plays.
@@ -67,15 +69,36 @@ export class MusicTracks {
         }
          */
 
-        for (let trackName of Object.keys(this.trackFlags) as TrackName[]) {
+        for (let trackName of TRACK_NAMES) {
             this.tracks[trackName] = this.sound.add(this.songName + '-' + trackName, {volume: 0});
+        }
+    }
+
+    /**
+     * Updates the track flags on-the-fly. Let you start/stop tracks on-the-fly.
+     */
+    setTrackFlags(trackFlags: {[key in TrackName]?: boolean}) {
+        for (let trackName of TRACK_NAMES) {
+            let oldTrackFlag: boolean = this.trackFlags[trackName];
+            let newTrackFlag: boolean = trackFlags[trackName];
+            let stopTrack: boolean = oldTrackFlag && newTrackFlag === false;
+            let startTrack: boolean = !oldTrackFlag && newTrackFlag === true;
+            let track = this.tracks[trackName] as Phaser.Sound.WebAudioSound;
+            if (stopTrack) {
+                this.trackFlags[trackName] = false;
+                track.setVolume(0);
+            } else if (startTrack) {
+                this.trackFlags[trackName] = true;
+                track.setVolume(this.volume);
+            }
         }
     }
 
     play(): void {
         // play all tracks as quickly as possible to ensure they are in sync
         for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
-            (this.tracks[trackKey] as Phaser.Sound.BaseSound).play();
+            let track = this.tracks[trackKey] as Phaser.Sound.BaseSound;
+            track.play();
         }
         // when all tracks complete
         let onCompleteCallsLeft = 0;
@@ -87,7 +110,8 @@ export class MusicTracks {
                     // re-play all tracks as quickly as possible to ensure they are in sync
                     // IMPORTANT: must manually loop because automatic looping is not precise enough
                     for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
-                        (this.tracks[trackKey] as Phaser.Sound.BaseSound).play();
+                        let track = this.tracks[trackKey] as Phaser.Sound.BaseSound;
+                        track.play();
                     }
                 }
             })
@@ -95,8 +119,12 @@ export class MusicTracks {
     }
 
     fadeIn(scene: Phaser.Scene, fullVolume: number, fadeMillis: number, fadeInComplete?: () => void): void {
+        this.volume = fullVolume;
         let onCompleteCallsLeft = 0;
         for (let trackKey of Object.keys(this.tracks)) {
+            if (!this.trackFlags[trackKey]) {
+                continue;
+            }
             let track: Phaser.Sound.BaseSound = this.tracks[trackKey];
             onCompleteCallsLeft++;
             scene.add.tween({
@@ -115,6 +143,7 @@ export class MusicTracks {
     }
 
     fadeOut(scene: GameScene, fadeMillis: number, fadeOutComplete?: () => void): void {
+        this.volume = 0;
         let onCompleteCallsLeft = 0;
         for (let trackKey of Object.keys(this.tracks)) {
             let track: Phaser.Sound.BaseSound = this.tracks[trackKey];
@@ -142,7 +171,7 @@ export class MusicTracks {
         if (trackNamePair.length === 1) {
             return trackNamePair[0];
         }
-        if (TRACK_KEYS.indexOf(trackNamePair[0] + '-' + trackNamePair[1]) >= 0) {
+        if (TRACK_KEYS.indexOf(trackNamePair[0] + '-' + trackNamePair[1] as TrackKey) >= 0) {
             return trackNamePair[0] + '-' + trackNamePair[1] as TrackKey;
         } else {
             return trackNamePair[1] + '-' + trackNamePair[0] as TrackKey;
