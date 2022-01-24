@@ -3,6 +3,16 @@
         "files": [
             {
                 "type": "audio",
+                "key": "morning",
+                "url": "assets/sounds/morning.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "night",
+                "url": "assets/sounds/night.mp3"
+            },
+            {
+                "type": "audio",
                 "key": "melodica-angry",
                 "url": "assets/sounds/melodica-angry.mp3"
             },
