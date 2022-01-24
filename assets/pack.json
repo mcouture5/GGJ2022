@@ -12,6 +12,11 @@
             },
             {
                 "type": "audio",
+                "key": "duality-ocarina",
+                "url": "assets/sounds/duality-ocarina.mp3"
+            },
+            {
+                "type": "audio",
                 "key": "duality-rhythm",
                 "url": "assets/sounds/duality-rhythm.mp3"
             },
@@ -37,6 +42,11 @@
             },
             {
                 "type": "audio",
+                "key": "today-ocarina",
+                "url": "assets/sounds/today-ocarina.mp3"
+            },
+            {
+                "type": "audio",
                 "key": "today-rhythm",
                 "url": "assets/sounds/today-rhythm.mp3"
             },
@@ -59,6 +69,11 @@
                 "type": "audio",
                 "key": "scootch-over-melodica",
                 "url": "assets/sounds/scootch-over-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-ocarina",
+                "url": "assets/sounds/scootch-over-ocarina.mp3"
             },
             {
                 "type": "audio",
