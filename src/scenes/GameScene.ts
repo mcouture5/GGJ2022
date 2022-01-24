@@ -1,6 +1,6 @@
 import { Scene, Game } from 'phaser';
 import { DISPLAY_SIZE } from '../constants';
-import {MusicTracks, MusicUtils} from "../MusicTracks";
+import { MusicTracks } from "../MusicTracks";
 
 // configuration object passed into init()
 interface GameSceneConfig {
@@ -28,7 +28,7 @@ export class GameScene extends Phaser.Scene {
 
         this.mainMenuMusic = null;
         this.musicIsSetUp = false;
-        this.music = {};
+        this.music = null;
     }
 
     init(config: GameSceneConfig): void {
@@ -50,7 +50,7 @@ export class GameScene extends Phaser.Scene {
             this.musicIsSetUp = true;
             // fade out mainMenuMusic if we're coming from the main menu
             if (this.mainMenuMusic) {
-                MusicUtils.fadeOut(this, this.mainMenuMusic, 500, () => this.setUpMusic());
+                this.mainMenuMusic.fadeOut(this, 500, () => this.setUpMusic());
             } else {
                 this.setUpMusic();
             }
@@ -67,17 +67,20 @@ export class GameScene extends Phaser.Scene {
      * Sets up the game music.
      */
     private setUpMusic() {
-        let startVolume = 0.1;
         let fullVolume = 0.1;
         let fadeMillis = 500;
-        this.music.melodica = this.sound.add('duality-melodica', {volume: startVolume});
-        this.music.ocarina = this.sound.add('duality-ocarina', {volume: startVolume});
-        this.music.rhythm = this.sound.add('duality-rhythm', {volume: startVolume});
-        this.music.uke = this.sound.add('duality-uke', {volume: startVolume});
-        this.music.vocalGuitar = this.sound.add('duality-vocal-guitar', {volume: startVolume});
-        MusicUtils.play(this.music);
-        MusicUtils.fadeIn(this, this.music, fullVolume, fadeMillis);
-        // manually loop when music.vocalGuitar is done. automatic looping is too imprecise.
-        this.music.vocalGuitar.on('complete', () => MusicUtils.play(this.music));
+        this.music = new MusicTracks({
+            sound: this.sound,
+            songName: 'duality',
+            trackFlags: {
+                'melodica': true,
+                'ocarina': true,
+                'rhythm': true,
+                'uke': true,
+                'vocal-guitar': true
+            }
+        });
+        this.music.play();
+        this.music.fadeIn(this, fullVolume, fadeMillis);
     }
 }

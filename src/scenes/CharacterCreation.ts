@@ -1,6 +1,6 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { SpeechBox } from '../objects/SpeechBox';
-import { MusicTracks, MusicUtils } from '../MusicTracks';
+import { MusicTracks } from '../MusicTracks';
 
 const { r, g, b } = BACKGROUND_RBG;
 

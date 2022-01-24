@@ -1,4 +1,4 @@
-import { MusicTracks, MusicUtils } from '../MusicTracks';
+import { MusicTracks } from '../MusicTracks';
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 
 const { r, g, b } = BACKGROUND_RBG;
@@ -12,7 +12,7 @@ export class MainMenu extends Phaser.Scene {
         });
 
         this.musicIsSetUp = false;
-        this.music = {};
+        this.music = null;
     }
 
     init() {}
@@ -65,16 +65,19 @@ export class MainMenu extends Phaser.Scene {
         // start playing music tracks if not already set up. fade it in.
         if (!this.musicIsSetUp) {
             this.musicIsSetUp = true;
-            let startVolume = 0.1;
             let fullVolume = 0.75;
             let fadeMillis = 1000;
-            this.music.melodica = this.sound.add('duality-melodica', { volume: startVolume });
-            this.music.ocarina = this.sound.add('duality-ocarina', { volume: startVolume });
-            this.music.uke = this.sound.add('duality-uke', { volume: startVolume });
-            MusicUtils.play(this.music);
-            MusicUtils.fadeIn(this, this.music, fullVolume, fadeMillis);
-            // manually loop when music.uke is done. automatic looping is too imprecise.
-            this.music.uke.on('complete', () => MusicUtils.play(this.music));
+            this.music = new MusicTracks({
+                sound: this.sound,
+                songName: 'duality',
+                trackFlags: {
+                    'melodica': false,
+                    'ocarina': false,
+                    'uke': true
+                }
+            });
+            this.music.play();
+            this.music.fadeIn(this, fullVolume, fadeMillis);
         }
     }
 

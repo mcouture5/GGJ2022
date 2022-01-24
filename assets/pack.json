@@ -3,11 +3,6 @@
         "files": [
             {
                 "type": "audio",
-                "key": "duality-full-ensemble",
-                "url": "assets/sounds/duality-full-ensemble.mp3"
-            },
-            {
-                "type": "audio",
                 "key": "duality-melodica",
                 "url": "assets/sounds/duality-melodica.mp3"
             },
@@ -33,11 +28,6 @@
             },
             {
                 "type": "audio",
-                "key": "today-full-ensemble",
-                "url": "assets/sounds/today-full-ensemble.mp3"
-            },
-            {
-                "type": "audio",
                 "key": "today-melodica",
                 "url": "assets/sounds/today-melodica.mp3"
             },
@@ -60,11 +50,6 @@
                 "type": "audio",
                 "key": "today-vocal-guitar",
                 "url": "assets/sounds/today-vocal-guitar.mp3"
-            },
-            {
-                "type": "audio",
-                "key": "scootch-over-full-ensemble",
-                "url": "assets/sounds/scootch-over-full-ensemble.mp3"
             },
             {
                 "type": "audio",
