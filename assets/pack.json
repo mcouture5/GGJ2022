@@ -3,6 +3,31 @@
         "files": [
             {
                 "type": "audio",
+                "key": "melodica-angry",
+                "url": "assets/sounds/melodica-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "ocarina-angry",
+                "url": "assets/sounds/ocarina-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "rhythm-angry",
+                "url": "assets/sounds/rhythm-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "uke-angry",
+                "url": "assets/sounds/uke-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "uke-angry-2",
+                "url": "assets/sounds/uke-angry-2.mp3"
+            },
+            {
+                "type": "audio",
                 "key": "duality-melodica",
                 "url": "assets/sounds/duality-melodica.mp3"
             },
