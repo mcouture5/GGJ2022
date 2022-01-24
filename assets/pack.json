@@ -1,6 +1,7 @@
 {
     "audio": {
-        "files": [{
+        "files": [
+            {
                 "type": "audio",
                 "key": "duality-full-ensemble",
                 "url": "assets/sounds/duality-full-ensemble.mp3"
@@ -93,7 +94,8 @@
         ]
     },
     "images": {
-        "files": [{
+        "files": [
+            {
                 "type": "image",
                 "key": "company",
                 "url": "./assets/images/company.png"
@@ -107,6 +109,16 @@
                 "type": "image",
                 "key": "mainmenu",
                 "url": "./assets/images/mainmenu.jpg"
+            },
+            {
+                "type": "image",
+                "key": "character_creation",
+                "url": "./assets/images/bus_stop.jpg"
+            },
+            {
+                "type": "image",
+                "key": "manager",
+                "url": "./assets/images/manager.png"
             },
             {
                 "type": "image",

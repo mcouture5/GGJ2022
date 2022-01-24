@@ -1,8 +1,8 @@
-import { DISPLAY_SIZE } from "../constants";
-import { MusicTracks, MusicUtils } from "../MusicTracks";
+import { MusicTracks, MusicUtils } from '../MusicTracks';
+import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 
+const { r, g, b } = BACKGROUND_RBG;
 export class MainMenu extends Phaser.Scene {
-
     private musicIsSetUp: boolean;
     private music: MusicTracks;
 
@@ -15,9 +15,7 @@ export class MainMenu extends Phaser.Scene {
         this.music = {};
     }
 
-    init() {
-        
-    }
+    init() {}
 
     create() {
         let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'mainmenu').setOrigin(0.5, 0.5);
@@ -26,45 +24,40 @@ export class MainMenu extends Phaser.Scene {
 
         let textContainer = this.add.container(20, 20);
         let texts = [
-            new Phaser.GameObjects.Text(this.scene.scene, 80, 80,
-                'Just The',
-                {
-                    fontFamily: 'Ace',
-                    fontSize: '8rem',
-                    color: '#000'
-                }),
-                
-            new Phaser.GameObjects.Text(this.scene.scene, 263, 120,
-                '4',
-                {
-                    fontFamily: 'Ace',
-                    fontSize: '12rem',
-                    color: '#000'
-                }),
-                
-            new Phaser.GameObjects.Text(this.scene.scene, 370, 210,
-                'Of Us',
-                {
-                    fontFamily: 'Ace',
-                    fontSize: '5rem',
-                    color: '#000'
-                })
+            new Phaser.GameObjects.Text(this.scene.scene, 80, 80, 'Just The', {
+                fontFamily: 'Ace',
+                fontSize: '8rem',
+                color: '#000'
+            }),
+
+            new Phaser.GameObjects.Text(this.scene.scene, 263, 120, '4', {
+                fontFamily: 'Ace',
+                fontSize: '12rem',
+                color: '#000'
+            }),
+
+            new Phaser.GameObjects.Text(this.scene.scene, 370, 210, 'Of Us', {
+                fontFamily: 'Ace',
+                fontSize: '5rem',
+                color: '#000'
+            })
         ];
         textContainer.add(texts);
-        
+
         let buttonContainer = this.add.container(250, 440);
-        let startButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1)
-        startButton.setInteractive({useHandCursor: true});
+        let startButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
+        startButton.setInteractive({ useHandCursor: true });
         startButton.on('pointerup', () => {
-            this.scene.start('GameScene', {mainMenuMusic: this.music});
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                this.scene.start('CharacterCreation', { mainMenuMusic: this.music });
+            });
+            this.cameras.main.fadeOut(350, r, g, b);
         });
-        let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0,
-            'Start',
-            {
-                fontFamily: 'Ace',
-                fontSize: '6rem',
-                color: '#000'
-            }).setOrigin(0.5, 0.5);
+        let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0, 'Start', {
+            fontFamily: 'Ace',
+            fontSize: '6rem',
+            color: '#000'
+        }).setOrigin(0.5, 0.5);
         buttonContainer.add([startButton, startText]);
 
         // do not pause sounds on blur
@@ -75,9 +68,9 @@ export class MainMenu extends Phaser.Scene {
             let startVolume = 0.1;
             let fullVolume = 0.75;
             let fadeMillis = 1000;
-            this.music.melodica = this.sound.add('duality-melodica', {volume: startVolume});
-            this.music.ocarina = this.sound.add('duality-ocarina', {volume: startVolume});
-            this.music.uke = this.sound.add('duality-uke', {volume: startVolume});
+            this.music.melodica = this.sound.add('duality-melodica', { volume: startVolume });
+            this.music.ocarina = this.sound.add('duality-ocarina', { volume: startVolume });
+            this.music.uke = this.sound.add('duality-uke', { volume: startVolume });
             MusicUtils.play(this.music);
             MusicUtils.fadeIn(this, this.music, fullVolume, fadeMillis);
             // manually loop when music.uke is done. automatic looping is too imprecise.
@@ -85,7 +78,5 @@ export class MainMenu extends Phaser.Scene {
         }
     }
 
-    update() {
-        
-    }
+    update() {}
 }

@@ -1,6 +1,5 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8" />
         <title>Just The 4 of Us</title>
@@ -19,6 +18,11 @@
         @font-face {
             font-family: 'Ace';
             src: url('./assets/fonts/AceofSpades-Regular.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Octanis';
+            src: url('./assets/fonts/Octanis-SansRounded.ttf') format('truetype');
         }
 
         * {
@@ -62,6 +66,10 @@
             font-family: 'Ace';
         }
 
+        .octanis {
+            font-family: 'Octanis';
+        }
+
         body div.container h1 {
             font-family: 'Bough';
             padding: 0;
@@ -75,8 +83,8 @@
             <div class="hidden voyage">Digital</div>
             <div class="hidden voyageShadow">Aviator</div>
             <div class="hidden ace">Ace</div>
+            <div class="hidden octanis">Octanis</div>
             <div id="game"></div>
         </div>
     </body>
-
 </html>

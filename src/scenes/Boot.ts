@@ -1,7 +1,7 @@
 /**
  * Boot scene shows a loading bar while loading all assets.
  */
- export class Boot extends Phaser.Scene {
+export class Boot extends Phaser.Scene {
     private loadingBar: Phaser.GameObjects.Graphics;
     private progressBar: Phaser.GameObjects.Graphics;
     private camera: Phaser.Cameras.Scene2D.Camera;
@@ -24,12 +24,7 @@
         this.load.on('progress', (value) => {
             this.progressBar.clear();
             this.progressBar.fillStyle(0x684949, 1);
-            this.progressBar.fillRect(
-                this.camera.width / 4,
-                this.camera.height / 2 - 16,
-                (this.camera.width / 2) * value,
-                16
-            );
+            this.progressBar.fillRect(this.camera.width / 4, this.camera.height / 2 - 16, (this.camera.width / 2) * value, 16);
         });
 
         // delete bar graphics, when loading complete
@@ -49,18 +44,13 @@
     create() {
         // Immediately start the main menu
         this.scene.start('Company');
-        //this.scene.start('MainMenu');
+        //this.scene.start('CharacterCreation');
     }
 
     private createLoadingbar() {
         this.loadingBar = this.add.graphics();
         this.loadingBar.fillStyle(0x684949, 1);
-        this.loadingBar.fillRect(
-            this.camera.width / 4 - 2,
-            this.camera.height / 2 - 18,
-            this.camera.width / 2 + 4,
-            20
-        );
+        this.loadingBar.fillRect(this.camera.width / 4 - 2, this.camera.height / 2 - 18, this.camera.width / 2 + 4, 20);
         this.progressBar = this.add.graphics();
     }
 }

@@ -17,5 +17,12 @@
     "scripts": {
         "dev": "webpack serve --mode development",
         "build": "webpack --mode production"
+    },
+    "prettier": {
+        "printWidth": 160,
+        "trailingComma": "none",
+        "tabWidth": 4,
+        "semi": true,
+        "singleQuote": true
     }
 }
