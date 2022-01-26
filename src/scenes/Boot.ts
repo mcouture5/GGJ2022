@@ -48,8 +48,8 @@ export class Boot extends Phaser.Scene {
 
     create() {
         // Immediately start the main menu
-        //this.scene.start('Company');
-        this.scene.start('CharacterCreation');
+        this.scene.start('Company');
+        //this.scene.start('CharacterCreation');
     }
 
     private createLoadingbar() {
