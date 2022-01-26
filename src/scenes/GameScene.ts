@@ -3,6 +3,7 @@ import { DISPLAY_SIZE } from '../constants';
 import { MusicTracks } from "../MusicTracks";
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
+const DAY_NIGHT_FADE_MILLIS = 1000;
 
 // configuration object passed into init()
 interface GameSceneConfig {
@@ -97,9 +98,21 @@ export class GameScene extends Phaser.Scene {
     }
 
     private switchToNight(): void {
-        this.dayOverlay.setAlpha(0);
-        this.nightOverlay.setAlpha(NIGHT_OVERLAY_ALPHA);
-        this.nightSound.play();
+        this.add.tween({
+            targets: this.dayOverlay,
+            alpha: 0,
+            ease: 'Linear',
+            duration: DAY_NIGHT_FADE_MILLIS
+        });
+        this.add.tween({
+            targets: this.nightOverlay,
+            alpha: NIGHT_OVERLAY_ALPHA,
+            ease: 'Linear',
+            duration: DAY_NIGHT_FADE_MILLIS,
+            onComplete: () => {
+                this.nightSound.play();
+            }
+        });
         this.isDay = false;
     }
 
@@ -114,9 +127,21 @@ export class GameScene extends Phaser.Scene {
             return;
         }
 
-        this.dayOverlay.setAlpha(1);
-        this.nightOverlay.setAlpha(0);
-        this.morningSound.play();
+        this.add.tween({
+            targets: this.dayOverlay,
+            alpha: 1,
+            ease: 'Linear',
+            duration: DAY_NIGHT_FADE_MILLIS,
+            onComplete: () => {
+                this.morningSound.play();
+            }
+        });
+        this.add.tween({
+            targets: this.nightOverlay,
+            alpha: 0,
+            ease: 'Linear',
+            duration: DAY_NIGHT_FADE_MILLIS
+        });
         this.isDay = true;
     }
 
