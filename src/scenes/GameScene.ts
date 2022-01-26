@@ -1,5 +1,5 @@
 import { Scene, Game } from 'phaser';
-import { DISPLAY_SIZE } from '../constants';
+import {BACKGROUND_RBG, DISPLAY_SIZE} from '../constants';
 import { MusicTracks } from "../MusicTracks";
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
@@ -149,7 +149,21 @@ export class GameScene extends Phaser.Scene {
      * Triggers a major event (gig or new band member).
      */
     private triggerMajorEvent(): void {
-        alert("MAJOR EVENT: gig or new band member");
+        // fade out camera and music
+        this.cameras.main.fadeOut(350, BACKGROUND_RBG.r, BACKGROUND_RBG.g, BACKGROUND_RBG.b);
+        this.music.fadeOut(this, 350);
+
+        // when camera fade is done...
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+            // stop music just in case fade isn't complete yet
+            this.music.stop();
+            // 50% switch to Gig scene, 50% switch to NewBandmember scene
+            if (Phaser.Math.Between(0, 1) === 0) {
+                this.scene.start('Gig');
+            } else {
+                this.scene.start('NewBandmember');
+            }
+        });
     }
 
     /**

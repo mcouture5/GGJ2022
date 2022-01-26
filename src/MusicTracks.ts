@@ -119,6 +119,13 @@ export class MusicTracks {
         }
     }
 
+    stop(): void {
+        for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
+            let track = this.tracks[trackKey] as Phaser.Sound.BaseSound;
+            track.stop();
+        }
+    }
+
     fadeIn(scene: Phaser.Scene, fullVolume: number, fadeMillis: number, fadeInComplete?: () => void): void {
         this.volume = fullVolume;
         let onCompleteCallsLeft = 0;
