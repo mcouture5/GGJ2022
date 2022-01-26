@@ -101,12 +101,13 @@ export class MusicTracks {
             track.play();
         }
         // when all tracks complete
-        let onCompleteCallsLeft = 0;
-        for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
-            onCompleteCallsLeft++;
+        let trackKeys = Object.keys(this.tracks) as TrackKey[]
+        let onCompleteCallsLeft = trackKeys.length;
+        for (let trackKey of trackKeys) {
             this.tracks[trackKey].on('complete', () => {
                 onCompleteCallsLeft--;
                 if (onCompleteCallsLeft <= 0) {
+                    onCompleteCallsLeft = trackKeys.length;
                     // re-play all tracks as quickly as possible to ensure they are in sync
                     // IMPORTANT: must manually loop because automatic looping is not precise enough
                     for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
@@ -114,7 +115,7 @@ export class MusicTracks {
                         track.play();
                     }
                 }
-            })
+            });
         }
     }
 
