@@ -1,7 +1,5 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
-import { SpeechBox } from '../objects/SpeechBox';
 import { MusicTracks } from '../MusicTracks';
-
 const { r, g, b } = BACKGROUND_RBG;
 
 interface CharacterCreationConfig {
@@ -13,8 +11,8 @@ export class CharacterCreation extends Phaser.Scene {
     private introducingCreator: boolean = false;
     private overlay: Phaser.GameObjects.Rectangle;
     private recordManager: Phaser.GameObjects.Sprite;
-    private speechBox: SpeechBox;
     private mainMenuMusic: MusicTracks;
+    private conversation: IConversation;
 
     constructor() {
         super({
@@ -27,15 +25,25 @@ export class CharacterCreation extends Phaser.Scene {
     }
 
     create() {
-        let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'character_creation').setOrigin(0.5, 0.5);
+        let bg = this.add
+            .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'office')
+            .setOrigin(0.5, 0.5)
+            .setDepth(0);
         bg.displayWidth = DISPLAY_SIZE.width;
         bg.displayHeight = DISPLAY_SIZE.height;
 
-        this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(50);
+        this.recordManager = this.add
+            .sprite(DISPLAY_SIZE.width - 400, -DISPLAY_SIZE.height, 'manager', 0)
+            .setOrigin(0.5, 0.5)
+            .setDepth(10);
+        let desk = this.add
+            .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'desk')
+            .setOrigin(0.5, 0.5)
+            .setDepth(20);
+        desk.displayWidth = DISPLAY_SIZE.width;
 
-        this.recordManager = this.add.sprite(450, -DISPLAY_SIZE.height, 'manager', 0).setOrigin(0.5, 0.5).setDepth(300);
-        this.speechBox = new SpeechBox({ scene: this, minitb: this.recordManager });
-
+        this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
+        this.conversation = this.add.conversation('character_creation').setDepth(50).setX(40).setY(40);
         setTimeout(() => {
             this.tweens.add({
                 targets: this.overlay,
@@ -51,44 +59,11 @@ export class CharacterCreation extends Phaser.Scene {
 
     private introduceCreation() {
         let timeline = this.tweens.createTimeline();
-        timeline.add({
-            targets: this.recordManager,
-            y: { from: DISPLAY_SIZE.height + 210, to: DISPLAY_SIZE.height + 40 },
-            duration: 1500
-        });
-        timeline.add({
-            targets: this.recordManager,
-            alpha: 1,
-            duration: 500
-        });
-        timeline.add({
-            targets: this.recordManager,
-            scaleX: -1,
-            duration: 1
-        });
-        timeline.add({
-            targets: this.recordManager,
-            alpha: 1,
-            duration: 500
-        });
-        timeline.add({
-            targets: this.recordManager,
-            scaleX: 1,
-            duration: 1
-        });
-        timeline.add({
-            targets: this.recordManager,
-            alpha: 1,
-            duration: 500
-        });
-        timeline.add({
-            targets: this.recordManager,
-            y: DISPLAY_SIZE.height - 190,
-            duration: 500
-        });
+        timeline.add({ targets: this.recordManager, y: { from: DISPLAY_SIZE.height + 210, to: DISPLAY_SIZE.height + 90 }, duration: 1500 });
+        timeline.add({ targets: this.recordManager, alpha: 1, duration: 1000 });
+        timeline.add({ targets: this.recordManager, y: DISPLAY_SIZE.height - 190, duration: 500 });
         timeline.on('complete', () => {
-            this.speechBox.move(700, 80);
-            this.speechBox.speak("Oh hi! Didn't see you there...");
+            this.conversation.begin();
 
             let buttonContainer = this.add.container(250, 440);
             let startButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
@@ -107,11 +82,5 @@ export class CharacterCreation extends Phaser.Scene {
             buttonContainer.add([startButton, startText]);
         });
         timeline.play();
-    }
-
-    private introduction() {}
-
-    update() {
-        this.speechBox.update();
     }
 }

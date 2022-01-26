@@ -132,11 +132,6 @@
             },
             {
                 "type": "image",
-                "key": "character_creation",
-                "url": "./assets/images/bus_stop.jpg"
-            },
-            {
-                "type": "image",
                 "key": "manager",
                 "url": "./assets/images/manager.png"
             },
@@ -174,6 +169,16 @@
                 "type": "image",
                 "key": "sky",
                 "url": "./assets/images/sky.png"
+            },
+            {
+                "type": "image",
+                "key": "office",
+                "url": "./assets/images/grungyoffice.png"
+            },
+            {
+                "type": "image",
+                "key": "desk",
+                "url": "./assets/images/desk.png"
             }
         ]
     }
