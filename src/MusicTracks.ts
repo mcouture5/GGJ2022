@@ -126,6 +126,16 @@ export class MusicTracks {
         }
     }
 
+    isPlaying(): boolean {
+        for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
+            let track = this.tracks[trackKey] as Phaser.Sound.BaseSound;
+            if (track.isPlaying) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     fadeIn(scene: Phaser.Scene, fullVolume: number, fadeMillis: number, fadeInComplete?: () => void): void {
         this.volume = fullVolume;
         let onCompleteCallsLeft = 0;
@@ -150,7 +160,7 @@ export class MusicTracks {
         }
     }
 
-    fadeOut(scene: GameScene, fadeMillis: number, fadeOutComplete?: () => void): void {
+    fadeOut(scene: Phaser.Scene, fadeMillis: number, fadeOutComplete?: () => void): void {
         this.volume = 0;
         let onCompleteCallsLeft = 0;
         for (let trackKey of Object.keys(this.tracks)) {

@@ -1,14 +1,13 @@
-import { Scene, Game } from 'phaser';
-import {BACKGROUND_RBG, DISPLAY_SIZE} from '../constants';
-import { MusicTracks } from "../MusicTracks";
+import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
+import { MusicTracks } from '../MusicTracks';
+import { GigConfig } from './Gig';
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
 const DAY_NIGHT_FADE_MILLIS = 1000;
 
 // configuration object passed into init()
 interface GameSceneConfig {
-    // music tracks from main menu. null if not coming from main menu.
-    mainMenuMusic?: MusicTracks;
+    // TODO
 }
 
 export class GameScene extends Phaser.Scene {
@@ -24,8 +23,6 @@ export class GameScene extends Phaser.Scene {
     private isDay: boolean;
     private dayNum: number;
 
-    private mainMenuMusic: MusicTracks;
-    private musicIsSetUp: boolean;
     private music: MusicTracks;
     private morningSound: Phaser.Sound.BaseSound;
     private nightSound: Phaser.Sound.BaseSound;
@@ -34,18 +31,10 @@ export class GameScene extends Phaser.Scene {
         super({
             key: 'GameScene'
         });
-
-        // start with day before going to night
-        this.isDay = true;
-        this.dayNum = 1;
-
-        this.mainMenuMusic = null;
-        this.musicIsSetUp = false;
-        this.music = null;
     }
 
     init(config: GameSceneConfig): void {
-        this.mainMenuMusic = config.mainMenuMusic;
+        // TODO
     }
 
     create(): void {
@@ -62,10 +51,12 @@ export class GameScene extends Phaser.Scene {
         // set up day/night cycles. 6 transitions 30 seconds apart, creating 3 in-game days that elapse in 3 irl
         // minutes. the last transition marks the end of the last night and triggers a major event
         // (gig or new band member).
+        this.isDay = true;
+        this.dayNum = 1;
         this.dayNightTimer = this.time.addEvent({
             callback: () => {
                 if (this.isDay) {
-                    this.switchToNight()
+                    this.switchToNight();
                 } else {
                     this.switchToDay();
                 }
@@ -76,15 +67,23 @@ export class GameScene extends Phaser.Scene {
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;
-        // start playing music tracks if not already set up. fade it in.
-        if (!this.musicIsSetUp) {
-            this.musicIsSetUp = true;
-            // fade out mainMenuMusic if we're coming from the main menu
-            if (this.mainMenuMusic) {
-                this.mainMenuMusic.fadeOut(this, 500, () => this.setUpMusic());
-            } else {
-                this.setUpMusic();
-            }
+        // start playing music tracks if not already playing. fade it in.
+        if (!this.music || !this.music.isPlaying()) {
+            let fullVolume = 0.2;
+            let fadeMillis = 350;
+            this.music = new MusicTracks({
+                sound: this.sound,
+                songName: 'duality',
+                trackFlags: {
+                    'melodica': true,
+                    'ocarina': true,
+                    'rhythm': true,
+                    'uke': true,
+                    'vocal-guitar': true
+                }
+            });
+            this.music.play();
+            this.music.fadeIn(this, fullVolume, fadeMillis);
         }
         // set up sound effects
         this.morningSound = this.sound.add('morning', {volume: 0.5});
@@ -98,6 +97,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     private switchToNight(): void {
+        this.isDay = false;
         this.add.tween({
             targets: this.dayOverlay,
             alpha: 0,
@@ -113,16 +113,16 @@ export class GameScene extends Phaser.Scene {
                 this.nightSound.play();
             }
         });
-        this.isDay = false;
     }
 
     private switchToDay(): void {
+        this.isDay = true;
         // increment dayNum each day
         this.dayNum++;
 
-        // if about to switch to 4th day, STOP and trigger major event (gig or new band member)
+        // if this is the 4th day, STOP and trigger major event (gig or new band member)
         if (this.dayNum > 3) {
-            this.dayNum = 0;
+            this.dayNum = 1;
             this.triggerMajorEvent();
             return;
         }
@@ -142,7 +142,6 @@ export class GameScene extends Phaser.Scene {
             ease: 'Linear',
             duration: DAY_NIGHT_FADE_MILLIS
         });
-        this.isDay = true;
     }
 
     /**
@@ -152,38 +151,27 @@ export class GameScene extends Phaser.Scene {
         // fade out camera and music
         this.cameras.main.fadeOut(350, BACKGROUND_RBG.r, BACKGROUND_RBG.g, BACKGROUND_RBG.b);
         this.music.fadeOut(this, 350);
-
         // when camera fade is done...
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             // stop music just in case fade isn't complete yet
             this.music.stop();
             // 50% switch to Gig scene, 50% switch to NewBandmember scene
             if (Phaser.Math.Between(0, 1) === 0) {
-                this.scene.start('Gig');
+                this.scene.start('Gig', {
+                    // TODO: change song name after gig
+                    songName: 'duality',
+                    // TODO make trackFlags actually reflect the bandmembers' instruments
+                    trackFlags: {
+                        'melodica': true,
+                        'ocarina': true,
+                        'rhythm': true,
+                        'uke': true,
+                        'vocal-guitar': true
+                    }
+                } as GigConfig);
             } else {
                 this.scene.start('NewBandmember');
             }
         });
-    }
-
-    /**
-     * Sets up the game music.
-     */
-    private setUpMusic(): void {
-        let fullVolume = 0.1;
-        let fadeMillis = 500;
-        this.music = new MusicTracks({
-            sound: this.sound,
-            songName: 'duality',
-            trackFlags: {
-                'melodica': true,
-                'ocarina': true,
-                'rhythm': true,
-                'uke': true,
-                'vocal-guitar': true
-            }
-        });
-        this.music.play();
-        this.music.fadeIn(this, fullVolume, fadeMillis);
     }
 }

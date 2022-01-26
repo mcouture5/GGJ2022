@@ -3,16 +3,13 @@ import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 
 const { r, g, b } = BACKGROUND_RBG;
 export class MainMenu extends Phaser.Scene {
-    private musicIsSetUp: boolean;
+
     private music: MusicTracks;
 
     constructor() {
         super({
             key: 'MainMenu'
         });
-
-        this.musicIsSetUp = false;
-        this.music = null;
     }
 
     init() {}
@@ -48,6 +45,7 @@ export class MainMenu extends Phaser.Scene {
         let startButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
         startButton.setInteractive({ useHandCursor: true });
         startButton.on('pointerup', () => {
+            this.music.fadeOut(this, 350);
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
                 this.scene.start('CharacterCreation', { mainMenuMusic: this.music });
             });
@@ -62,11 +60,10 @@ export class MainMenu extends Phaser.Scene {
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;
-        // start playing music tracks if not already set up. fade it in.
-        if (!this.musicIsSetUp) {
-            this.musicIsSetUp = true;
+        // start playing music tracks if not already playing. fade it in.
+        if (!this.music || !this.music.isPlaying()) {
             let fullVolume = 0.75;
-            let fadeMillis = 1000;
+            let fadeMillis = 350;
             this.music = new MusicTracks({
                 sound: this.sound,
                 songName: 'duality',

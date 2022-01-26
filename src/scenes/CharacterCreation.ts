@@ -69,10 +69,16 @@ export class CharacterCreation extends Phaser.Scene {
             let startButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
             startButton.setInteractive({ useHandCursor: true });
             startButton.on('pointerup', () => {
-                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    this.scene.start('GameScene', { mainMenuMusic: this.mainMenuMusic });
-                });
+                // fade out camera and mainMenuMusic
                 this.cameras.main.fadeOut(350, r, g, b);
+                this.mainMenuMusic && this.mainMenuMusic.fadeOut(this, 350);
+                // when camera fade is done...
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                    // stop mainMenuMusic just in case fade isn't complete yet
+                    this.mainMenuMusic && this.mainMenuMusic.stop();
+                    // switch to GameScene
+                    this.scene.start('GameScene');
+                });
             });
             let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0, 'Start', {
                 fontFamily: 'Ace',
