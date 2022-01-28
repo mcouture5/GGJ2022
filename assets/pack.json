@@ -179,6 +179,70 @@
                 "type": "image",
                 "key": "desk",
                 "url": "./assets/images/desk.png"
+            },
+            {
+                "type": "image",
+                "key": "form",
+                "url": "./assets/images/form.png"
+            },
+            {
+                "type": "image",
+                "key": "arrow",
+                "url": "./assets/images/arrow.png"
+            }
+        ]
+    },
+    "character": {
+        "files": [
+            {
+                "type": "image",
+                "key": "base1",
+                "url": "./assets/images/character/base1.png"
+            },
+            {
+                "type": "image",
+                "key": "base2",
+                "url": "./assets/images/character/base2.png"
+            },
+            {
+                "type": "image",
+                "key": "eyebrows1",
+                "url": "./assets/images/character/eyebrows.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes1",
+                "url": "./assets/images/character/eyes1.png"
+            },
+            {
+                "type": "image",
+                "key": "hair1",
+                "url": "./assets/images/character/hair1.png"
+            },
+            {
+                "type": "image",
+                "key": "mouth1",
+                "url": "./assets/images/character/mouth1.png"
+            },
+            {
+                "type": "image",
+                "key": "nose1",
+                "url": "./assets/images/character/nose1.png"
+            },
+            {
+                "type": "image",
+                "key": "nose2",
+                "url": "./assets/images/character/nose2.png"
+            },
+            {
+                "type": "image",
+                "key": "nose3",
+                "url": "./assets/images/character/nose3.png"
+            },
+            {
+                "type": "image",
+                "key": "nose4",
+                "url": "./assets/images/character/nose4.png"
             }
         ]
     }

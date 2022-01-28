@@ -1,4 +1,4 @@
-import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
+import { BACKGROUND_RBG, BodyPart, DISPLAY_SIZE } from '../constants';
 import { MusicTracks } from '../MusicTracks';
 import { GameScene, GameSceneConfig } from './GameScene';
 
@@ -9,12 +9,34 @@ interface CharacterCreationConfig {
     mainMenuMusic?: MusicTracks;
 }
 
+export interface Loadout {
+    parts: {
+        [BodyPart.head]: string;
+        [BodyPart.hair]: string;
+        [BodyPart.eyebrows]: string;
+        [BodyPart.eyes]: string;
+        [BodyPart.nose]: string;
+        [BodyPart.mouth]: string;
+    };
+}
+
 export class CharacterCreation extends Phaser.Scene {
     private introducingCreator: boolean = false;
     private overlay: Phaser.GameObjects.Rectangle;
     private recordManager: Phaser.GameObjects.Sprite;
     private mainMenuMusic: MusicTracks;
     private conversation: IConversation;
+
+    public loadout: Loadout = {
+        parts: {
+            [BodyPart.head]: 'head1',
+            [BodyPart.hair]: 'hair',
+            [BodyPart.eyebrows]: 'eyebrows',
+            [BodyPart.eyes]: 'eyes1',
+            [BodyPart.nose]: 'nose1',
+            [BodyPart.mouth]: 'mouth1'
+        }
+    };
 
     constructor() {
         super({
@@ -46,6 +68,24 @@ export class CharacterCreation extends Phaser.Scene {
 
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
         this.conversation = this.add.conversation('character_creation').setDepth(50).setX(40).setY(40);
+        this.events.addListener(CONVERSATION_COMPLETE, () => {
+            let form = new Form(this, this.loadout)
+                .setDepth(50)
+                .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2)
+                .setScale(0, 0)
+                .setAlpha(0);
+            this.add.existing(form);
+            this.tweens.add({
+                targets: form,
+                alpha: { from: 0, to: 1 },
+                scaleX: { from: 0, to: 3.5 },
+                scaleY: { from: 0, to: 3.5 },
+                angle: { from: 0, to: 360 },
+                delay: 0,
+                duration: 500,
+                onComplete: (tween, targets, param) => {}
+            });
+        });
         setTimeout(() => {
             this.tweens.add({
                 targets: this.overlay,
@@ -53,7 +93,10 @@ export class CharacterCreation extends Phaser.Scene {
                 delay: 0,
                 duration: 500,
                 onComplete: (tween, targets, param) => {
-                    this.introduceCreation();
+                    //this.introduceCreation();
+
+                    let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
+                    this.add.existing(form);
                 }
             });
         }, 1500);
