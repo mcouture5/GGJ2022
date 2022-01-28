@@ -1,4 +1,5 @@
 import { BACKGROUND_HEX_COLOR } from '../constants';
+import Button, { BUTTON_CLICKED } from './Button';
 import { SpeechButton } from './SpeechButton';
 
 interface IConversationObject {
@@ -32,6 +33,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
     private boxHeight: number;
     private timer: Phaser.Time.TimerEvent;
     private responseButtons: SpeechButton[];
+    private nextButton: Button;
 
     constructor(scene: Phaser.Scene, key: string) {
         super(scene);
@@ -48,6 +50,11 @@ export default class Conversation extends Phaser.GameObjects.Container implement
         }).setAlpha(0);
         this.add(this.text);
         this.responseButtons = [];
+        this.nextButton = new Button(this.scene, 'Next').setAlpha(0).setPosition(this.boxWidth - 75, this.boxHeight - 50);
+        this.nextButton.on(BUTTON_CLICKED, () => {
+            this.advanceConversation(this.activeConvo.to);
+        });
+        this.add(this.nextButton);
     }
 
     begin() {
@@ -78,6 +85,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
      * Display the chocie buttons. This effectively waits for user input.
      */
     private showChoices() {
+        this.nextButton.setAlpha(0);
         let choices = this.activeConvo.choices || [];
         let yPos = BASE_BUTTON_Y;
         for (let choice of choices) {
@@ -107,13 +115,12 @@ export default class Conversation extends Phaser.GameObjects.Container implement
      * Waits a few seconds then proceeds to the next conversation topic.
      */
     private waitThenSpeak() {
-        setTimeout(() => {
-            this.advanceConversation(this.activeConvo.to);
-        }, 1000);
+        this.nextButton.setAlpha(1);
     }
 
     private advanceConversation(to: string) {
         this.text.setText('').setAlpha(1).setSize(200, 200);
+        this.nextButton.setAlpha(0);
         this.activeConvo = this.conversation[to];
         // If no further conversation, close the box and destroy the evidence.
         if (this.activeConvo) {
@@ -125,19 +132,16 @@ export default class Conversation extends Phaser.GameObjects.Container implement
         }
     }
 
-    private move(x: number, y: number) {
-        this.setX(x).setY(y);
-    }
-
     private shutup() {
         this.text.setAlpha(0);
+        this.nextButton.setAlpha(0);
         this.scene.tweens.add({
             targets: [this.bubble],
             height: 0,
             duration: 200,
             onComplete: () => {
                 this.bubble.setAlpha(0);
-                this.scene.events.emit(CONVERSATION_COMPLETE);
+                this.emit(CONVERSATION_COMPLETE);
                 this.destroy();
             }
         });
@@ -159,10 +163,3 @@ export default class Conversation extends Phaser.GameObjects.Container implement
         }
     }
 }
-
-Phaser.GameObjects.GameObjectFactory.register('conversation', function (this: Phaser.GameObjects.GameObjectFactory, key: string) {
-    const conversation = new Conversation(this.scene, key);
-    this.displayList.add(conversation);
-    //this.updateList.add(conversation);
-    return conversation;
-});

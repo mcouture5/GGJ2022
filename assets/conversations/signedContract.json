@@ -1,0 +1,40 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "Alright! Let me just enter this into our database here and we can get you on your way!",
+            "to": "database"
+        },
+        "database" : {
+            "text": "... BEEP BOOP BEEP ...",
+            "to": "database_more"
+        },
+        "database_more" : {
+            "text": "... BEEP BEEP ...",
+            "choices": [
+                { "text": "Are you making those noises?", "to": "caught_noise" },
+                { "text": "( This guy is weird )", "to": "keep_entering" }
+            ]
+        },
+        "caught_noise": {
+            "text": "NO! STOP ASKING SO MANY QUESTIONS!",
+            "to": "keep_entering"
+        },
+        "keep_entering": {
+            "text": "... ... and BEEP. Done!",
+            "to": "done_database"
+        },
+        "done_database": {
+            "text": "You're all set! Looks like it's your lucky day! We just happen to have a spare vehicle for you.",
+            "to": "vehicle"
+        },
+        "vehicle": {
+            "text": "This one's a beaut too! Brand new, only 100 miles, top safety ratings, what a deal!",
+            "choices": [
+                { "text": "For free??", "to": "leave" }
+            ]
+        },
+        "leave": {
+            "text": "Yup! We make sure every new contractee here at Broken Records Inc. gets what they deserve. Be on your way now!"
+        }
+    }
+}

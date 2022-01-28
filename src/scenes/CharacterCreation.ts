@@ -1,25 +1,15 @@
-import { BACKGROUND_RBG, BodyPart, DISPLAY_SIZE } from '../constants';
+import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { MusicTracks } from '../MusicTracks';
 import { GameScene, GameSceneConfig } from './GameScene';
 
 import { CONVERSATION_COMPLETE } from '../objects/Conversation';
-import { Form } from '../objects/Form';
+import { Form, SIGNED_EVENT } from '../objects/editor/Form';
+import LoadoutGenerator from '../LoadoutGenerator';
 const { r, g, b } = BACKGROUND_RBG;
 
 interface CharacterCreationConfig {
     // music tracks from main menu. null if not coming from main menu.
     mainMenuMusic?: MusicTracks;
-}
-
-export interface Loadout {
-    parts: {
-        [BodyPart.head]: string;
-        [BodyPart.hair]: string;
-        [BodyPart.eyebrows]: string;
-        [BodyPart.eyes]: string;
-        [BodyPart.nose]: string;
-        [BodyPart.mouth]: string;
-    };
 }
 
 export class CharacterCreation extends Phaser.Scene {
@@ -28,17 +18,7 @@ export class CharacterCreation extends Phaser.Scene {
     private recordManager: Phaser.GameObjects.Sprite;
     private mainMenuMusic: MusicTracks;
     private conversation: IConversation;
-
-    public loadout: Loadout = {
-        parts: {
-            [BodyPart.head]: 'head1',
-            [BodyPart.hair]: 'hair',
-            [BodyPart.eyebrows]: 'eyebrows',
-            [BodyPart.eyes]: 'eyes1',
-            [BodyPart.nose]: 'nose1',
-            [BodyPart.mouth]: 'mouth1'
-        }
-    };
+    public loadout: Loadout;
 
     constructor() {
         super({
@@ -47,6 +27,7 @@ export class CharacterCreation extends Phaser.Scene {
     }
 
     init(config: CharacterCreationConfig): void {
+        this.loadout = LoadoutGenerator.getDefaultLoadout();
         this.mainMenuMusic = config.mainMenuMusic;
     }
 
@@ -70,35 +51,14 @@ export class CharacterCreation extends Phaser.Scene {
 
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
         this.conversation = this.add.conversation('character_creation').setDepth(50).setX(40).setY(40);
-        this.events.addListener(CONVERSATION_COMPLETE, () => {
-            let form = new Form(this, this.loadout)
-                .setDepth(50)
-                .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2)
-                .setScale(0, 0)
-                .setAlpha(0);
-            this.add.existing(form);
-            this.tweens.add({
-                targets: form,
-                alpha: { from: 0, to: 1 },
-                scaleX: { from: 0, to: 3.5 },
-                scaleY: { from: 0, to: 3.5 },
-                angle: { from: 0, to: 360 },
-                delay: 0,
-                duration: 500,
-                onComplete: (tween, targets, param) => {}
-            });
-        });
         setTimeout(() => {
             this.tweens.add({
                 targets: this.overlay,
                 alpha: { from: 0, to: 1 },
                 delay: 0,
                 duration: 500,
-                onComplete: (tween, targets, param) => {
-                    //this.introduceCreation();
-
-                    let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
-                    this.add.existing(form);
+                onComplete: () => {
+                    this.introduceCreation();
                 }
             });
         }, 1500);
@@ -110,69 +70,89 @@ export class CharacterCreation extends Phaser.Scene {
         timeline.add({ targets: this.recordManager, alpha: 1, duration: 1000 });
         timeline.add({ targets: this.recordManager, y: DISPLAY_SIZE.height - 190, duration: 500 });
         timeline.on('complete', () => {
-            this.conversation.begin();
-
-            let buttonContainer = this.add.container(250, 440);
-            let startButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
-            startButton.setInteractive({ useHandCursor: true });
-            startButton.on('pointerup', () => {
-                // fade out camera and mainMenuMusic
-                this.cameras.main.fadeOut(350, r, g, b);
-                this.mainMenuMusic && this.mainMenuMusic.fadeOut(this, 350);
-                // when camera fade is done...
-                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    // stop mainMenuMusic just in case fade isn't complete yet
-                    this.mainMenuMusic && this.mainMenuMusic.stop();
-                    // switch to GameScene
-                    this.scene.start('GameScene', {
-                        gameState: {
-                            // TODO: Replace fake characters with actual characters from character creation.
-                            characters: [
-                                {
-                                    name: 'Alice',
-                                    isDriver: true,
-                                    seatPosition: 1,
-                                    dayTrait: 'safety',
-                                    nightTrait: 'fast',
-                                    instrument: 'vocal-guitar', // driver MUST be vocal-guitar
-                                    happiness: 100
-                                },
-                                {
-                                    name: 'Bob',
-                                    seatPosition: 2,
-                                    dayTrait: 'hat',
-                                    nightTrait: 'scary',
-                                    instrument: 'melodica',
-                                    happiness: 100
-                                },
-                                {
-                                    name: 'Casey',
-                                    seatPosition: 3,
-                                    dayTrait: 'party',
-                                    nightTrait: 'hungry',
-                                    instrument: 'ocarina',
-                                    happiness: 100
-                                },
-                                {
-                                    name: 'Danielle',
-                                    seatPosition: 4,
-                                    dayTrait: 'friendly',
-                                    nightTrait: 'slippery',
-                                    instrument: 'uke',
-                                    happiness: 100
-                                }
-                            ]
+            // Prepare handle for the end of the first conversation.
+            this.conversation.on(CONVERSATION_COMPLETE, () => {
+                let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height * 2); // way off screen to start
+                form.on(SIGNED_EVENT, () => {
+                    // this.loadout contains the selected face and name.
+                    this.tweens.add({
+                        targets: form,
+                        y: DISPLAY_SIZE.height * 2,
+                        duration: 500,
+                        onComplete: () => {
+                            // Remove the old conversation and begin a new one
+                            this.conversation.destroy();
+                            this.conversation = this.add.conversation('signed_contract').setDepth(50).setX(40).setY(40);
+                            this.conversation.on(CONVERSATION_COMPLETE, () => {
+                                this.beginGame();
+                            });
+                            this.conversation.begin();
                         }
-                    } as GameSceneConfig);
+                    });
+                });
+                this.add.existing(form);
+                this.tweens.add({
+                    targets: form,
+                    y: DISPLAY_SIZE.height / 2 - 450,
+                    duration: 500
                 });
             });
-            let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0, 'Start', {
-                fontFamily: 'Ace',
-                fontSize: '6rem',
-                color: '#000'
-            }).setOrigin(0.5, 0.5);
-            buttonContainer.add([startButton, startText]);
+
+            // Start the first conversation
+            this.conversation.begin();
         });
         timeline.play();
+    }
+
+    private beginGame() {
+        // fade out camera and mainMenuMusic
+        this.cameras.main.fadeOut(350, r, g, b);
+        this.mainMenuMusic && this.mainMenuMusic.fadeOut(this, 350);
+        // when camera fade is done...
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+            // stop mainMenuMusic just in case fade isn't complete yet
+            this.mainMenuMusic && this.mainMenuMusic.stop();
+            // switch to GameScene
+            this.scene.start('GameScene', {
+                gameState: {
+                    // TODO: Replace fake characters with actual characters from character creation.
+                    characters: [
+                        {
+                            name: 'Alice',
+                            isDriver: true,
+                            seatPosition: 1,
+                            dayTrait: 'safety',
+                            nightTrait: 'fast',
+                            instrument: 'vocal-guitar', // driver MUST be vocal-guitar
+                            happiness: 100
+                        },
+                        {
+                            name: 'Bob',
+                            seatPosition: 2,
+                            dayTrait: 'hat',
+                            nightTrait: 'scary',
+                            instrument: 'melodica',
+                            happiness: 100
+                        },
+                        {
+                            name: 'Casey',
+                            seatPosition: 3,
+                            dayTrait: 'party',
+                            nightTrait: 'hungry',
+                            instrument: 'ocarina',
+                            happiness: 100
+                        },
+                        {
+                            name: 'Danielle',
+                            seatPosition: 4,
+                            dayTrait: 'friendly',
+                            nightTrait: 'slippery',
+                            instrument: 'uke',
+                            happiness: 100
+                        }
+                    ]
+                }
+            } as GameSceneConfig);
+        });
     }
 }

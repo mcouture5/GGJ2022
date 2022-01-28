@@ -1,6 +1,6 @@
 // VERY IMPORTANT TO KEEP THIS
 // It needs to be imported as a side effect so the plugin manager will run.
-import '../objects/Conversation';
+import '../plugins.ts';
 
 /**
  * Boot scene shows a loading bar while loading all assets.
@@ -41,16 +41,14 @@ export class Boot extends Phaser.Scene {
          * pack is a JSON that contains details about other files that should be added into the Loader.
          * Place ALL files to load in there, separated by sections.
          */
-        this.load.pack('images', './assets/pack.json');
-        //this.load.pack('audio', './assets/pack.json');
-        this.load.pack('character', './assets/pack.json');
+        this.load.pack('assets', './assets/pack.json');
         this.load.json('character_creation', './assets/conversations/intro.json');
+        this.load.json('signed_contract', './assets/conversations/signedContract.json');
     }
 
     create() {
-        // Immediately start the main menu
-        this.scene.start('Company');
-        //this.scene.start('CharacterCreation');
+        //this.scene.start('Company');
+        this.scene.start('CharacterCreation');
     }
 
     private createLoadingbar() {

@@ -1,4 +1,4 @@
-import { BACKGROUND_HEX_COLOR, DISPLAY_SIZE } from '../constants';
+import { BACKGROUND_HEX_COLOR, DISPLAY_SIZE } from '../../constants';
 
 const CELL_SIZE = 2;
 const TRACK_HEIGHT = 16;

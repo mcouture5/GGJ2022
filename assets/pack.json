@@ -187,8 +187,13 @@
             },
             {
                 "type": "image",
-                "key": "arrow",
-                "url": "./assets/images/arrow.png"
+                "key": "x",
+                "url": "./assets/images/x.png"
+            },
+            {
+                "type": "image",
+                "key": "signed",
+                "url": "./assets/images/signed.png"
             }
         ]
     },
@@ -211,8 +216,68 @@
             },
             {
                 "type": "image",
+                "key": "eyebrows2",
+                "url": "./assets/images/character/eyebrows2.png"
+            },
+            {
+                "type": "image",
+                "key": "eyebrows3",
+                "url": "./assets/images/character/eyebrows3.png"
+            },
+            {
+                "type": "image",
+                "key": "eyebrows4",
+                "url": "./assets/images/character/eyebrows4.png"
+            },
+            {
+                "type": "image",
+                "key": "eyebrows5",
+                "url": "./assets/images/character/eyebrows5.png"
+            },
+            {
+                "type": "image",
+                "key": "eyebrows6",
+                "url": "./assets/images/character/eyebrows6.png"
+            },
+            {
+                "type": "image",
+                "key": "eyebrows7",
+                "url": "./assets/images/character/eyebrows7.png"
+            },
+            {
+                "type": "image",
                 "key": "eyes1",
                 "url": "./assets/images/character/eyes1.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes2",
+                "url": "./assets/images/character/eyes2.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes3",
+                "url": "./assets/images/character/eyes3.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes4",
+                "url": "./assets/images/character/eyes4.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes5",
+                "url": "./assets/images/character/eyes5.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes6",
+                "url": "./assets/images/character/eyes6.png"
+            },
+            {
+                "type": "image",
+                "key": "eyes7",
+                "url": "./assets/images/character/eyes7.png"
             },
             {
                 "type": "image",
@@ -221,8 +286,33 @@
             },
             {
                 "type": "image",
+                "key": "hair2",
+                "url": "./assets/images/character/hair2.png"
+            },
+            {
+                "type": "image",
+                "key": "hair3",
+                "url": "./assets/images/character/hair3.png"
+            },
+            {
+                "type": "image",
+                "key": "hair4",
+                "url": "./assets/images/character/hair4.png"
+            },
+            {
+                "type": "image",
+                "key": "hair5",
+                "url": "./assets/images/character/hair5.png"
+            },
+            {
+                "type": "image",
                 "key": "mouth1",
                 "url": "./assets/images/character/mouth1.png"
+            },
+            {
+                "type": "image",
+                "key": "mouth2",
+                "url": "./assets/images/character/mouth2.png"
             },
             {
                 "type": "image",

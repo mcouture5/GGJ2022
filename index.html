@@ -25,6 +25,16 @@
             src: url('./assets/fonts/Octanis-SansRounded.ttf') format('truetype');
         }
 
+        @font-face {
+            font-family: 'Season';
+            src: url('./assets/fonts/SeasonTimes-Script.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'America';
+            src: url('./assets/fonts/TheNewAmerica-Regular.ttf') format('truetype');
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -75,6 +85,14 @@
             font-family: 'Octanis';
         }
 
+        .season {
+            font-family: 'Season';
+        }
+
+        .america {
+            font-family: 'America';
+        }
+
         body div.container h1 {
             font-family: 'Bough';
             padding: 0;
@@ -108,7 +126,6 @@
             font-size: 36px;
         }
     </style>
-
     <body>
         <div id="container">
             <!-- This is how to load fonts -->
@@ -116,7 +133,13 @@
             <div class="hidden voyageShadow">Aviator</div>
             <div class="hidden ace">Ace</div>
             <div class="hidden octanis">Octanis</div>
+            <div class="hidden season">Season</div>
+            <div class="hidden america">America</div>
             <div id="game"></div>
+        </div>
+        <div style="display: none">
+            <input id="character-name-input" maxlength="64" />
+            <input id="band-name-input" maxlength="64" />
         </div>
     </body>
 </html>
