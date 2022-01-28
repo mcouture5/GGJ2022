@@ -1,17 +1,6 @@
 import { BACKGROUND_HEX_COLOR } from '../constants';
 import { SpeechButton } from './SpeechButton';
 
-interface CharacterCreationProps {
-    scene: Phaser.Scene;
-    key: string;
-}
-
-enum ConversationState {
-    SPEAKING,
-    ANIMATING,
-    WAITING
-}
-
 interface IConversationObject {
     text: string;
     choices?: Choice[];
@@ -23,6 +12,7 @@ interface Choice {
     to: string;
 }
 
+export const CONVERSATION_COMPLETE = 'conversation_complete';
 const BASE_BUTTON_Y = 600;
 
 /**
@@ -147,6 +137,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
             duration: 200,
             onComplete: () => {
                 this.bubble.setAlpha(0);
+                this.scene.events.emit(CONVERSATION_COMPLETE);
                 this.destroy();
             }
         });

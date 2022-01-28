@@ -2,6 +2,8 @@ import { BACKGROUND_RBG, BodyPart, DISPLAY_SIZE } from '../constants';
 import { MusicTracks } from '../MusicTracks';
 import { GameScene, GameSceneConfig } from './GameScene';
 
+import { CONVERSATION_COMPLETE } from '../objects/Conversation';
+import { Form } from '../objects/Form';
 const { r, g, b } = BACKGROUND_RBG;
 
 interface CharacterCreationConfig {

@@ -42,7 +42,8 @@ export class Boot extends Phaser.Scene {
          * Place ALL files to load in there, separated by sections.
          */
         this.load.pack('images', './assets/pack.json');
-        this.load.pack('audio', './assets/pack.json');
+        //this.load.pack('audio', './assets/pack.json');
+        this.load.pack('character', './assets/pack.json');
         this.load.json('character_creation', './assets/conversations/intro.json');
     }
 

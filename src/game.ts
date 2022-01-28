@@ -28,17 +28,20 @@ const config: Phaser.Types.Core.GameConfig = {
     },
     physics: null,
     backgroundColor: '#e4e4eb',
-    render: { pixelArt: false, antialias: true }
+    render: { pixelArt: false, antialias: true },
+    dom: {
+        createContainer: true
+    }
 };
 
 // game class
 export class Game extends Phaser.Game {
-  constructor(config: Phaser.Types.Core.GameConfig) {
-    super(config);
-  }
+    constructor(config: Phaser.Types.Core.GameConfig) {
+        super(config);
+    }
 }
 
 // when the page is loaded, create our game instance
 window.addEventListener('load', () => {
-  var game = new Game(config);
+    var game = new Game(config);
 });
