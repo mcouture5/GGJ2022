@@ -1,18 +1,15 @@
 import {BACKGROUND_RBG, DISPLAY_SIZE} from '../constants';
-import { MusicTracks, TrackName } from '../MusicTracks';
+import { MusicTracks } from '../MusicTracks';
+import { GameScene, GameState } from './GameScene';
 
 // configuration object passed into init()
 export interface GigConfig {
-    // name of the song for the gig
-    songName: string;
-    // trackFlags of current bandmembers' instruments
-    trackFlags: {[key in TrackName]?: boolean}
+    gameState: GameState;
 }
 
 export class Gig extends Phaser.Scene {
 
-    private songName: string;
-    private trackFlags: {[key in TrackName]?: boolean};
+    private gameState: GameState;
     private music: MusicTracks;
 
     constructor() {
@@ -22,8 +19,7 @@ export class Gig extends Phaser.Scene {
     }
 
     init(config: GigConfig): void {
-        this.songName = config.songName;
-        this.trackFlags = config.trackFlags;
+        this.gameState = config.gameState;
     }
 
     create(): void {
@@ -42,8 +38,10 @@ export class Gig extends Phaser.Scene {
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
                 // stop music just in case fade isn't complete yet
                 this.music.stop();
+                // increment gigNum
+                this.gameState.gigNum++;
                 // switch back to GameScene
-                this.scene.start('GameScene');
+                this.scene.start('GameScene', {gameState: this.gameState});
             });
         });
         let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0, 'Continue', {
@@ -57,12 +55,12 @@ export class Gig extends Phaser.Scene {
         this.sound.pauseOnBlur = false;
         // start playing music tracks if not already set up. fade it in.
         if (!this.music || !this.music.isPlaying()) {
-            let fullVolume = 0.75;
+            let fullVolume = this.gigNumToFullVolume(this.gameState.gigNum);
             let fadeMillis = 350;
             this.music = new MusicTracks({
                 sound: this.sound,
-                songName: this.songName,
-                trackFlags: this.trackFlags
+                songName: GameScene.gigNumToSongName(this.gameState.gigNum),
+                trackFlags: GameScene.charactersToTrackFlags(this.gameState.characters)
             });
             this.music.play();
             this.music.fadeIn(this, fullVolume, fadeMillis);
@@ -70,4 +68,18 @@ export class Gig extends Phaser.Scene {
     }
 
     update(): void {}
+
+    /**
+     * Converts a gigNum into the appropriate music full volume.
+     */
+    private gigNumToFullVolume(gigNum: any): number {
+        let gigNumMod3 = gigNum % 3;
+        if (gigNumMod3 === 1) { // 1st gig
+            return 0.75;
+        } else if (gigNumMod3 === 2) { // 2nd gig
+            return 1;
+        } else if (gigNumMod3 === 0) { // 3rd gig
+            return 0.75;
+        }
+    }
 }

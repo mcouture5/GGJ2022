@@ -1,5 +1,7 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { MusicTracks } from '../MusicTracks';
+import { GameScene, GameSceneConfig } from './GameScene';
+
 const { r, g, b } = BACKGROUND_RBG;
 
 interface CharacterCreationConfig {
@@ -77,7 +79,46 @@ export class CharacterCreation extends Phaser.Scene {
                     // stop mainMenuMusic just in case fade isn't complete yet
                     this.mainMenuMusic && this.mainMenuMusic.stop();
                     // switch to GameScene
-                    this.scene.start('GameScene');
+                    this.scene.start('GameScene', {
+                        gameState: {
+                            // TODO: Replace fake characters with actual characters from character creation.
+                            characters: [
+                                {
+                                    name: 'Alice',
+                                    isDriver: true,
+                                    seatPosition: 1,
+                                    dayTrait: 'safety',
+                                    nightTrait: 'fast',
+                                    instrument: 'vocal-guitar', // driver MUST be vocal-guitar
+                                    happiness: 100
+                                },
+                                {
+                                    name: 'Bob',
+                                    seatPosition: 2,
+                                    dayTrait: 'hat',
+                                    nightTrait: 'scary',
+                                    instrument: 'melodica',
+                                    happiness: 100
+                                },
+                                {
+                                    name: 'Casey',
+                                    seatPosition: 3,
+                                    dayTrait: 'party',
+                                    nightTrait: 'hungry',
+                                    instrument: 'ocarina',
+                                    happiness: 100
+                                },
+                                {
+                                    name: 'Danielle',
+                                    seatPosition: 4,
+                                    dayTrait: 'friendly',
+                                    nightTrait: 'slippery',
+                                    instrument: 'uke',
+                                    happiness: 100
+                                }
+                            ]
+                        }
+                    } as GameSceneConfig);
                 });
             });
             let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0, 'Start', {

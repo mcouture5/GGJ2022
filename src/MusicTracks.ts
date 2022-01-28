@@ -1,8 +1,4 @@
-/**
- * Structure to hold the various music tracks for a song.
- */
-import { GameScene } from "./scenes/GameScene";
-
+// constructor options for MusicTracks
 export interface MusicTracksOptions {
     sound: Phaser.Sound.BaseSoundManager;
     songName: string;
@@ -24,6 +20,9 @@ export const TRACK_KEYS: TrackKey[] = [
     'rhythm-uke'
 ];
 
+/**
+ * Structure to hold the various music tracks for a song.
+ */
 export class MusicTracks {
 
     private sound: Phaser.Sound.BaseSoundManager;
@@ -94,11 +93,11 @@ export class MusicTracks {
         }
     }
 
-    play(): void {
+    play(config?: Phaser.Types.Sound.SoundConfig): void {
         // play all tracks as quickly as possible to ensure they are in sync
         for (let trackKey of Object.keys(this.tracks) as TrackKey[]) {
             let track = this.tracks[trackKey] as Phaser.Sound.BaseSound;
-            track.play();
+            track.play(config);
         }
         // when all tracks complete
         let trackKeys = Object.keys(this.tracks) as TrackKey[]
