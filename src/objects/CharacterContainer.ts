@@ -4,7 +4,13 @@ import {DISPLAY_SIZE} from "../constants";
 import {TrackName} from "../MusicTracks";
 
 const INSTRUMENT_SCALE_FACTOR = 0.25;
-const DRAG_BOX = {x: -5, y: -5, width: 55, height: 80}
+const DRAG_BOX = {x: -5, y: -5, width: 55, height: 80};
+// drop zone X/Y are the left-top corner position, relative to screen center
+const SEAT_1_DROP_ZONE = {x: -497, y: -100, width: 240, height: 220};
+const SEAT_2_DROP_ZONE = {x: -256, y: -100, width: 86, height: 220};
+const SEAT_3_DROP_ZONE = {x: -168, y: -100, width: 78, height: 220};
+const SEAT_4_DROP_ZONE = {x: -89, y: -100, width: 120, height: 220};
+const SEAT_5_DROP_ZONE = {x: 100, y: -100, width: 350, height: 220};
 
 export class CharacterContainer extends Phaser.GameObjects.Container {
 
@@ -16,6 +22,8 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         super(scene);
 
         this.characterState = characterState;
+
+        this.graphics = scene.add.graphics();
 
         let passenger = scene.add.sprite(0, 0, 'passenger');
         this.add(passenger);
@@ -32,11 +40,6 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             .setScale(INSTRUMENT_SCALE_FACTOR, INSTRUMENT_SCALE_FACTOR)
             .setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle).setDepth(1000);
 
-        this.graphics = scene.add.graphics();
-        this.graphics.lineStyle(2, 0xffff00);
-        this.graphics.strokeRect(this.x - DRAG_BOX.width / 2 + DRAG_BOX.x, this.y - DRAG_BOX.height / 2 + DRAG_BOX.y,
-            DRAG_BOX.width, DRAG_BOX.height);
-
         scene.add.existing(this);
 
         this.setInteractive({
@@ -51,14 +54,25 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             characterContainer.x = dragX;
             characterContainer.y = dragY;
         });
-
-        scene.input.on('drop', (pointer, characterContainer: this, dropZone) => {
-            characterContainer.x = dropZone.x;
-            characterContainer.y = dropZone.y;
-        });
-
         scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
-            if (!dropped) {
+            let centerX = DISPLAY_SIZE.width / 2;
+            let centerY = DISPLAY_SIZE.height / 2;
+            if (new Phaser.Geom.Rectangle(centerX + SEAT_1_DROP_ZONE.x, centerY + SEAT_1_DROP_ZONE.y,
+                    SEAT_1_DROP_ZONE.width, SEAT_1_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
+                characterContainer.moveToSeatPosition(1);
+            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_2_DROP_ZONE.x, centerY + SEAT_2_DROP_ZONE.y,
+                    SEAT_2_DROP_ZONE.width, SEAT_2_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
+                characterContainer.moveToSeatPosition(2);
+            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_3_DROP_ZONE.x, centerY + SEAT_3_DROP_ZONE.y,
+                    SEAT_3_DROP_ZONE.width, SEAT_3_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
+                characterContainer.moveToSeatPosition(3);
+            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_4_DROP_ZONE.x, centerY + SEAT_4_DROP_ZONE.y,
+                    SEAT_4_DROP_ZONE.width, SEAT_4_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
+                characterContainer.moveToSeatPosition(4);
+            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y,
+                    SEAT_5_DROP_ZONE.width, SEAT_5_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
+                characterContainer.moveToSeatPosition(5);
+            } else {
                 characterContainer.x = characterContainer.input.dragStartX;
                 characterContainer.y = characterContainer.input.dragStartY;
             }
@@ -69,15 +83,30 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         this.instrumentSprite.setPosition(this.x, this.y);
         this.instrumentSprite.setScale(this.scaleX * INSTRUMENT_SCALE_FACTOR, this.scaleY * INSTRUMENT_SCALE_FACTOR);
 
+        // DEBUG BOUNDING BOXES
+        let centerX = DISPLAY_SIZE.width / 2;
+        let centerY = DISPLAY_SIZE.height / 2;
         this.graphics.clear();
         this.graphics.lineStyle(2, 0xffff00);
         this.graphics.strokeRect(this.x - DRAG_BOX.width / 2 + DRAG_BOX.x, this.y - DRAG_BOX.height / 2 + DRAG_BOX.y,
             DRAG_BOX.width, DRAG_BOX.height);
+        this.graphics.strokeRect(centerX + SEAT_1_DROP_ZONE.x, centerY + SEAT_1_DROP_ZONE.y, SEAT_1_DROP_ZONE.width,
+            SEAT_1_DROP_ZONE.height);
+        this.graphics.strokeRect(centerX + SEAT_2_DROP_ZONE.x, centerY + SEAT_2_DROP_ZONE.y, SEAT_2_DROP_ZONE.width,
+            SEAT_2_DROP_ZONE.height);
+        this.graphics.strokeRect(centerX + SEAT_3_DROP_ZONE.x, centerY + SEAT_3_DROP_ZONE.y, SEAT_3_DROP_ZONE.width,
+            SEAT_3_DROP_ZONE.height);
+        this.graphics.strokeRect(centerX + SEAT_4_DROP_ZONE.x, centerY + SEAT_4_DROP_ZONE.y, SEAT_4_DROP_ZONE.width,
+            SEAT_4_DROP_ZONE.height);
+        this.graphics.strokeRect(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y, SEAT_5_DROP_ZONE.width,
+            SEAT_5_DROP_ZONE.height);
     }
 
     moveToSeatPosition(seatPosition: number): void {
-        let centerY = DISPLAY_SIZE.height / 2;
+        this.characterState.seatPosition = seatPosition;
+
         let centerX = DISPLAY_SIZE.width / 2;
+        let centerY = DISPLAY_SIZE.height / 2;
         switch (seatPosition) {
             case 1:
                 this.x = centerX - 280;
