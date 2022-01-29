@@ -27,7 +27,7 @@ export class CharacterCreation extends Phaser.Scene {
     }
 
     init(config: CharacterCreationConfig): void {
-        this.loadout = LoadoutGenerator.getDefaultLoadout();
+        this.loadout = LoadoutGenerator.generateRandomLoadout(true);
     }
 
     create() {
@@ -39,8 +39,8 @@ export class CharacterCreation extends Phaser.Scene {
         bg.displayHeight = DISPLAY_SIZE.height;
 
         this.recordManager = this.add
-            .sprite(DISPLAY_SIZE.width - 400, -DISPLAY_SIZE.height, 'manager', 0)
-            .setOrigin(0.5, 0.5)
+            .sprite(DISPLAY_SIZE.width - 525, DISPLAY_SIZE.height * 2, 'manager', 0)
+            .setOrigin(0.5, 0)
             .setDepth(10);
         let desk = this.add
             .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'desk')
@@ -49,7 +49,7 @@ export class CharacterCreation extends Phaser.Scene {
         desk.displayWidth = DISPLAY_SIZE.width;
 
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
-        this.conversation = this.add.conversation('character_creation').setDepth(50).setX(40).setY(40);
+        this.conversation = this.add.conversation(800, 600, 'character_creation').setDepth(50).setPosition(80, 80);
 
         // DEBUG
         //let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
@@ -80,9 +80,9 @@ export class CharacterCreation extends Phaser.Scene {
 
     private introduceCreation() {
         let timeline = this.tweens.createTimeline();
-        timeline.add({ targets: this.recordManager, y: { from: DISPLAY_SIZE.height + 210, to: DISPLAY_SIZE.height + 90 }, duration: 1500 });
-        timeline.add({ targets: this.recordManager, alpha: 1, duration: 1000 });
-        timeline.add({ targets: this.recordManager, y: DISPLAY_SIZE.height - 190, duration: 500 });
+        timeline.add({ targets: this.recordManager, y: { from: DISPLAY_SIZE.height + 20, to: DISPLAY_SIZE.height - 260 }, duration: 1000 });
+        timeline.add({ targets: this.recordManager, alpha: 1, duration: 1250 });
+        timeline.add({ targets: this.recordManager, y: DISPLAY_SIZE.height - this.recordManager.displayHeight + 30, duration: 500 });
         timeline.on('complete', () => {
             // Prepare handle for the end of the first conversation.
             this.conversation.on(CONVERSATION_COMPLETE, () => {
@@ -93,13 +93,20 @@ export class CharacterCreation extends Phaser.Scene {
                         y: DISPLAY_SIZE.height * 2,
                         duration: 500,
                         onComplete: () => {
-                            // Remove the old conversation and begin a new one
-                            this.conversation.destroy();
-                            this.conversation = this.add.conversation('signed_contract').setDepth(50).setX(40).setY(40);
-                            this.conversation.on(CONVERSATION_COMPLETE, () => {
-                                this.beginGame();
+                            this.tweens.killAll();
+                            this.tweens.add({
+                                targets: this.recordManager,
+                                y: DISPLAY_SIZE.height - this.recordManager.displayHeight + 30,
+                                duration: 350,
+                                onComplete: () => {
+                                    // Remove the old conversation and begin a new one
+                                    this.conversation = this.add.conversation(800, 600, 'signed_contract').setDepth(50).setPosition(80, 80);
+                                    this.conversation.on(CONVERSATION_COMPLETE, () => {
+                                        this.beginGame();
+                                    });
+                                    this.conversation.begin();
+                                }
                             });
-                            this.conversation.begin();
                         }
                     });
                 });
@@ -108,6 +115,12 @@ export class CharacterCreation extends Phaser.Scene {
                     targets: form,
                     y: DISPLAY_SIZE.height / 2 - 450,
                     duration: 500
+                });
+                this.tweens.add({
+                    targets: this.recordManager,
+                    y: DISPLAY_SIZE.height - 260,
+                    delay: 5000,
+                    duration: 6500
                 });
             });
 

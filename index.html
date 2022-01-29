@@ -99,31 +99,13 @@
             font-size: 50px;
         }
 
-        #name-input-prompt {
-            display: none;
-            width: 1024px;
-            min-width: 1024px;
-            height: 50px;
-            left: 0;
-            right: 0;
-            top: 420px;
-            margin: auto;
-            position: absolute;
-        }
-
-        .enter-name {
-            font-family: 'Octanis';
-            font-size: 18px;
-        }
-
-        #name-input {
-            text-align: center;
-            width: 300px;
-            height: 50px;
-        }
         input[type='text'] {
             font-family: 'Octanis';
-            font-size: 36px;
+            font-size: 1.8rem;
+            width: 410px;
+            height: 34px;
+            padding: 0;
+            margin: 0;
         }
     </style>
     <body>
@@ -138,8 +120,8 @@
             <div id="game"></div>
         </div>
         <div style="display: none">
-            <input id="character-name-input" maxlength="64" />
-            <input id="band-name-input" maxlength="64" />
+            <input id="character-name-input" maxlength="64" type="text" />
+            <input id="band-name-input" maxlength="64" type="text" />
         </div>
     </body>
 </html>

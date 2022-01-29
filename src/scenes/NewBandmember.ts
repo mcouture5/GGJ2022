@@ -49,7 +49,7 @@ export class NewBandmember extends Phaser.Scene {
                     y: DISPLAY_SIZE.height - 250,
                     duration: 500,
                     onComplete: () => {
-                        let convo = this.add.conversation('bandmember_1', this.bandmember.name).setPosition(DISPLAY_SIZE.width / 2 - 250, 50).setDepth(20);
+                        let convo = this.add.conversation(1024, 768, 'bandmember_1', this.bandmember.name).setPosition(DISPLAY_SIZE.width / 2 - 250, 50).setDepth(20);
                         convo.begin();
                         convo.on(RESPONSE, (choice: Choice) => {
                             this.isJoining = choice.data.answer === 'yes';

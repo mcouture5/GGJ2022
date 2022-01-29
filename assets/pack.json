@@ -138,7 +138,7 @@
             {
                 "type": "image",
                 "key": "manager",
-                "url": "./assets/images/manager.png"
+                "url": "./assets/images/shady.png"
             },
             {
                 "type": "image",
@@ -187,18 +187,18 @@
             },
             {
                 "type": "image",
-                "key": "form",
-                "url": "./assets/images/form.png"
+                "key": "contract",
+                "url": "./assets/images/contract.png"
             },
             {
                 "type": "image",
-                "key": "x",
-                "url": "./assets/images/x.png"
+                "key": "signhere",
+                "url": "./assets/images/signhere.png"
             },
             {
                 "type": "image",
                 "key": "signed",
-                "url": "./assets/images/signed.png"
+                "url": "./assets/images/contractstamp.png"
             },
             {
                 "type": "image",
@@ -219,11 +219,6 @@
                 "type": "image",
                 "key": "trailertire",
                 "url": "./assets/images/trailertire.png"
-            },
-            {
-                "type": "image",
-                "key": "dice",
-                "url": "./assets/images/dice.png"
             },
             {
                 "type": "image",
@@ -388,6 +383,60 @@
                 "type": "image",
                 "key": "nose4",
                 "url": "./assets/images/character/nose4.png"
+            }
+        ]
+    },
+    "icons": {
+        "files": [
+            {
+                "type": "image",
+                "key": "day",
+                "url": "./assets/images/icons/day.png"
+            },
+            {
+                "type": "image",
+                "key": "fast",
+                "url": "./assets/images/icons/fast.png"
+            },
+            {
+                "type": "image",
+                "key": "friendly",
+                "url": "./assets/images/icons/friendly.png"
+            },
+            {
+                "type": "image",
+                "key": "hat",
+                "url": "./assets/images/icons/hat.png"
+            },
+            {
+                "type": "image",
+                "key": "hungry",
+                "url": "./assets/images/icons/hungry.png"
+            },
+            {
+                "type": "image",
+                "key": "night",
+                "url": "./assets/images/icons/night.png"
+            },
+            {
+                "type": "image",
+                "key": "party",
+                "url": "./assets/images/icons/party.png"
+            },
+            {
+                "type": "image",
+                "key": "safety",
+                "url": "./assets/images/icons/safety.png"
+            },
+            {
+                "type": "image",
+                "key": "scary",
+                "url": "./assets/images/icons/scary.png"
+            },
+            {
+                "type": "image",
+                "key": "slippery",
+                "url": "./assets/images/icons/slippery.png"
             }
         ]
     }

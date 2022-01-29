@@ -16,7 +16,6 @@ export interface Choice {
 
 export const RESPONSE = 'conversation_response';
 export const CONVERSATION_COMPLETE = 'conversation_complete';
-const BASE_BUTTON_Y = 600;
 
 /**
  * Use this class to begin a conversation. Just pass it the conversation key and it will take care of the rest.
@@ -39,12 +38,12 @@ export default class Conversation extends Phaser.GameObjects.Container implement
     private responseButtons: SpeechButton[];
     private nextButton: Button;
 
-    constructor(scene: Phaser.Scene, key: string, speaker?: string) {
+    constructor(scene: Phaser.Scene, w: number, h: number, key: string, speaker?: string) {
         super(scene);
         this.conversation = this.scene.cache.json.get(key).conversation;
         this.speaker = speaker || this.scene.cache.json.get(key).speaker;
-        this.boxWidth = 1024;
-        this.boxHeight = 768;
+        this.boxWidth = w;
+        this.boxHeight = h;
         this.bubble = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, this.boxWidth, 0, BACKGROUND_HEX_COLOR).setStrokeStyle(0x000000, 2).setOrigin(0, 0);
         this.add(this.bubble);
         
@@ -101,7 +100,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
     private showChoices() {
         this.nextButton.setAlpha(0);
         let choices = this.activeConvo.choices || [];
-        let yPos = BASE_BUTTON_Y;
+        let yPos = this.boxHeight - 175;
         for (let choice of choices) {
             let speechButton = new SpeechButton({
                 scene: this.scene,
@@ -147,6 +146,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
     }
 
     private shutup() {
+        this.speakerTitle.setAlpha(0);
         this.text.setAlpha(0);
         this.nextButton.setAlpha(0);
         this.scene.tweens.add({
@@ -154,7 +154,6 @@ export default class Conversation extends Phaser.GameObjects.Container implement
             height: 0,
             duration: 200,
             onComplete: () => {
-                this.setAlpha(0);
                 this.emit(CONVERSATION_COMPLETE);
                 this.destroy();
             }

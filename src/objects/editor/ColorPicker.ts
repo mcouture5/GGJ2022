@@ -59,11 +59,4 @@ export class ColorPicker extends Phaser.GameObjects.Container {
         let index = COLORS.indexOf(color);
         this.slider.setPosition(index * CELL_SIZE, 0);
     }
-
-    public setRandomColor() {
-        let index = Math.min(Math.floor(Math.random() * this.colorLen), this.colorLen - 1);
-        let color = COLORS[index];
-        this.slider.setPosition(index * CELL_SIZE, 0);
-        this.emit(COLOR_MOVE, color);
-    }
 }

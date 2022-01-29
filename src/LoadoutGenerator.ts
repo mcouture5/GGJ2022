@@ -20,6 +20,9 @@ export const BodyChoices = {
     [BodyPart.mouth]: ['mouth1', 'mouth2', 'mouth3', 'mouth4']
 };
 
+export const TRAITS = ['hat', 'safety', 'scary', 'party', 'hungry', 'friendly', 'fast', 'slippery'];
+export const STARTING_TRAITS = Phaser.Utils.Array.Shuffle([...TRAITS]).slice(0, 4);
+
 const nameConfig: Config = {
     dictionaries: [names, names],
     separator: ' ',
@@ -38,33 +41,6 @@ const bandConfig: Config = {
 export const COLORS = Phaser.Display.Color.ColorSpectrum(64);
 
 class LoadoutGeneratorImpl {
-    public getDefaultLoadout(): Loadout {
-        return {
-            name: this.getRandomName(),
-            bandName: this.getRandomBandName(),
-            face: {
-                [BodyPart.head]: {
-                    texture: 'head1'
-                },
-                [BodyPart.hair]: {
-                    texture: 'hair'
-                },
-                [BodyPart.eyebrows]: {
-                    texture: 'eyebrows'
-                },
-                [BodyPart.eyes]: {
-                    texture: 'eyes1'
-                },
-                [BodyPart.nose]: {
-                    texture: 'nose1'
-                },
-                [BodyPart.mouth]: {
-                    texture: 'mouth1'
-                }
-            }
-        };
-    }
-
     public getRandomName() {
         return uniqueNamesGenerator(nameConfig);
     }
@@ -98,11 +74,13 @@ class LoadoutGeneratorImpl {
         };
     }
 
-    public generateRandomLoadout(): Loadout {
+    public generateRandomLoadout(isMainCharacter: boolean = false): Loadout {
         return {
             name: this.getRandomName(),
             bandName: this.getRandomBandName(),
-            face: this.generateRandomFace()
+            face: this.generateRandomFace(),
+            dayTrait: isMainCharacter ? Phaser.Utils.Array.GetRandom(STARTING_TRAITS) : this.randomTrait(),
+            nightTrait: isMainCharacter ? Phaser.Utils.Array.GetRandom(STARTING_TRAITS) : this.randomTrait()
         };
     }
 
@@ -112,8 +90,8 @@ class LoadoutGeneratorImpl {
             face: loadout.face,
             isDriver: true,
             seatPosition: 1,
-            dayTrait: 'safety',
-            nightTrait: 'fast',
+            dayTrait: loadout.dayTrait,
+            nightTrait: loadout.nightTrait,
             instrument: 'vocal-guitar', // driver MUST be vocal-guitar
             happiness: 100
         };
@@ -124,28 +102,19 @@ class LoadoutGeneratorImpl {
             name: loadout.name,
             face: loadout.face,
             seatPosition: seatPosition,
-            dayTrait: this.randomTrait(),
-            nightTrait: this.randomTrait(),
+            dayTrait: loadout.dayTrait,
+            nightTrait: loadout.nightTrait,
             instrument: instrument,
             happiness: 100
         };
     }
 
     public randomTrait(): string {
-        return [
-            'hat',
-            'safety',
-            'scary',
-            'party',
-            'hungry',
-            'friendly',
-            'fast',
-            'slippery'
-        ][Phaser.Math.Between(0, 7)]
+        return Phaser.Utils.Array.GetRandom(TRAITS);
     }
 
     private getRandom(arr: any[]) {
-        return arr[Math.min(Math.floor(Math.random() * arr.length), arr.length - 1)];
+        return Phaser.Utils.Array.GetRandom(arr);
     }
 
     public getTint(color: Phaser.Types.Display.ColorObject) {
