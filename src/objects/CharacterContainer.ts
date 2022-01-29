@@ -4,11 +4,13 @@ import {DISPLAY_SIZE} from "../constants";
 import {TrackName} from "../MusicTracks";
 
 const INSTRUMENT_SCALE_FACTOR = 0.25;
+const DRAG_BOX = {x: -5, y: -5, width: 55, height: 80}
 
 export class CharacterContainer extends Phaser.GameObjects.Container {
 
     private characterState: CharacterState;
     private instrumentSprite: Phaser.GameObjects.Sprite;
+    private graphics: Phaser.GameObjects.Graphics;
 
     constructor(scene: Phaser.Scene, characterState: CharacterState) {
         super(scene);
@@ -17,7 +19,8 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         let passenger = scene.add.sprite(0, 0, 'passenger');
         this.add(passenger);
-        let face = LoadoutGenerator.createFaceSprite(scene, characterState.face).setScale(0.1, 0.1).setOrigin(0.45, 0.5);
+        let face = LoadoutGenerator.createFaceSprite(scene, characterState.face).setScale(0.1, 0.1)
+            .setOrigin(0.45, 0.5);
         this.add(face);
 
         this.moveToSeatPosition(characterState.seatPosition);
@@ -29,14 +32,47 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             .setScale(INSTRUMENT_SCALE_FACTOR, INSTRUMENT_SCALE_FACTOR)
             .setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle).setDepth(1000);
 
-        //this.setScale(2, 2);
+        this.graphics = scene.add.graphics();
+        this.graphics.lineStyle(2, 0xffff00);
+        this.graphics.strokeRect(this.x - DRAG_BOX.width / 2 + DRAG_BOX.x, this.y - DRAG_BOX.height / 2 + DRAG_BOX.y,
+            DRAG_BOX.width, DRAG_BOX.height);
 
         scene.add.existing(this);
+
+        this.setInteractive({
+            hitArea: new Phaser.Geom.Rectangle(-DRAG_BOX.width / 2 + DRAG_BOX.x, -DRAG_BOX.height / 2 + DRAG_BOX.x,
+                DRAG_BOX.width, DRAG_BOX.height),
+            hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+            useHandCursor: true,
+            draggable: true
+        });
+
+        scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
+            characterContainer.x = dragX;
+            characterContainer.y = dragY;
+        });
+
+        scene.input.on('drop', (pointer, characterContainer: this, dropZone) => {
+            characterContainer.x = dropZone.x;
+            characterContainer.y = dropZone.y;
+        });
+
+        scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
+            if (!dropped) {
+                characterContainer.x = characterContainer.input.dragStartX;
+                characterContainer.y = characterContainer.input.dragStartY;
+            }
+        });
     }
 
     update(): void {
         this.instrumentSprite.setPosition(this.x, this.y);
         this.instrumentSprite.setScale(this.scaleX * INSTRUMENT_SCALE_FACTOR, this.scaleY * INSTRUMENT_SCALE_FACTOR);
+
+        this.graphics.clear();
+        this.graphics.lineStyle(2, 0xffff00);
+        this.graphics.strokeRect(this.x - DRAG_BOX.width / 2 + DRAG_BOX.x, this.y - DRAG_BOX.height / 2 + DRAG_BOX.y,
+            DRAG_BOX.width, DRAG_BOX.height);
     }
 
     moveToSeatPosition(seatPosition: number): void {
