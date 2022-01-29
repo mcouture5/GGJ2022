@@ -11,11 +11,11 @@ export enum BodyPart {
 
 export const BodyChoices = {
     [BodyPart.head]: ['base1', 'base2'],
-    [BodyPart.hair]: ['hair1', 'hair2', 'hair3', 'hair4', 'hair5'],
+    [BodyPart.hair]: ['hair1', 'hair2', 'hair3', 'hair4', 'hair5', 'hair6'],
     [BodyPart.eyebrows]: ['eyebrows1', 'eyebrows2', 'eyebrows3', 'eyebrows4', 'eyebrows5', 'eyebrows6', 'eyebrows7'],
     [BodyPart.eyes]: ['eyes1', 'eyes2', 'eyes3', 'eyes4', 'eyes5', 'eyes6', 'eyes7'],
     [BodyPart.nose]: ['nose1', 'nose2', 'nose3', 'nose4'],
-    [BodyPart.mouth]: ['mouth1', 'mouth2']
+    [BodyPart.mouth]: ['mouth1', 'mouth2', 'mouth3', 'mouth4']
 };
 
 const nameConfig: Config = {
@@ -96,30 +96,36 @@ class LoadoutGeneratorImpl {
         };
     }
 
-    public genrateRandomLoadout() {}
+    public generateRandomLoadout(): Loadout {
+        return {
+            name: this.getRandomName(),
+            bandName: this.getRandomBandName(),
+            face: this.generateRandomFace()
+        };
+    }
 
     private getRandom(arr: any[]) {
         return arr[Math.min(Math.floor(Math.random() * arr.length), arr.length - 1)];
     }
 
-    private colorToNumber(color: Phaser.Types.Display.ColorObject) {
-        return Phaser.Display.Color.GetColor(color.r, color.g, color.b);
+    public getTint(color: Phaser.Types.Display.ColorObject) {
+        return Phaser.Display.Color.ObjectToColor(color).desaturate(50).color;
     }
 
     /**
      * Given a loadout, generates a single sprite with the combined textures to create a face.
      */
-    public createFaceSprite(scene: Phaser.Scene, loadout: Loadout) {
-        let head = new Phaser.GameObjects.Sprite(scene, 0, 0, loadout.face[BodyPart.head].texture)
-            .setTint(this.colorToNumber(loadout.face[BodyPart.head].tint))
+    public createFaceSprite(scene: Phaser.Scene, face: FaceConfig) {
+        let head = new Phaser.GameObjects.Sprite(scene, 0, 0, face[BodyPart.head].texture)
+            .setTint(this.getTint(face[BodyPart.head].tint))
             .setOrigin(0, 0);
-        let hair = new Phaser.GameObjects.Sprite(scene, 0, 0, loadout.face[BodyPart.hair].texture)
-            .setTint(this.colorToNumber(loadout.face[BodyPart.hair].tint))
+        let hair = new Phaser.GameObjects.Sprite(scene, 0, 0, face[BodyPart.hair].texture)
+            .setTint(this.getTint(face[BodyPart.hair].tint))
             .setOrigin(0, 0);
-        let eyebrows = new Phaser.GameObjects.Sprite(scene, 0, 0, loadout.face[BodyPart.eyebrows].texture).setOrigin(0, 0);
-        let eyes = new Phaser.GameObjects.Sprite(scene, 0, 0, loadout.face[BodyPart.eyes].texture).setOrigin(0, 0);
-        let nose = new Phaser.GameObjects.Sprite(scene, 0, 0, loadout.face[BodyPart.nose].texture).setOrigin(0, 0);
-        let mouth = new Phaser.GameObjects.Sprite(scene, 0, 0, loadout.face[BodyPart.mouth].texture).setOrigin(0, 0);
+        let eyebrows = new Phaser.GameObjects.Sprite(scene, 0, 0, face[BodyPart.eyebrows].texture).setOrigin(0, 0);
+        let eyes = new Phaser.GameObjects.Sprite(scene, 0, 0, face[BodyPart.eyes].texture).setOrigin(0, 0);
+        let nose = new Phaser.GameObjects.Sprite(scene, 0, 0, face[BodyPart.nose].texture).setOrigin(0, 0);
+        let mouth = new Phaser.GameObjects.Sprite(scene, 0, 0, face[BodyPart.mouth].texture).setOrigin(0, 0);
 
         let combined = new Phaser.GameObjects.RenderTexture(scene, 0, 0, 712, 843);
         combined.draw([head, eyebrows, eyes, hair, mouth, nose]);

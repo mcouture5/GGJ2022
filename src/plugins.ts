@@ -2,8 +2,8 @@ import { BodyPart } from './LoadoutGenerator';
 import Conversation from './objects/Conversation';
 import { Editor } from './objects/editor/Editor';
 
-Phaser.GameObjects.GameObjectFactory.register('conversation', function (this: Phaser.GameObjects.GameObjectFactory, key: string) {
-    const conversation = new Conversation(this.scene, key);
+Phaser.GameObjects.GameObjectFactory.register('conversation', function (this: Phaser.GameObjects.GameObjectFactory, key: string, speaker?: string) {
+    const conversation = new Conversation(this.scene, key, speaker);
     this.displayList.add(conversation);
     return conversation;
 });

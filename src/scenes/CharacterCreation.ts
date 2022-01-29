@@ -12,7 +12,6 @@ interface CharacterCreationConfig {
 }
 
 export class CharacterCreation extends Phaser.Scene {
-    private introducingCreator: boolean = false;
     private overlay: Phaser.GameObjects.Rectangle;
     private recordManager: Phaser.GameObjects.Sprite;
 
@@ -52,20 +51,23 @@ export class CharacterCreation extends Phaser.Scene {
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
         this.conversation = this.add.conversation('character_creation').setDepth(50).setX(40).setY(40);
 
+        // DEBUG
         //let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
         //this.add.existing(form);
+        //form.on(SIGNED_EVENT, () => this.beginGame());
+        // DEBUG
 
-        setTimeout(() => {
-            this.tweens.add({
-                targets: this.overlay,
-                alpha: { from: 0, to: 1 },
-                delay: 0,
-                duration: 500,
-                onComplete: () => {
-                    this.introduceCreation();
-                }
-            });
-        }, 1500);
+        this.tweens.add({
+            targets: this.overlay,
+            alpha: { from: 0, to: 1 },
+            delay: 1500,
+            duration: 500,
+            onComplete: () => {
+                // DEBUG - reverse
+                this.introduceCreation();
+                // DEBUG - reverse
+            }
+        });
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;
@@ -137,6 +139,18 @@ export class CharacterCreation extends Phaser.Scene {
                 instrument: 'vocal-guitar', // driver MUST be vocal-guitar
                 happiness: 100
             };
+            // Set up the first random band member
+            let randoLoadout = LoadoutGenerator.generateRandomLoadout();
+            let rando: CharacterState = {
+                name: randoLoadout.name,
+                face: randoLoadout.face,
+                isDriver: true,
+                seatPosition: 2,
+                dayTrait: 'hat',
+                nightTrait: 'scary',
+                instrument: 'melodica',
+                happiness: 100
+            };
             // stop music just in case fade isn't complete yet
             this.music.stop();
             // switch to GameScene
@@ -145,14 +159,7 @@ export class CharacterCreation extends Phaser.Scene {
                     // TODO: Replace fake characters with actual characters from character creation.
                     characters: [
                         you,
-                        {
-                            name: 'Bob',
-                            seatPosition: 2,
-                            dayTrait: 'hat',
-                            nightTrait: 'scary',
-                            instrument: 'melodica',
-                            happiness: 100
-                        },
+                        rando,
                         {
                             name: 'Casey',
                             seatPosition: 3,

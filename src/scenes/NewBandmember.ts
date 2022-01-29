@@ -1,6 +1,8 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { CharacterState, GameScene, GameState } from './GameScene';
 import { MusicTracks, TrackName } from '../MusicTracks';
+import LoadoutGenerator from '../LoadoutGenerator';
+import { Choice, CONVERSATION_COMPLETE, RESPONSE } from '../objects/Conversation';
 
 // configuration object passed into init()
 export interface NewBandmemberConfig {
@@ -11,6 +13,9 @@ export class NewBandmember extends Phaser.Scene {
 
     private gameState: GameState;
     private music: MusicTracks;
+    private portrait: Phaser.GameObjects.RenderTexture;
+    private bandmember: Loadout;
+    private isJoining: boolean;
 
     constructor() {
         super({
@@ -23,31 +28,58 @@ export class NewBandmember extends Phaser.Scene {
     }
 
     create(): void {
-        let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'office').setOrigin(0.5, 0.5);
+        let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bus_stop').setOrigin(0.5, 0.5);
         bg.displayWidth = DISPLAY_SIZE.width;
         bg.displayHeight = DISPLAY_SIZE.height;
+        let overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
+        this.bandmember = LoadoutGenerator.generateRandomLoadout();
 
-        let buttonContainer = this.add.container(250, 440);
-        let continueButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
-        continueButton.setInteractive({ useHandCursor: true });
-        continueButton.on('pointerup', () => {
-            // fade out camera and music
-            this.cameras.main.fadeOut(350, BACKGROUND_RBG.r, BACKGROUND_RBG.g, BACKGROUND_RBG.b);
-            this.music.fadeOut(this, 350);
-            // when camera fade is done...
-            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                // stop music just in case fade isn't complete yet
-                this.music.stop();
-                // switch back to GameScene
-                this.scene.start('GameScene', {gameState: this.gameState});
-            });
+        this.tweens.add({
+            targets: overlay,
+            alpha: { from: 0, to: 1 },
+            delay: 750,
+            duration: 500,
+            onComplete: () => {
+                this.portrait = LoadoutGenerator.createFaceSprite(this, this.bandmember.face)
+                    .setPosition(-DISPLAY_SIZE.width, -DISPLAY_SIZE.height).setOrigin(0.5, 0.5).setDepth(10);
+                this.add.existing(this.portrait);  
+                this.tweens.add({
+                    targets: this.portrait,
+                    x: 475,
+                    y: DISPLAY_SIZE.height - 250,
+                    duration: 500,
+                    onComplete: () => {
+                        let convo = this.add.conversation('bandmember_1', this.bandmember.name).setPosition(DISPLAY_SIZE.width / 2 - 250, 50).setDepth(20);
+                        convo.begin();
+                        convo.on(RESPONSE, (choice: Choice) => {
+                            this.isJoining = choice.data.answer === 'yes';
+                        });
+                        convo.on(CONVERSATION_COMPLETE, () => {
+                            this.tweens.add({
+                                targets: this.portrait,
+                                x: this.isJoining ? 475 : -DISPLAY_SIZE.width,
+                                y: this.isJoining ? DISPLAY_SIZE.height - 250 : -DISPLAY_SIZE.height,
+                                alpha: this.isJoining ? 0 : 1,
+                                duration: 350,
+                                onComplete: () => {
+                                    this.music.fadeOut(this, 350);
+                                    this.tweens.add({
+                                        targets: overlay,
+                                        alpha: 0,
+                                        duration: 350,
+                                        onComplete: () => {
+                                            this.music.stop();
+                                            // switch back to GameScene
+                                            this.scene.start('GameScene', {gameState: this.gameState});
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });          
+            }
         });
-        let startText = new Phaser.GameObjects.Text(this.scene.scene, 0, 0, 'Continue', {
-            fontFamily: 'Ace',
-            fontSize: '6rem',
-            color: '#000'
-        }).setOrigin(0.5, 0.5);
-        buttonContainer.add([continueButton, startText]);
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;

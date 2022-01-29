@@ -14,7 +14,7 @@ declare interface FaceConfig {
 
 declare interface Loadout {
     name: string;
-    bandName: string;
+    bandName: string; // Only used during character creation
     face: FaceConfig;
     personality?: any;
 }
@@ -28,7 +28,7 @@ declare interface IEditor extends Phaser.GameObjects.Container {
 
 declare namespace Phaser.GameObjects {
     interface GameObjectFactory {
-        conversation(key: string): IConversation;
+        conversation(key: string, speaker?: string): IConversation;
         editor(sprite: Phaser.GameObjects.Sprite, part: string, loadout: Loadout, useColorPicker?: boolean): IEditor;
     }
 }

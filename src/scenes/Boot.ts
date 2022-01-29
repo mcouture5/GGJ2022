@@ -44,6 +44,7 @@ export class Boot extends Phaser.Scene {
         this.load.pack('assets', './assets/pack.json');
         this.load.json('character_creation', './assets/conversations/intro.json');
         this.load.json('signed_contract', './assets/conversations/signedContract.json');
+        this.load.json('bandmember_1', './assets/conversations/bandmember_1.json');
     }
 
     create() {

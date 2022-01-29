@@ -93,7 +93,7 @@ export class PhotoId extends Phaser.GameObjects.Container {
         this.editorContainer.destroy();
         this.faceContainer.destroy();
 
-        let face = LoadoutGenerator.createFaceSprite(this.scene, this.loadout).setScale(PHOTO_SCALE, PHOTO_SCALE).setPosition(-42, -87);
+        let face = LoadoutGenerator.createFaceSprite(this.scene, this.loadout.face).setScale(PHOTO_SCALE, PHOTO_SCALE).setPosition(-42, -87);
         this.add(face);
         this.scene.tweens.add({
             targets: face,

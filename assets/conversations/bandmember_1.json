@@ -1,0 +1,17 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "Hi there! Looking for a friend?",
+            "choices": [
+                { "text": "Yeah!", "to": "welcome", "data": { "answer": "yes" } },
+                { "text": "Uhh... Pass.", "to": "no_thanks", "data": { "answer": "no" }  }
+            ]
+        },
+        "welcome": {
+            "text": "Alright!"
+        },
+        "no_thanks": {
+            "text": "Fine."
+        }
+    }
+}

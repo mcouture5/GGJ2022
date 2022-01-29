@@ -1,4 +1,4 @@
-import { BodyChoices, BodyPart } from '../../LoadoutGenerator';
+import LoadoutGenerator, { BodyChoices, BodyPart } from '../../LoadoutGenerator';
 import { ColorPicker, COLOR_MOVE } from './ColorPicker';
 
 export class Editor extends Phaser.GameObjects.Container implements IEditor {
@@ -57,8 +57,7 @@ export class Editor extends Phaser.GameObjects.Container implements IEditor {
             this.colorPicker = new ColorPicker(this.scene).setPosition(-64, 30);
             this.add(this.colorPicker);
             this.colorPicker.on(COLOR_MOVE, (color: Phaser.Types.Display.ColorObject) => {
-                let colorNum = Phaser.Display.Color.GetColor(color.r, color.g, color.b);
-                this.sprite.setTint(colorNum);
+                this.sprite.setTint(LoadoutGenerator.getTint(color));
                 this.loadout.face[this.part].tint = color;
             });
             this.colorPicker.setRandomColor();
@@ -77,8 +76,7 @@ export class Editor extends Phaser.GameObjects.Container implements IEditor {
 
         // Tint
         if (part.tint) {
-            let colorNum = Phaser.Display.Color.GetColor(part.tint.r, part.tint.g, part.tint.b);
-            this.sprite.setTint(colorNum);
+            this.sprite.setTint(LoadoutGenerator.getTint(part.tint));
             this.colorPicker.setColor(part.tint);
         }
     }

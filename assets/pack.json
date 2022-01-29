@@ -224,6 +224,11 @@
                 "type": "image",
                 "key": "dice",
                 "url": "./assets/images/dice.png"
+            },
+            {
+                "type": "image",
+                "key": "bus_stop",
+                "url": "./assets/images/bus_stop.jpg"
             }
         ]
     },
@@ -336,6 +341,11 @@
             },
             {
                 "type": "image",
+                "key": "hair6",
+                "url": "./assets/images/character/hair6.png"
+            },
+            {
+                "type": "image",
                 "key": "mouth1",
                 "url": "./assets/images/character/mouth1.png"
             },
@@ -343,6 +353,16 @@
                 "type": "image",
                 "key": "mouth2",
                 "url": "./assets/images/character/mouth2.png"
+            },
+            {
+                "type": "image",
+                "key": "mouth3",
+                "url": "./assets/images/character/mouth3.png"
+            },
+            {
+                "type": "image",
+                "key": "mouth4",
+                "url": "./assets/images/character/mouth4.png"
             },
             {
                 "type": "image",

@@ -8,11 +8,13 @@ interface IConversationObject {
     to?: string;
 }
 
-interface Choice {
+export interface Choice {
     text: string;
     to: string;
+    data?: any;
 }
 
+export const RESPONSE = 'conversation_response';
 export const CONVERSATION_COMPLETE = 'conversation_complete';
 const BASE_BUTTON_Y = 600;
 
@@ -24,9 +26,11 @@ const BASE_BUTTON_Y = 600;
  */
 export default class Conversation extends Phaser.GameObjects.Container implements IConversation {
     private conversation: { [key: string]: IConversationObject };
+    private speaker: string;
     private activeConvo: IConversationObject;
 
     private bubble: Phaser.GameObjects.Shape;
+    private speakerTitle: Phaser.GameObjects.Text;
     private text: Phaser.GameObjects.Text;
     private speech: string;
     private boxWidth: number;
@@ -35,30 +39,40 @@ export default class Conversation extends Phaser.GameObjects.Container implement
     private responseButtons: SpeechButton[];
     private nextButton: Button;
 
-    constructor(scene: Phaser.Scene, key: string) {
+    constructor(scene: Phaser.Scene, key: string, speaker?: string) {
         super(scene);
         this.conversation = this.scene.cache.json.get(key).conversation;
+        this.speaker = speaker || this.scene.cache.json.get(key).speaker;
         this.boxWidth = 1024;
         this.boxHeight = 768;
-        this.bubble = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, this.boxWidth, 0, BACKGROUND_HEX_COLOR).setStrokeStyle(0x000000, 1).setOrigin(0, 0);
+        this.bubble = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, this.boxWidth, 0, BACKGROUND_HEX_COLOR).setStrokeStyle(0x000000, 2).setOrigin(0, 0);
         this.add(this.bubble);
-        this.text = new Phaser.GameObjects.Text(this.scene, 10, 10, '', {
+        
+        this.speakerTitle = new Phaser.GameObjects.Text(this.scene, 10, 10, this.speaker, {
             fontFamily: 'Octanis',
             fontSize: '3rem',
-            color: '#000000',
-            wordWrap: { width: this.boxWidth - 10, useAdvancedWrap: true }
-        }).setAlpha(0);
+            color: '#000000'
+        }).setAlpha(1);
+        this.add(this.speakerTitle);
+        this.text = new Phaser.GameObjects.Text(this.scene, 50, 80, '', {
+            fontFamily: 'Octanis',
+            fontSize: '2.5rem',
+            color: '#666666',
+            wordWrap: { width: this.boxWidth - 60, useAdvancedWrap: true }
+        }).setAlpha(1);
         this.add(this.text);
+
         this.responseButtons = [];
         this.nextButton = new Button(this.scene, 'Next').setAlpha(0).setPosition(this.boxWidth - 75, this.boxHeight - 50);
         this.nextButton.on(BUTTON_CLICKED, () => {
             this.advanceConversation(this.activeConvo.to);
         });
         this.add(this.nextButton);
+        this.setAlpha(0);
     }
 
     begin() {
-        this.bubble.setAlpha(1);
+        this.setAlpha(1);
         this.scene.tweens.add({
             targets: [this.bubble],
             height: this.boxHeight,
@@ -89,12 +103,12 @@ export default class Conversation extends Phaser.GameObjects.Container implement
         let choices = this.activeConvo.choices || [];
         let yPos = BASE_BUTTON_Y;
         for (let choice of choices) {
-            let data = { text: choice.text, key: choice.to };
             let speechButton = new SpeechButton({
                 scene: this.scene,
-                data: data,
-                callback: (to: string) => {
-                    this.advanceConversation(to);
+                data: choice,
+                callback: (selection: Choice) => {
+                    this.emit(RESPONSE, selection);
+                    this.advanceConversation(selection.to);
                 }
             });
             speechButton.setX(this.boxWidth / 2).setY(yPos);
@@ -140,7 +154,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
             height: 0,
             duration: 200,
             onComplete: () => {
-                this.bubble.setAlpha(0);
+                this.setAlpha(0);
                 this.emit(CONVERSATION_COMPLETE);
                 this.destroy();
             }
