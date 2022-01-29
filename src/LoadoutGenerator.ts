@@ -1,6 +1,7 @@
-import { uniqueNamesGenerator, Config, adjectives, colors, animals, names } from 'unique-names-generator';
+import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 import {CharacterState} from "./scenes/GameScene";
 import {TrackName} from "./MusicTracks";
+import { NAMES } from './names';
 
 export enum BodyPart {
     'head' = 'head',
@@ -24,7 +25,7 @@ export const TRAITS = ['hat', 'safety', 'scary', 'party', 'hungry', 'friendly', 
 export const STARTING_TRAITS = Phaser.Utils.Array.Shuffle([...TRAITS]).slice(0, 4);
 
 const nameConfig: Config = {
-    dictionaries: [names, names],
+    dictionaries: [NAMES, NAMES],
     separator: ' ',
     length: 2,
     style: 'capital'

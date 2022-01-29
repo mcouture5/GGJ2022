@@ -134,10 +134,6 @@ export class GameScene extends Phaser.Scene {
         this.dayOverlay = this.add.sprite(centerX, centerY, 'dayoverlay').setOrigin(0.5, 0.5).setAlpha(1);
         this.nightOverlay = this.add.sprite(centerX, centerY, 'nightoverlay').setOrigin(0.5, 0.5).setAlpha(0);
 
-        // DEBUG
-        //this.scene.start('NewBandmember', { gameState: this.gameState } as GigConfig);
-        // DEBUG
-
         // set up day/night cycles. 6 transitions 30 seconds apart, creating 3 in-game days that elapse in 3 irl
         // minutes. the last transition marks the end of the last night and triggers a major event
         // (gig or new band member).

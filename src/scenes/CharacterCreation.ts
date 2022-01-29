@@ -51,7 +51,7 @@ export class CharacterCreation extends Phaser.Scene {
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
         this.conversation = this.add.conversation(800, 600, 'character_creation').setDepth(50).setPosition(80, 80);
 
-        // DEBUG
+        // DEBUG - uncomment for dev
         //let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
         //this.add.existing(form);
         //form.on(SIGNED_EVENT, () => this.beginGame());
@@ -63,9 +63,9 @@ export class CharacterCreation extends Phaser.Scene {
             delay: 1500,
             duration: 500,
             onComplete: () => {
-                // DEBUG - reverse
+                // DEBUG - comment for dev
                 this.introduceCreation();
-                // DEBUG - reverse
+                // DEBUG
             }
         });
 
