@@ -73,7 +73,7 @@ export class CharacterCreation extends Phaser.Scene {
         this.sound.pauseOnBlur = false;
         // start playing music tracks if not already playing. DO NOT fade it in.
         if (!this.music || !this.music.isPlaying) {
-            this.music = this.sound.add('broken-records', { volume: 0.1, loop: true });
+            this.music = this.sound.add('broken-records', { volume: 0.2, loop: true });
             this.music.play();
         }
     }
