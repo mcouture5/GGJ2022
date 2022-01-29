@@ -3,6 +3,7 @@ import { MusicTracks, TrackName } from '../MusicTracks';
 import { GigConfig } from './Gig';
 import LoadoutGenerator from "../LoadoutGenerator";
 import {CharacterContainer} from "../objects/CharacterContainer";
+import HUD from '../hud/HUD';
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
 const DAY_NIGHT_FADE_MILLIS = 1000;
@@ -65,6 +66,7 @@ export class GameScene extends Phaser.Scene {
     private truckTire2: Phaser.GameObjects.Sprite;
     private dayOverlay: Phaser.GameObjects.Sprite;
     private nightOverlay: Phaser.GameObjects.Sprite;
+    private hud: HUD;
 
     private gameState: GameState;
     private dayNightTimer: Phaser.Time.TimerEvent;
@@ -168,6 +170,10 @@ export class GameScene extends Phaser.Scene {
         // set up sound effects
         this.morningSound = this.sound.add('morning', { volume: 0.07 });
         this.nightSound = this.sound.add('night', { volume: 1 });
+
+        // HUD
+        this.hud = new HUD(this, this.gameState);
+        this.add.existing(this.hud);
     }
 
     update(): void {
@@ -178,6 +184,7 @@ export class GameScene extends Phaser.Scene {
         for (let characterContainer of this.characterContainers) {
             characterContainer.update();
         }
+        this.hud.update();
 
         this.truckTire1.angle -= 15;
         this.truckTire2.angle -= 15;
