@@ -58,6 +58,7 @@ export class GameScene extends Phaser.Scene {
     private mountains: Phaser.GameObjects.TileSprite;
     private hills: Phaser.GameObjects.TileSprite;
     private grass: Phaser.GameObjects.TileSprite;
+    private road: Phaser.GameObjects.Sprite;
     private characterContainers: CharacterContainer[];
     private trailer: Phaser.GameObjects.Sprite;
     private trailerTire: Phaser.GameObjects.Sprite;
@@ -104,14 +105,7 @@ export class GameScene extends Phaser.Scene {
         this.mountains = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'mountains');
         this.hills = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'hills');
         this.grass = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass');
-
-
-
-        this.characterContainers = [];
-        for (let character of this.gameState.characters) {
-            let characterContainer = new CharacterContainer(this, character);
-            this.characterContainers.push(characterContainer);
-        }
+        this.road = this.add.sprite(centerX, centerY, 'road').setOrigin(0.5, 0.5);
 
         this.trailer = this.add.sprite(centerX + 226, centerY, 'trailer').setOrigin(0.5, 0.5);
         this.trailerTire = this.add.sprite(centerX + 230, centerY + 55, 'trailertire').setOrigin(0.5, 0.5);
@@ -119,6 +113,18 @@ export class GameScene extends Phaser.Scene {
         this.truck = this.add.sprite(centerX - 230, centerY, 'truck').setOrigin(0.5, 0.5);
         this.truckTire1 = this.add.sprite(centerX - 400, centerY + 55, 'tire').setOrigin(0.5, 0.5);
         this.truckTire2 = this.add.sprite(centerX - 90, centerY + 55, 'tire').setOrigin(0.5, 0.5);
+
+        this.characterContainers = [];
+        for (let character of this.gameState.characters) {
+            let characterContainer = new CharacterContainer({
+                scene: this,
+                trailer: this.trailer,
+                truck: this.truck,
+                characterState: character,
+                characterStates: this.gameState.characters
+            });
+            this.characterContainers.push(characterContainer);
+        }
 
         // get truck shaking
         this.truck.angle = -0.35;
