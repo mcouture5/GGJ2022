@@ -107,7 +107,7 @@ export class GameScene extends Phaser.Scene {
 
         this.characterContainers = [];
         for (let character of this.gameState.characters) {
-            let characterContainer = new CharacterContainer(this, character);
+            let characterContainer = new CharacterContainer(this, character, this.gameState.characters);
             this.characterContainers.push(characterContainer);
         }
 

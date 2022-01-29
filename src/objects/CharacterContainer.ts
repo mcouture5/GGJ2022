@@ -15,13 +15,19 @@ const SEAT_5_DROP_ZONE = {x: 100, y: -100, width: 350, height: 220};
 export class CharacterContainer extends Phaser.GameObjects.Container {
 
     private characterState: CharacterState;
+    private characterStates: CharacterState[];
     private instrumentSprite: Phaser.GameObjects.Sprite;
     private graphics: Phaser.GameObjects.Graphics;
 
-    constructor(scene: Phaser.Scene, characterState: CharacterState) {
+    private isDragging: boolean;
+
+    constructor(scene: Phaser.Scene, characterState: CharacterState, characterStates: CharacterState[]) {
         super(scene);
 
         this.characterState = characterState;
+        this.characterStates = characterStates;
+
+        this.isDragging = false;
 
         this.graphics = scene.add.graphics();
 
@@ -42,41 +48,59 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         scene.add.existing(this);
 
-        this.setInteractive({
-            hitArea: new Phaser.Geom.Rectangle(-DRAG_BOX.width / 2 + DRAG_BOX.x, -DRAG_BOX.height / 2 + DRAG_BOX.x,
-                DRAG_BOX.width, DRAG_BOX.height),
-            hitAreaCallback: Phaser.Geom.Rectangle.Contains,
-            useHandCursor: true,
-            draggable: true
-        });
+        // only enable dragging and dropping if not the driver
+        if (!this.characterState.isDriver) {
+            this.setInteractive({
+                hitArea: new Phaser.Geom.Rectangle(-DRAG_BOX.width / 2 + DRAG_BOX.x, -DRAG_BOX.height / 2 + DRAG_BOX.x,
+                    DRAG_BOX.width, DRAG_BOX.height),
+                hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+                useHandCursor: true,
+                draggable: true
+            });
 
-        scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
-            characterContainer.x = dragX;
-            characterContainer.y = dragY;
-        });
-        scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
-            let centerX = DISPLAY_SIZE.width / 2;
-            let centerY = DISPLAY_SIZE.height / 2;
-            if (new Phaser.Geom.Rectangle(centerX + SEAT_1_DROP_ZONE.x, centerY + SEAT_1_DROP_ZONE.y,
-                    SEAT_1_DROP_ZONE.width, SEAT_1_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
-                characterContainer.moveToSeatPosition(1);
-            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_2_DROP_ZONE.x, centerY + SEAT_2_DROP_ZONE.y,
-                    SEAT_2_DROP_ZONE.width, SEAT_2_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
-                characterContainer.moveToSeatPosition(2);
-            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_3_DROP_ZONE.x, centerY + SEAT_3_DROP_ZONE.y,
-                    SEAT_3_DROP_ZONE.width, SEAT_3_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
-                characterContainer.moveToSeatPosition(3);
-            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_4_DROP_ZONE.x, centerY + SEAT_4_DROP_ZONE.y,
-                    SEAT_4_DROP_ZONE.width, SEAT_4_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
-                characterContainer.moveToSeatPosition(4);
-            } else if (new Phaser.Geom.Rectangle(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y,
-                    SEAT_5_DROP_ZONE.width, SEAT_5_DROP_ZONE.height).contains(pointer.x, pointer.y)) {
-                characterContainer.moveToSeatPosition(5);
-            } else {
-                characterContainer.x = characterContainer.input.dragStartX;
-                characterContainer.y = characterContainer.input.dragStartY;
-            }
-        });
+            scene.input.on('dragstart', (pointer, characterContainer: this) => {
+                characterContainer.isDragging = true;
+            });
+            scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
+                characterContainer.x = dragX;
+                characterContainer.y = dragY;
+            });
+            scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
+                // 'dragend' has tons of duplicate events. STOP if we've already handled this.
+                if (!characterContainer.isDragging) {
+                    return;
+                }
+
+                let centerX = DISPLAY_SIZE.width / 2;
+                let centerY = DISPLAY_SIZE.height / 2;
+                if (new Phaser.Geom.Rectangle(centerX + SEAT_1_DROP_ZONE.x, centerY + SEAT_1_DROP_ZONE.y,
+                        SEAT_1_DROP_ZONE.width, SEAT_1_DROP_ZONE.height).contains(pointer.x, pointer.y) &&
+                        characterContainer.seatPositionIsOpen(1)) {
+                    characterContainer.moveToSeatPosition(1);
+                } else if (new Phaser.Geom.Rectangle(centerX + SEAT_2_DROP_ZONE.x, centerY + SEAT_2_DROP_ZONE.y,
+                        SEAT_2_DROP_ZONE.width, SEAT_2_DROP_ZONE.height).contains(pointer.x, pointer.y) &&
+                        characterContainer.seatPositionIsOpen(2)) {
+                    characterContainer.moveToSeatPosition(2);
+                } else if (new Phaser.Geom.Rectangle(centerX + SEAT_3_DROP_ZONE.x, centerY + SEAT_3_DROP_ZONE.y,
+                        SEAT_3_DROP_ZONE.width, SEAT_3_DROP_ZONE.height).contains(pointer.x, pointer.y) &&
+                        characterContainer.seatPositionIsOpen(3)) {
+                    characterContainer.moveToSeatPosition(3);
+                } else if (new Phaser.Geom.Rectangle(centerX + SEAT_4_DROP_ZONE.x, centerY + SEAT_4_DROP_ZONE.y,
+                        SEAT_4_DROP_ZONE.width, SEAT_4_DROP_ZONE.height).contains(pointer.x, pointer.y) &&
+                        characterContainer.seatPositionIsOpen(4)) {
+                    characterContainer.moveToSeatPosition(4);
+                } else if (new Phaser.Geom.Rectangle(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y,
+                        SEAT_5_DROP_ZONE.width, SEAT_5_DROP_ZONE.height).contains(pointer.x, pointer.y) &&
+                        characterContainer.seatPositionIsOpen(5)) {
+                    characterContainer.moveToSeatPosition(5);
+                } else {
+                    characterContainer.x = characterContainer.input.dragStartX;
+                    characterContainer.y = characterContainer.input.dragStartY;
+                }
+
+                characterContainer.isDragging = false;
+            });
+        }
     }
 
     update(): void {
@@ -100,6 +124,15 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             SEAT_4_DROP_ZONE.height);
         this.graphics.strokeRect(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y, SEAT_5_DROP_ZONE.width,
             SEAT_5_DROP_ZONE.height);
+    }
+
+    seatPositionIsOpen(seatPosition: number): boolean {
+        for (let characterState of this.characterStates) {
+            if (characterState.seatPosition === seatPosition) {
+                return false;
+            }
+        }
+        return true;
     }
 
     moveToSeatPosition(seatPosition: number): void {
