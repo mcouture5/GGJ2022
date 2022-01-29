@@ -229,6 +229,11 @@
                 "type": "image",
                 "key": "bus_stop",
                 "url": "./assets/images/bus_stop.jpg"
+            },
+            {
+                "type": "image",
+                "key": "passenger",
+                "url": "./assets/images/passanger.png"
             }
         ]
     },

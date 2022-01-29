@@ -156,12 +156,14 @@ export class CharacterCreation extends Phaser.Scene {
             // switch to GameScene
             this.scene.start('GameScene', {
                 gameState: {
+                    bandName: this.loadout.bandName,
                     // TODO: Replace fake characters with actual characters from character creation.
                     characters: [
                         you,
                         rando,
                         {
                             name: 'Casey',
+                            face: LoadoutGenerator.generateRandomFace(),
                             seatPosition: 3,
                             dayTrait: 'party',
                             nightTrait: 'hungry',
@@ -170,6 +172,7 @@ export class CharacterCreation extends Phaser.Scene {
                         },
                         {
                             name: 'Danielle',
+                            face: LoadoutGenerator.generateRandomFace(),
                             seatPosition: 4,
                             dayTrait: 'friendly',
                             nightTrait: 'slippery',
