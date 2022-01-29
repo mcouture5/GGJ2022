@@ -105,7 +105,7 @@ export class GameScene extends Phaser.Scene {
         this.mountains = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'mountains');
         this.hills = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'hills');
         this.grass = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass');
-        this.road = this.add.sprite(centerX, centerY, 'road').setOrigin(0.5, 0.5);
+        this.road = this.add.sprite(centerX, centerY + 45, 'road').setOrigin(0.5, 0.5);
 
         this.trailer = this.add.sprite(centerX + 226, centerY, 'trailer').setOrigin(0.5, 0.5);
         this.trailerTire = this.add.sprite(centerX + 230, centerY + 55, 'trailertire').setOrigin(0.5, 0.5);
