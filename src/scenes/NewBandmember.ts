@@ -72,7 +72,7 @@ export class NewBandmember extends Phaser.Scene {
                                             // if new bandmember is joining...
                                             if (this.isJoining) {
                                                 // if party is full, kick someone out first
-                                                if (this.gameState.characters.length > 4) {
+                                                if (this.gameState.characters.length >= 4) {
                                                     let tossThisCharacter = Phaser.Math.Between(1, 3);
                                                     this.gameState.characters.splice(tossThisCharacter, 1);
                                                 }
