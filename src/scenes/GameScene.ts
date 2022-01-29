@@ -2,6 +2,7 @@ import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { MusicTracks, TrackName } from '../MusicTracks';
 import { GigConfig } from './Gig';
 import LoadoutGenerator from "../LoadoutGenerator";
+import {CharacterContainer} from "../objects/CharacterContainer";
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
 const DAY_NIGHT_FADE_MILLIS = 1000;
@@ -56,7 +57,7 @@ export class GameScene extends Phaser.Scene {
     private mountains: Phaser.GameObjects.TileSprite;
     private hills: Phaser.GameObjects.TileSprite;
     private grass: Phaser.GameObjects.TileSprite;
-    private characterSprites: Phaser.GameObjects.Sprite[];
+    private characterContainers: CharacterContainer[];
     private trailer: Phaser.GameObjects.Sprite;
     private trailerTire: Phaser.GameObjects.Sprite;
     private truck: Phaser.GameObjects.Sprite;
@@ -102,10 +103,12 @@ export class GameScene extends Phaser.Scene {
         this.hills = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'hills');
         this.grass = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass');
 
-        this.characterSprites = [];
+
+
+        this.characterContainers = [];
         for (let character of this.gameState.characters) {
-            let face = LoadoutGenerator.createFaceSprite(this, character.face).setScale(27, 27).setPosition(centerX, centerY - 500);
-            this.characterSprites.push(this.add.sprite(centerX, centerY, 'passenger'));
+            let characterContainer = new CharacterContainer(this, character);
+            this.characterContainers.push(characterContainer);
         }
 
         this.trailer = this.add.sprite(centerX + 226, centerY, 'trailer').setOrigin(0.5, 0.5);

@@ -234,6 +234,31 @@
                 "type": "image",
                 "key": "passenger",
                 "url": "./assets/images/passanger.png"
+            },
+            {
+                "type": "image",
+                "key": "rhythm",
+                "url": "./assets/images/drumsticks.png"
+            },
+            {
+                "type": "image",
+                "key": "melodica",
+                "url": "./assets/images/harmonica.png"
+            },
+            {
+                "type": "image",
+                "key": "ocarina",
+                "url": "./assets/images/ocarina.png"
+            },
+            {
+                "type": "image",
+                "key": "uke",
+                "url": "./assets/images/ukulele.png"
+            },
+            {
+                "type": "image",
+                "key": "vocal-guitar",
+                "url": "./assets/images/guitarandmic.png"
             }
         ]
     },
