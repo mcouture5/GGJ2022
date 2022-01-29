@@ -194,6 +194,11 @@
                 "type": "image",
                 "key": "signed",
                 "url": "./assets/images/signed.png"
+            },
+            {
+                "type": "image",
+                "key": "dice",
+                "url": "./assets/images/dice.png"
             }
         ]
     },

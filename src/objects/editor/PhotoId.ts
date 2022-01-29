@@ -58,11 +58,28 @@ export class PhotoId extends Phaser.GameObjects.Container {
             .setScale(PHOTO_SCALE, PHOTO_SCALE);
         this.faceContainer.add([this.head, this.eyebrows, this.eyes, this.hair, this.mouth, this.nose]);
 
+        // Rando
+        this.add(
+            new Phaser.GameObjects.Sprite(this.scene, EDITOR_X, EDITOR_Y - 40, 'dice')
+                .setOrigin(0.5, 0.5)
+                .setScale(0.35, 0.35)
+                .setInteractive({ useHandCursor: true })
+                .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+                    this.loadout.face = LoadoutGenerator.generateRandomFace();
+                    this.headEditor.setValue(this.loadout.face.head);
+                    this.hairEditor.setValue(this.loadout.face.hair);
+                    this.eyebrowEditor.setValue(this.loadout.face.eyebrows);
+                    this.eyesEditor.setValue(this.loadout.face.eyes);
+                    this.noseEditor.setValue(this.loadout.face.nose);
+                    this.mouthEditor.setValue(this.loadout.face.mouth);
+                })
+        );
+
         // Editors
         this.editorContainer = new Phaser.GameObjects.Container(this.scene);
         this.add(this.editorContainer);
-        this.headEditor = this.scene.add.editor(this.head, BodyPart.head, this.loadout, true).setPosition(EDITOR_X, EDITOR_Y + EDITOR_SPACING * 0);
-        this.hairEditor = this.scene.add.editor(this.hair, BodyPart.hair, this.loadout, true).setPosition(EDITOR_X, EDITOR_Y + EDITOR_SPACING * 1.5);
+        this.headEditor = this.scene.add.editor(this.head, BodyPart.head, this.loadout, true).setPosition(EDITOR_X, EDITOR_Y + EDITOR_SPACING * 0.5);
+        this.hairEditor = this.scene.add.editor(this.hair, BodyPart.hair, this.loadout, true).setPosition(EDITOR_X, EDITOR_Y + EDITOR_SPACING * 1.75);
         this.eyebrowEditor = this.scene.add
             .editor(this.eyebrows, BodyPart.eyebrows, this.loadout)
             .setPosition(EDITOR_X - 360, EDITOR_Y + EDITOR_SPACING * 3 + 20);

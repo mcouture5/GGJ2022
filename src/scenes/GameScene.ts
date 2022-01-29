@@ -8,7 +8,7 @@ const DAY_NIGHT_FADE_MILLIS = 1000;
 // configuration object passed into init()
 export interface GameSceneConfig {
     // the game state from the previous scene
-    gameState: GameState
+    gameState: GameState;
 }
 
 export interface GameState {
@@ -23,10 +23,14 @@ export interface GameState {
     // the major events left. defaults to a copy of the MAJOR_EVENTS list. makes the CPU randomness feel more like
     // human randomness.
     majorEventsLeft?: MajorEvent[];
+    bandName: string;
 }
 
 export interface CharacterState {
     name: string;
+    // We cant just keep a reference to a sprite because that sprite is technically owned by the scene that created it.
+    // Instead we save the confgiuration so we can create a new one on the fly.
+    face: FaceConfig;
     // defaults to false
     isDriver?: boolean;
     // TODO: establish a numbering system for the seat positions
@@ -47,7 +51,6 @@ export const enum MajorEvent {
 export const MAJOR_EVENTS = [MajorEvent.Gig, MajorEvent.NewBandmember];
 
 export class GameScene extends Phaser.Scene {
-
     private sky: Phaser.GameObjects.Sprite;
     private mountains: Phaser.GameObjects.TileSprite;
     private hills: Phaser.GameObjects.TileSprite;
@@ -71,11 +74,14 @@ export class GameScene extends Phaser.Scene {
 
     init(config: GameSceneConfig): void {
         // apply defaults to gameState config
-        this.gameState = Object.assign({
-            dayNum: 1,
-            gigNum: 1,
-            majorEventsLeft: MAJOR_EVENTS.slice()
-        }, config.gameState);
+        this.gameState = Object.assign(
+            {
+                dayNum: 1,
+                gigNum: 1,
+                majorEventsLeft: MAJOR_EVENTS.slice()
+            },
+            config.gameState
+        );
     }
 
     create(): void {
@@ -86,8 +92,14 @@ export class GameScene extends Phaser.Scene {
         this.grass = this.add.tileSprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass');
 
         // start with day before going to night
-        this.dayOverlay = this.add.sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'dayoverlay').setOrigin(0.5, 0.5).setAlpha(1);
-        this.nightOverlay = this.add.sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'nightoverlay').setOrigin(0.5, 0.5).setAlpha(0);
+        this.dayOverlay = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'dayoverlay')
+            .setOrigin(0.5, 0.5)
+            .setAlpha(1);
+        this.nightOverlay = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'nightoverlay')
+            .setOrigin(0.5, 0.5)
+            .setAlpha(0);
 
         // set up day/night cycles. 6 transitions 30 seconds apart, creating 3 in-game days that elapse in 3 irl
         // minutes. the last transition marks the end of the last night and triggers a major event
@@ -121,8 +133,8 @@ export class GameScene extends Phaser.Scene {
             this.music.fadeIn(this, fullVolume, fadeMillis);
         }
         // set up sound effects
-        this.morningSound = this.sound.add('morning', {volume: 0.5});
-        this.nightSound = this.sound.add('night', {volume: 1});
+        this.morningSound = this.sound.add('morning', { volume: 0.5 });
+        this.nightSound = this.sound.add('night', { volume: 1 });
     }
 
     update(): void {
@@ -202,7 +214,7 @@ export class GameScene extends Phaser.Scene {
                 let majorEvent = this.gameState.majorEventsLeft[majorEventIndex];
                 // remove 1 event from majorEventsLeft
                 this.gameState.majorEventsLeft.splice(majorEventIndex, 1);
-                this.switchToMajorEvent(majorEvent)
+                this.switchToMajorEvent(majorEvent);
             }
         });
     }
@@ -221,11 +233,14 @@ export class GameScene extends Phaser.Scene {
      */
     private gigNumToFullVolume(gigNum: any): number {
         let gigNumMod3 = gigNum % 3;
-        if (gigNumMod3 === 1) { // 1st gig
+        if (gigNumMod3 === 1) {
+            // 1st gig
             return 0.2;
-        } else if (gigNumMod3 === 2) { // 2nd gig
+        } else if (gigNumMod3 === 2) {
+            // 2nd gig
             return 0.3;
-        } else if (gigNumMod3 === 0) { // 3rd gig
+        } else if (gigNumMod3 === 0) {
+            // 3rd gig
             return 0.2;
         }
     }
@@ -235,11 +250,14 @@ export class GameScene extends Phaser.Scene {
      */
     static gigNumToSongName(gigNum: number): string {
         let gigNumMod3 = gigNum % 3;
-        if (gigNumMod3 === 1) { // 1st gig
+        if (gigNumMod3 === 1) {
+            // 1st gig
             return 'duality';
-        } else if (gigNumMod3 === 2) { // 2nd gig
+        } else if (gigNumMod3 === 2) {
+            // 2nd gig
             return 'today';
-        } else if (gigNumMod3 === 0) { // 3rd gig
+        } else if (gigNumMod3 === 0) {
+            // 3rd gig
             return 'scootch-over';
         }
     }
@@ -247,8 +265,8 @@ export class GameScene extends Phaser.Scene {
     /**
      * Converts a list of character states to the appropriate trackFlags object.
      */
-    static charactersToTrackFlags(characters: CharacterState[]): {[key in TrackName]?: boolean} {
-        let trackFlags: {[key in TrackName]?: boolean} = {};
+    static charactersToTrackFlags(characters: CharacterState[]): { [key in TrackName]?: boolean } {
+        let trackFlags: { [key in TrackName]?: boolean } = {};
         for (let character of characters) {
             trackFlags[character.instrument] = true;
         }

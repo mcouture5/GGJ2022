@@ -1,9 +1,10 @@
+import LoadoutGenerator from '../../LoadoutGenerator';
 import { PhotoId } from './PhotoId';
 
 const LEFT_MARGIN = 50;
 
 const INPUT_STYPE = {
-    width: '480px',
+    width: '460px',
     height: '42px',
     font: '2rem Octanis',
     padding: '6px'
@@ -21,9 +22,8 @@ export const SIGNED_EVENT = 'form-signed';
 export class Form extends Phaser.GameObjects.Container {
     private nameInput: Phaser.GameObjects.DOMElement;
     private bandNameInput: Phaser.GameObjects.DOMElement;
-
-    private enteredName: string;
-    private bandName: string;
+    private nameDice: Phaser.GameObjects.Sprite;
+    private bandDice: Phaser.GameObjects.Sprite;
 
     private photo: PhotoId;
     private loadout: Loadout;
@@ -52,6 +52,16 @@ export class Form extends Phaser.GameObjects.Container {
         this.nameInput.addListener('input');
         this.nameInput.on('input', (event) => this.onNameChange(event));
         this.add(this.nameInput);
+        (document.getElementById('character-name-input') as any).value = this.loadout.name;
+        this.nameDice = new Phaser.GameObjects.Sprite(this.scene, LEFT_MARGIN + 600, 100, 'dice')
+            .setOrigin(0.5, 0.5)
+            .setScale(0.2, 0.2)
+            .setInteractive({ useHandCursor: true })
+            .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+                this.loadout.name = LoadoutGenerator.getRandomName();
+                (document.getElementById('character-name-input') as any).value = this.loadout.name;
+            });
+        this.add(this.nameDice);
 
         // Band name
         this.add(
@@ -65,6 +75,16 @@ export class Form extends Phaser.GameObjects.Container {
         this.bandNameInput.addListener('input');
         this.bandNameInput.on('input', (event) => this.onBandNameChange(event));
         this.add(this.bandNameInput);
+        (document.getElementById('band-name-input') as any).value = this.loadout.bandName;
+        this.bandDice = new Phaser.GameObjects.Sprite(this.scene, LEFT_MARGIN + 600, 200, 'dice')
+            .setOrigin(0.5, 0.5)
+            .setScale(0.2, 0.2)
+            .setInteractive({ useHandCursor: true })
+            .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+                this.loadout.bandName = LoadoutGenerator.getRandomBandName();
+                (document.getElementById('band-name-input') as any).value = this.loadout.bandName;
+            });
+        this.add(this.bandDice);
 
         // Photo
         this.add(
@@ -117,39 +137,39 @@ export class Form extends Phaser.GameObjects.Container {
     }
 
     private onNameChange(event) {
-        this.enteredName = event.target.value;
+        this.loadout.name = event.target.value;
     }
 
     private onBandNameChange(event) {
-        this.bandName = event.target.value;
+        this.loadout.bandName = event.target.value;
     }
 
     private onSign() {
         document.getElementById('game').removeEventListener('click', this.gameclick);
-        this.loadout.name = this.enteredName;
-        this.loadout.bandName = this.bandName;
         this.nameInput.destroy();
         this.bandNameInput.destroy();
+        this.nameDice.destroy();
+        this.bandDice.destroy();
         this.add(
-            new Phaser.GameObjects.Text(this.scene, LEFT_MARGIN + 320, 100, this.enteredName, {
+            new Phaser.GameObjects.Text(this.scene, LEFT_MARGIN + 80, 100, this.loadout.name, {
                 fontFamily: 'Octanis',
-                fontSize: this.getFontSize(this.enteredName),
+                fontSize: this.getFontSize(this.loadout.name),
                 color: '#000000'
-            }).setOrigin(0.5, 0.5)
+            }).setOrigin(0, 0.5)
         );
         this.add(
-            new Phaser.GameObjects.Text(this.scene, LEFT_MARGIN + 355, 200, this.bandName, {
+            new Phaser.GameObjects.Text(this.scene, LEFT_MARGIN + 140, 200, this.loadout.bandName, {
                 fontFamily: 'Octanis',
-                fontSize: this.getFontSize(this.bandName),
+                fontSize: this.getFontSize(this.loadout.bandName),
                 color: '#000000'
-            }).setOrigin(0.5, 0.5)
+            }).setOrigin(0, 0.5)
         );
         this.photo.finalize();
         this.signatureContainer.destroy();
         this.signedText && this.signedText.destroy();
-        this.signedText = new Phaser.GameObjects.Text(this.scene, LEFT_MARGIN + 45, 840, this.enteredName, {
+        this.signedText = new Phaser.GameObjects.Text(this.scene, LEFT_MARGIN + 45, 840, this.loadout.name, {
             fontFamily: 'Season',
-            fontSize: this.getFontSize(this.enteredName),
+            fontSize: this.getFontSize(this.loadout.name),
             color: '#000000'
         }).setOrigin(0, 0.5);
         this.add(this.signedText);
@@ -179,14 +199,11 @@ export class Form extends Phaser.GameObjects.Container {
 
     getFontSize(text: string) {
         if (!text) return '1rem';
-        if (text.length < 10) {
-            return '4rem';
-        }
         if (text.length < 20) {
-            return '2.75rem';
+            return '3rem';
         }
         if (text.length < 30) {
-            return '1.85rem';
+            return '2rem';
         }
         if (text.length < 40) {
             return '1.35rem';

@@ -1,6 +1,6 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { MusicTracks } from '../MusicTracks';
-import { GameScene, GameSceneConfig } from './GameScene';
+import { CharacterState, GameScene, GameSceneConfig } from './GameScene';
 
 import { CONVERSATION_COMPLETE } from '../objects/Conversation';
 import { Form, SIGNED_EVENT } from '../objects/editor/Form';
@@ -51,6 +51,10 @@ export class CharacterCreation extends Phaser.Scene {
 
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
         this.conversation = this.add.conversation('character_creation').setDepth(50).setX(40).setY(40);
+
+        //let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
+        //this.add.existing(form);
+
         setTimeout(() => {
             this.tweens.add({
                 targets: this.overlay,
@@ -74,7 +78,6 @@ export class CharacterCreation extends Phaser.Scene {
             this.conversation.on(CONVERSATION_COMPLETE, () => {
                 let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height * 2); // way off screen to start
                 form.on(SIGNED_EVENT, () => {
-                    // this.loadout contains the selected face and name.
                     this.tweens.add({
                         targets: form,
                         y: DISPLAY_SIZE.height * 2,
@@ -112,20 +115,23 @@ export class CharacterCreation extends Phaser.Scene {
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             // stop mainMenuMusic just in case fade isn't complete yet
             this.mainMenuMusic && this.mainMenuMusic.stop();
+            // Set up the main character with info from the loadout
+            let you: CharacterState = {
+                name: this.loadout.name,
+                face: this.loadout.face,
+                isDriver: true,
+                seatPosition: 1,
+                dayTrait: 'safety',
+                nightTrait: 'fast',
+                instrument: 'vocal-guitar', // driver MUST be vocal-guitar
+                happiness: 100
+            };
             // switch to GameScene
             this.scene.start('GameScene', {
                 gameState: {
                     // TODO: Replace fake characters with actual characters from character creation.
                     characters: [
-                        {
-                            name: 'Alice',
-                            isDriver: true,
-                            seatPosition: 1,
-                            dayTrait: 'safety',
-                            nightTrait: 'fast',
-                            instrument: 'vocal-guitar', // driver MUST be vocal-guitar
-                            happiness: 100
-                        },
+                        you,
                         {
                             name: 'Bob',
                             seatPosition: 2,

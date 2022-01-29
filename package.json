@@ -12,7 +12,8 @@
         "webpack-dev-server": "^4.7.3"
     },
     "dependencies": {
-        "phaser": "3.55.2"
+        "phaser": "3.55.2",
+        "unique-names-generator": "^4.6.0"
     },
     "scripts": {
         "dev": "webpack serve --mode development",

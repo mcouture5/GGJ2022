@@ -1,7 +1,7 @@
 import { BodyChoices, BodyPart } from '../../LoadoutGenerator';
 import { ColorPicker, COLOR_MOVE } from './ColorPicker';
 
-export class Editor extends Phaser.GameObjects.Container {
+export class Editor extends Phaser.GameObjects.Container implements IEditor {
     private loadout: Loadout;
     private part: BodyPart;
     private sprite: Phaser.GameObjects.Sprite;
@@ -58,8 +58,8 @@ export class Editor extends Phaser.GameObjects.Container {
             this.add(this.colorPicker);
             this.colorPicker.on(COLOR_MOVE, (color: Phaser.Types.Display.ColorObject) => {
                 let colorNum = Phaser.Display.Color.GetColor(color.r, color.g, color.b);
-                this.loadout.face[this.part].tint = colorNum;
                 this.sprite.setTint(colorNum);
+                this.loadout.face[this.part].tint = color;
             });
             this.colorPicker.setRandomColor();
         }
@@ -69,14 +69,32 @@ export class Editor extends Phaser.GameObjects.Container {
         return Math.min(Math.floor(Math.random() * this.choices.length), this.choices.length - 1);
     }
 
+    public setValue(part: FacePart) {
+        // Textute
+        this.texture = part.texture;
+        this.index = this.choices.indexOf(this.texture);
+        this.updateSprite();
+
+        // Tint
+        if (part.tint) {
+            let colorNum = Phaser.Display.Color.GetColor(part.tint.r, part.tint.g, part.tint.b);
+            this.sprite.setTint(colorNum);
+            this.colorPicker.setColor(part.tint);
+        }
+    }
+
     private step() {
         this.index++;
         if (this.index >= this.choices.length) {
             this.index = 0;
         }
         this.texture = this.choices[this.index];
-        this.sprite.setTexture(this.texture);
         this.loadout.face[this.part].texture = this.texture;
+        this.updateSprite();
+    }
+
+    private updateSprite() {
+        this.sprite.setTexture(this.texture);
         this.numbers.forEach((text) => text.setStyle({ color: '#CCCCCC' }));
         this.numbers[this.index].setStyle({ color: '#000000' });
     }
