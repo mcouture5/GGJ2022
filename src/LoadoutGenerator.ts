@@ -1,4 +1,6 @@
 import { uniqueNamesGenerator, Config, adjectives, colors, animals, names } from 'unique-names-generator';
+import {CharacterState} from "./scenes/GameScene";
+import {TrackName} from "./MusicTracks";
 
 export enum BodyPart {
     'head' = 'head',
@@ -102,6 +104,44 @@ class LoadoutGeneratorImpl {
             bandName: this.getRandomBandName(),
             face: this.generateRandomFace()
         };
+    }
+
+    public loadoutToDriverCharacterState(loadout: Loadout): CharacterState {
+        return {
+            name: loadout.name,
+            face: loadout.face,
+            isDriver: true,
+            seatPosition: 1,
+            dayTrait: 'safety',
+            nightTrait: 'fast',
+            instrument: 'vocal-guitar', // driver MUST be vocal-guitar
+            happiness: 100
+        };
+    }
+
+    public loadoutToRandomCharacterState(loadout: Loadout, seatPosition: number, instrument: TrackName): CharacterState {
+        return {
+            name: loadout.name,
+            face: loadout.face,
+            seatPosition: seatPosition,
+            dayTrait: this.randomTrait(),
+            nightTrait: this.randomTrait(),
+            instrument: instrument,
+            happiness: 100
+        };
+    }
+
+    public randomTrait(): string {
+        return [
+            'hat',
+            'safety',
+            'scary',
+            'party',
+            'hungry',
+            'friendly',
+            'fast',
+            'slippery'
+        ][Phaser.Math.Between(0, 7)]
     }
 
     private getRandom(arr: any[]) {

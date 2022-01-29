@@ -1,10 +1,10 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
-import { MusicTracks } from '../MusicTracks';
 import { CharacterState, GameScene, GameSceneConfig } from './GameScene';
 
 import { CONVERSATION_COMPLETE } from '../objects/Conversation';
 import { Form, SIGNED_EVENT } from '../objects/editor/Form';
 import LoadoutGenerator from '../LoadoutGenerator';
+import {TRACK_NAMES} from "../MusicTracks";
 const { r, g, b } = BACKGROUND_RBG;
 
 interface CharacterCreationConfig {
@@ -129,57 +129,21 @@ export class CharacterCreation extends Phaser.Scene {
         // when camera fade is done...
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             // Set up the main character with info from the loadout
-            let you: CharacterState = {
-                name: this.loadout.name,
-                face: this.loadout.face,
-                isDriver: true,
-                seatPosition: 1,
-                dayTrait: 'safety',
-                nightTrait: 'fast',
-                instrument: 'vocal-guitar', // driver MUST be vocal-guitar
-                happiness: 100
-            };
+            let you: CharacterState = LoadoutGenerator.loadoutToDriverCharacterState(this.loadout);
             // Set up the first random band member
             let randoLoadout = LoadoutGenerator.generateRandomLoadout();
-            let rando: CharacterState = {
-                name: randoLoadout.name,
-                face: randoLoadout.face,
-                isDriver: true,
-                seatPosition: 2,
-                dayTrait: 'hat',
-                nightTrait: 'scary',
-                instrument: 'melodica',
-                happiness: 100
-            };
+            let randoSeatPosition = 2;
+            let availableInstruments = TRACK_NAMES.filter(trackName => trackName !== 'vocal-guitar');
+            let randoInstrument = availableInstruments[Phaser.Math.Between(0, availableInstruments.length - 1)];
+            let rando: CharacterState = LoadoutGenerator.loadoutToRandomCharacterState(randoLoadout, randoSeatPosition,
+                randoInstrument);
             // stop music just in case fade isn't complete yet
             this.music.stop();
             // switch to GameScene
             this.scene.start('GameScene', {
                 gameState: {
                     bandName: this.loadout.bandName,
-                    // TODO: Replace fake characters with actual characters from character creation.
-                    characters: [
-                        you,
-                        rando,
-                        {
-                            name: 'Casey',
-                            face: LoadoutGenerator.generateRandomFace(),
-                            seatPosition: 3,
-                            dayTrait: 'party',
-                            nightTrait: 'hungry',
-                            instrument: 'ocarina',
-                            happiness: 100
-                        },
-                        {
-                            name: 'Danielle',
-                            face: LoadoutGenerator.generateRandomFace(),
-                            seatPosition: 4,
-                            dayTrait: 'friendly',
-                            nightTrait: 'slippery',
-                            instrument: 'uke',
-                            happiness: 100
-                        }
-                    ]
+                    characters: [you, rando]
                 }
             } as GameSceneConfig);
         });

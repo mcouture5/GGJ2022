@@ -1,6 +1,6 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { CharacterState, GameScene, GameState } from './GameScene';
-import { MusicTracks, TrackName } from '../MusicTracks';
+import {MusicTracks, TRACK_NAMES, TrackName} from '../MusicTracks';
 import LoadoutGenerator from '../LoadoutGenerator';
 import { Choice, CONVERSATION_COMPLETE, RESPONSE } from '../objects/Conversation';
 
@@ -69,6 +69,23 @@ export class NewBandmember extends Phaser.Scene {
                                         duration: 350,
                                         onComplete: () => {
                                             this.music.stop();
+                                            // if new bandmember is joining...
+                                            if (this.isJoining) {
+                                                // if party is full, kick someone out first
+                                                if (this.gameState.characters.length > 4) {
+                                                    let tossThisCharacter = Phaser.Math.Between(1, 3);
+                                                    this.gameState.characters.splice(tossThisCharacter, 1);
+                                                }
+                                                // find open seat position and open instrument for them
+                                                let seatPosition = this.findOpenSeatPosition(
+                                                    this.gameState.characters);
+                                                let instrument = this.findOpenInstrument(this.gameState.characters);
+                                                // generate random character state
+                                                let characterState = LoadoutGenerator.loadoutToRandomCharacterState(
+                                                    this.bandmember, seatPosition, instrument);
+                                                // add new bandmember to the party
+                                                this.gameState.characters.push(characterState);
+                                            }
                                             // switch back to GameScene
                                             this.scene.start('GameScene', {gameState: this.gameState});
                                         }
@@ -138,5 +155,29 @@ export class NewBandmember extends Phaser.Scene {
                 seek: 13 // "scootch-over" has only vocal-guitar for first 13 seconds
             };
         }
+    }
+
+    private findOpenSeatPosition(characters: CharacterState[]): number {
+        let availableSeatPositions = [1,2,3,4,5].filter((seatPosition) => {
+            for (let character of characters) {
+                if (character.seatPosition === seatPosition) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        return availableSeatPositions[Phaser.Math.Between(0, availableSeatPositions.length - 1)];
+    }
+
+    private findOpenInstrument(characters: CharacterState[]): TrackName {
+        let availableInstruments = TRACK_NAMES.filter((trackName) => {
+            for (let character of characters) {
+                if (character.instrument === trackName) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        return availableInstruments[Phaser.Math.Between(0, availableInstruments.length - 1)];
     }
 }
