@@ -55,6 +55,12 @@ export class GameScene extends Phaser.Scene {
     private mountains: Phaser.GameObjects.TileSprite;
     private hills: Phaser.GameObjects.TileSprite;
     private grass: Phaser.GameObjects.TileSprite;
+    private truck: Phaser.GameObjects.Sprite;
+    private truckTire1: Phaser.GameObjects.Sprite;
+    private truckTire2: Phaser.GameObjects.Sprite;
+    private trailer: Phaser.GameObjects.Sprite;
+    private trailerTire1: Phaser.GameObjects.Sprite;
+    private trailerTire2: Phaser.GameObjects.Sprite;
     private dayOverlay: Phaser.GameObjects.Sprite;
     private nightOverlay: Phaser.GameObjects.Sprite;
 
@@ -90,6 +96,36 @@ export class GameScene extends Phaser.Scene {
         this.mountains = this.add.tileSprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'mountains');
         this.hills = this.add.tileSprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'hills');
         this.grass = this.add.tileSprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass');
+
+        this.truck = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'truck')
+            .setOrigin(0.5, 0.5)
+            .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2);
+
+        this.truckTire1 = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'tire')
+            .setOrigin(0.5, 0.5)
+            .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2);
+
+        this.truckTire2 = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'tire')
+            .setOrigin(0.5, 0.5)
+            .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2);
+
+        this.trailer = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'trailer')
+            .setOrigin(0.5, 0.5)
+            .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2);
+
+        this.trailerTire1 = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'trailertire')
+            .setOrigin(0.5, 0.5)
+            .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2);
+
+        this.trailerTire2 = this.add
+            .sprite(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2, 'trailertire')
+            .setOrigin(0.5, 0.5)
+            .setPosition(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2);
 
         // start with day before going to night
         this.dayOverlay = this.add
@@ -133,7 +169,7 @@ export class GameScene extends Phaser.Scene {
             this.music.fadeIn(this, fullVolume, fadeMillis);
         }
         // set up sound effects
-        this.morningSound = this.sound.add('morning', { volume: 0.5 });
+        this.morningSound = this.sound.add('morning', { volume: 0.05 });
         this.nightSound = this.sound.add('night', { volume: 1 });
     }
 

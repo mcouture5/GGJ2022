@@ -8,17 +8,18 @@ import LoadoutGenerator from '../LoadoutGenerator';
 const { r, g, b } = BACKGROUND_RBG;
 
 interface CharacterCreationConfig {
-    // music tracks from main menu. null if not coming from main menu.
-    mainMenuMusic?: MusicTracks;
+    // TODO
 }
 
 export class CharacterCreation extends Phaser.Scene {
     private introducingCreator: boolean = false;
     private overlay: Phaser.GameObjects.Rectangle;
     private recordManager: Phaser.GameObjects.Sprite;
-    private mainMenuMusic: MusicTracks;
+
     private conversation: IConversation;
     public loadout: Loadout;
+
+    private music: Phaser.Sound.BaseSound;
 
     constructor() {
         super({
@@ -28,7 +29,6 @@ export class CharacterCreation extends Phaser.Scene {
 
     init(config: CharacterCreationConfig): void {
         this.loadout = LoadoutGenerator.getDefaultLoadout();
-        this.mainMenuMusic = config.mainMenuMusic;
     }
 
     create() {
@@ -66,6 +66,14 @@ export class CharacterCreation extends Phaser.Scene {
                 }
             });
         }, 1500);
+
+        // do not pause sounds on blur
+        this.sound.pauseOnBlur = false;
+        // start playing music tracks if not already playing. DO NOT fade it in.
+        if (!this.music || !this.music.isPlaying) {
+            this.music = this.sound.add('broken-records', { volume: 0.1, loop: true });
+            this.music.play();
+        }
     }
 
     private introduceCreation() {
@@ -108,13 +116,16 @@ export class CharacterCreation extends Phaser.Scene {
     }
 
     private beginGame() {
-        // fade out camera and mainMenuMusic
+        // fade out camera and music
         this.cameras.main.fadeOut(350, r, g, b);
-        this.mainMenuMusic && this.mainMenuMusic.fadeOut(this, 350);
+        this.add.tween({
+            targets: this.music,
+            volume: 0,
+            ease: 'Linear',
+            duration: 350
+        });
         // when camera fade is done...
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            // stop mainMenuMusic just in case fade isn't complete yet
-            this.mainMenuMusic && this.mainMenuMusic.stop();
             // Set up the main character with info from the loadout
             let you: CharacterState = {
                 name: this.loadout.name,
@@ -126,6 +137,8 @@ export class CharacterCreation extends Phaser.Scene {
                 instrument: 'vocal-guitar', // driver MUST be vocal-guitar
                 happiness: 100
             };
+            // stop music just in case fade isn't complete yet
+            this.music.stop();
             // switch to GameScene
             this.scene.start('GameScene', {
                 gameState: {

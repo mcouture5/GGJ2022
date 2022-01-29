@@ -110,6 +110,11 @@
                 "type": "audio",
                 "key": "scootch-over-vocal-guitar",
                 "url": "assets/sounds/scootch-over-vocal-guitar.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "broken-records",
+                "url": "assets/sounds/broken-records-office.mp3"
             }
         ]
     },
@@ -194,6 +199,26 @@
                 "type": "image",
                 "key": "signed",
                 "url": "./assets/images/signed.png"
+            },
+            {
+                "type": "image",
+                "key": "truck",
+                "url": "./assets/images/truck.png"
+            },
+            {
+                "type": "image",
+                "key": "trailer",
+                "url": "./assets/images/trailer.png"
+            },
+            {
+                "type": "image",
+                "key": "tire",
+                "url": "./assets/images/tire.png"
+            },
+            {
+                "type": "image",
+                "key": "trailertire",
+                "url": "./assets/images/trailertire.png"
             },
             {
                 "type": "image",
