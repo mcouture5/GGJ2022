@@ -57,6 +57,7 @@ export class GameScene extends Phaser.Scene {
     private mountains: Phaser.GameObjects.TileSprite;
     private hills: Phaser.GameObjects.TileSprite;
     private grass: Phaser.GameObjects.TileSprite;
+    private road: Phaser.GameObjects.Sprite;
     private characterContainers: CharacterContainer[];
     private trailer: Phaser.GameObjects.Sprite;
     private trailerTire: Phaser.GameObjects.Sprite;
@@ -102,8 +103,7 @@ export class GameScene extends Phaser.Scene {
         this.mountains = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'mountains');
         this.hills = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'hills');
         this.grass = this.add.tileSprite(centerX, centerY, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass');
-
-
+        this.road = this.add.sprite(centerX, centerY, 'road').setOrigin(0.5, 0.5);
 
         this.characterContainers = [];
         for (let character of this.gameState.characters) {
