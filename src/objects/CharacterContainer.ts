@@ -12,8 +12,20 @@ const SEAT_3_DROP_ZONE = {x: -168, y: -100, width: 78, height: 220};
 const SEAT_4_DROP_ZONE = {x: -89, y: -100, width: 120, height: 220};
 const SEAT_5_DROP_ZONE = {x: 100, y: -100, width: 350, height: 220};
 
+export interface CharacterContainerOptions {
+    scene: Phaser.Scene;
+    // the lowest Z-order sprite for moving stuff below it
+    trailer: Phaser.GameObjects.Sprite;
+    // the highest Z-order sprite for moving stuff above it
+    truck: Phaser.GameObjects.Sprite;
+    characterState: CharacterState;
+    characterStates: CharacterState[];
+}
+
 export class CharacterContainer extends Phaser.GameObjects.Container {
 
+    private truck: Phaser.GameObjects.Sprite;
+    private trailer: Phaser.GameObjects.Sprite;
     private characterState: CharacterState;
     private characterStates: CharacterState[];
     private instrumentSprite: Phaser.GameObjects.Sprite;
@@ -21,32 +33,37 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
     private isDragging: boolean;
 
-    constructor(scene: Phaser.Scene, characterState: CharacterState, characterStates: CharacterState[]) {
-        super(scene);
+    constructor(options: CharacterContainerOptions) {
+        super(options.scene);
 
-        this.characterState = characterState;
-        this.characterStates = characterStates;
+        this.truck = options.truck;
+        this.trailer = options.trailer;
+        this.characterState = options.characterState;
+        this.characterStates = options.characterStates;
 
         this.isDragging = false;
 
-        this.graphics = scene.add.graphics();
+        this.graphics = this.scene.add.graphics();
 
-        let passenger = scene.add.sprite(0, 0, 'passenger');
+        let passenger = this.scene.add.sprite(0, 0, 'passenger');
         this.add(passenger);
-        let face = LoadoutGenerator.createFaceSprite(scene, characterState.face).setScale(0.1, 0.1)
+        let face = LoadoutGenerator.createFaceSprite(this.scene, this.characterState.face).setScale(0.1, 0.1)
             .setOrigin(0.45, 0.5);
         this.add(face);
 
-        this.moveToSeatPosition(characterState.seatPosition);
+        this.moveToSeatPosition(this.characterState.seatPosition);
 
-        // have to keep track of instrumentSprite separately in order to boost its Z-order to 1000
-        let instrumentOrigin = this.instrumentToOrigin(characterState.instrument);
-        let instrumentAngle = this.instrumentToAngle(characterState.instrument);
-        this.instrumentSprite = scene.add.sprite(0, 0, characterState.instrument).setPosition(this.x, this.y)
+        // have to keep track of instrumentSprite separately in order to boost its Z-order above the truck sprite
+        let instrumentOrigin = this.instrumentToOrigin(this.characterState.instrument);
+        let instrumentAngle = this.instrumentToAngle(this.characterState.instrument);
+        this.instrumentSprite = this.scene.add.sprite(0, 0, this.characterState.instrument).setPosition(this.x, this.y)
             .setScale(INSTRUMENT_SCALE_FACTOR, INSTRUMENT_SCALE_FACTOR)
-            .setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle).setDepth(1000);
+            .setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle).setDepth(1);
+        this.scene.children.moveAbove(this.instrumentSprite, this.truck);
 
-        scene.add.existing(this);
+        // add this container to the scene. move it below the trailer sprite
+        this.scene.add.existing(this);
+        this.scene.children.moveBelow(this, this.trailer);
 
         // only enable dragging and dropping if not the driver
         if (!this.characterState.isDriver) {
@@ -58,14 +75,17 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 draggable: true
             });
 
-            scene.input.on('dragstart', (pointer, characterContainer: this) => {
+            this.scene.input.on('dragstart', (pointer, characterContainer: this) => {
                 characterContainer.isDragging = true;
+                // while dragging, raise container above the truck sprite
+                this.scene.children.moveAbove(characterContainer, this.truck);
+                this.scene.children.moveAbove(characterContainer.instrumentSprite, characterContainer);
             });
-            scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
+            this.scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
                 characterContainer.x = dragX;
                 characterContainer.y = dragY;
             });
-            scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
+            this.scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
                 // 'dragend' has tons of duplicate events. STOP if we've already handled this.
                 if (!characterContainer.isDragging) {
                     return;
@@ -99,6 +119,9 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 }
 
                 characterContainer.isDragging = false;
+                // restore original Z-order
+                this.scene.children.moveBelow(characterContainer, this.trailer);
+                this.scene.children.moveAbove(characterContainer.instrumentSprite, this.truck);
             });
         }
     }
