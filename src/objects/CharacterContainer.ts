@@ -108,22 +108,25 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         this.instrumentSprite.setScale(this.scaleX * INSTRUMENT_SCALE_FACTOR, this.scaleY * INSTRUMENT_SCALE_FACTOR);
 
         // DEBUG BOUNDING BOXES
-        let centerX = DISPLAY_SIZE.width / 2;
-        let centerY = DISPLAY_SIZE.height / 2;
-        this.graphics.clear();
-        this.graphics.lineStyle(2, 0xffff00);
-        this.graphics.strokeRect(this.x - DRAG_BOX.width / 2 + DRAG_BOX.x, this.y - DRAG_BOX.height / 2 + DRAG_BOX.y,
-            DRAG_BOX.width, DRAG_BOX.height);
-        this.graphics.strokeRect(centerX + SEAT_1_DROP_ZONE.x, centerY + SEAT_1_DROP_ZONE.y, SEAT_1_DROP_ZONE.width,
-            SEAT_1_DROP_ZONE.height);
-        this.graphics.strokeRect(centerX + SEAT_2_DROP_ZONE.x, centerY + SEAT_2_DROP_ZONE.y, SEAT_2_DROP_ZONE.width,
-            SEAT_2_DROP_ZONE.height);
-        this.graphics.strokeRect(centerX + SEAT_3_DROP_ZONE.x, centerY + SEAT_3_DROP_ZONE.y, SEAT_3_DROP_ZONE.width,
-            SEAT_3_DROP_ZONE.height);
-        this.graphics.strokeRect(centerX + SEAT_4_DROP_ZONE.x, centerY + SEAT_4_DROP_ZONE.y, SEAT_4_DROP_ZONE.width,
-            SEAT_4_DROP_ZONE.height);
-        this.graphics.strokeRect(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y, SEAT_5_DROP_ZONE.width,
-            SEAT_5_DROP_ZONE.height);
+        let debug = false;
+        if (debug) {
+            let centerX = DISPLAY_SIZE.width / 2;
+            let centerY = DISPLAY_SIZE.height / 2;
+            this.graphics.clear();
+            this.graphics.lineStyle(2, 0xffff00);
+            this.graphics.strokeRect(this.x - DRAG_BOX.width / 2 + DRAG_BOX.x,
+                this.y - DRAG_BOX.height / 2 + DRAG_BOX.y, DRAG_BOX.width, DRAG_BOX.height);
+            this.graphics.strokeRect(centerX + SEAT_1_DROP_ZONE.x, centerY + SEAT_1_DROP_ZONE.y,
+                SEAT_1_DROP_ZONE.width, SEAT_1_DROP_ZONE.height);
+            this.graphics.strokeRect(centerX + SEAT_2_DROP_ZONE.x, centerY + SEAT_2_DROP_ZONE.y,
+                SEAT_2_DROP_ZONE.width, SEAT_2_DROP_ZONE.height);
+            this.graphics.strokeRect(centerX + SEAT_3_DROP_ZONE.x, centerY + SEAT_3_DROP_ZONE.y,
+                SEAT_3_DROP_ZONE.width, SEAT_3_DROP_ZONE.height);
+            this.graphics.strokeRect(centerX + SEAT_4_DROP_ZONE.x, centerY + SEAT_4_DROP_ZONE.y,
+                SEAT_4_DROP_ZONE.width, SEAT_4_DROP_ZONE.height);
+            this.graphics.strokeRect(centerX + SEAT_5_DROP_ZONE.x, centerY + SEAT_5_DROP_ZONE.y,
+                SEAT_5_DROP_ZONE.width, SEAT_5_DROP_ZONE.height);
+        }
     }
 
     seatPositionIsOpen(seatPosition: number): boolean {
