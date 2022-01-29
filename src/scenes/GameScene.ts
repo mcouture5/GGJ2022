@@ -179,6 +179,10 @@ export class GameScene extends Phaser.Scene {
         this.hills.tilePositionX -= 1.75;
         this.grass.tilePositionX -= 3.75;
 
+        for (let characterContainer of this.characterContainers) {
+            characterContainer.update();
+        }
+
         this.truckTire1.angle -= 15;
         this.truckTire2.angle -= 15;
         this.trailerTire.angle -= 15;
