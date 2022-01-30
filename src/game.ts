@@ -8,6 +8,7 @@ import { DISPLAY_SIZE } from './constants';
 import { CharacterCreation } from './scenes/CharacterCreation';
 import { Gig } from './scenes/Gig';
 import { NewBandmember } from './scenes/NewBandmember';
+import GameOver from './scenes/GameOver';
 
 // main game configuration
 const config: Phaser.Types.Core.GameConfig = {
@@ -19,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
         height: DISPLAY_SIZE.height
     },
     parent: 'game',
-    scene: [Boot, Company, PhaserSplash, MainMenu, GameScene, CharacterCreation, Gig, NewBandmember],
+    scene: [Boot, Company, PhaserSplash, MainMenu, GameScene, CharacterCreation, Gig, NewBandmember, GameOver],
     input: {
         keyboard: false,
         mouse: true,
@@ -27,7 +28,7 @@ const config: Phaser.Types.Core.GameConfig = {
         gamepad: false
     },
     physics: null,
-    backgroundColor: '#e4e4eb',
+    backgroundColor: '#000000',// '#e4e4eb',
     render: { pixelArt: false, antialias: true },
     dom: {
         createContainer: true

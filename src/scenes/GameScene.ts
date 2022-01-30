@@ -90,6 +90,8 @@ export class GameScene extends Phaser.Scene {
     private morningSound: Phaser.Sound.BaseSound;
     private nightSound: Phaser.Sound.BaseSound;
 
+    private gameOver: boolean;
+
     constructor() {
         super({
             key: 'GameScene'
@@ -103,7 +105,7 @@ export class GameScene extends Phaser.Scene {
                 dayNum: 1,
                 gigNum: 1,
                 nextMajorEvent: MajorEvent.NewBandmember,
-                wallet: new Wallet(100)
+                wallet: new Wallet(500)
             },
             config.gameState
         );
@@ -212,9 +214,11 @@ export class GameScene extends Phaser.Scene {
             delay: 10000,
             loop: true
         });
+        this.gameOver = false;
     }
 
     update(): void {
+        if (this.gameOver) return;
         this.mountains.tilePositionX -= 0.35;
         this.hills.tilePositionX -= 1.75;
         this.grass.tilePositionX -= 3.75;
@@ -229,6 +233,20 @@ export class GameScene extends Phaser.Scene {
         this.truckTire1.angle -= 15;
         this.truckTire2.angle -= 15;
         this.trailerTire.angle -= 15;
+
+        // Lose conditions
+        if (!this.gameOver && this.gameState.bandHappiness === 0 || this.gameState.wallet.get() <= 0) {
+            this.gameOver = true;
+            // fade out camera and music
+            this.cameras.main.fadeOut(2750, 0, 0, 0);
+            this.music.fadeOut(this, 2750);
+            // when camera fade is done...
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                // stop music just in case fade isn't complete yet
+                this.music.stop();
+                this.scene.start('GameOver', {gameState: this.gameState});
+            });
+        }
     }
 
     private getAdjacentTrait(character: CharacterContainer): string {
