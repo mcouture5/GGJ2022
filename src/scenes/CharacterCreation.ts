@@ -31,6 +31,14 @@ export class CharacterCreation extends Phaser.Scene {
     }
 
     create() {
+        this.cameras.main.fadeIn(1250, 0, 0, 0);
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {
+            setTimeout(() => {
+                // DEBUG - comment for dev
+                this.introduceCreation();
+                // DEBUG
+            }, 500);
+        });
         let bg = this.add
             .sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'office')
             .setOrigin(0.5, 0.5)
@@ -57,24 +65,18 @@ export class CharacterCreation extends Phaser.Scene {
         //form.on(SIGNED_EVENT, () => this.beginGame());
         // DEBUG
 
-        this.tweens.add({
-            targets: this.overlay,
-            alpha: { from: 0, to: 1 },
-            delay: 1500,
-            duration: 500,
-            onComplete: () => {
-                // DEBUG - comment for dev
-                this.introduceCreation();
-                // DEBUG
-            }
-        });
-
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;
         // start playing music tracks if not already playing. DO NOT fade it in.
         if (!this.music || !this.music.isPlaying) {
-            this.music = this.sound.add('broken-records', { volume: 0.2, loop: true });
+            this.music = this.sound.add('broken-records', { volume: 0, loop: true });
             this.music.play();
+            this.add.tween({
+                targets: this.music,
+                volume: {from: 0, to: 0.1},
+                ease: 'Linear',
+                duration: 1250
+            });
         }
     }
 
@@ -128,6 +130,12 @@ export class CharacterCreation extends Phaser.Scene {
             this.conversation.begin();
         });
         timeline.play();
+        this.tweens.add({
+            targets: this.overlay,
+            alpha: { from: 0, to: 1 },
+            delay: 2000,
+            duration: 500
+        });
     }
 
     private beginGame() {
