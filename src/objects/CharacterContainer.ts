@@ -2,6 +2,7 @@ import {CharacterState} from "../scenes/GameScene";
 import LoadoutGenerator from "../LoadoutGenerator";
 import {DISPLAY_SIZE} from "../constants";
 import {TrackName} from "../MusicTracks";
+import HUD from "../hud/HUD";
 
 const INSTRUMENT_SCALE_FACTOR = 0.25;
 const DRAG_BOX = {x: -5, y: -5, width: 55, height: 80};
@@ -183,6 +184,8 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                     onComplete: () => {
                         // remove this character from the band
                         this.characterStates.splice(this.characterStates.indexOf(this.characterState), 1);
+                        // notify the HUD
+                        this.scene.events.emit('characterChange');
                         // destroy this container and its managed instrumentSprite
                         this.instrumentSprite.destroy();
                         this.destroy();

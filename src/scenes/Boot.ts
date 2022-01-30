@@ -2,6 +2,8 @@
 // It needs to be imported as a side effect so the plugin manager will run.
 import { BACKGROUND_HEX_COLOR } from '../constants';
 import '../plugins.ts';
+import {GameSceneConfig} from "./GameScene";
+import LoadoutGenerator from "../LoadoutGenerator";
 
 /**
  * Boot scene shows a loading bar while loading all assets.
@@ -50,11 +52,61 @@ export class Boot extends Phaser.Scene {
         this.load.json('character_creation', './assets/conversations/intro.json');
         this.load.json('signed_contract', './assets/conversations/signedContract.json');
         this.load.json('bandmember_1', './assets/conversations/bandmember_1.json');
+
+        this.load.pack('character', './assets/face_parts.json');
+        this.load.pack('icons', './assets/icons.json');
     }
 
     create() {
-        this.scene.start('Company');
+        //this.scene.start('Company');
         //this.scene.start('CharacterCreation');
+
+        // switch to GameScene
+        this.scene.start('NewBandmember', {
+            gameState: {
+                bandName: 'foo',
+                // TODO: Replace fake characters with actual characters from character creation.
+                characters: [
+                    {
+                        name: 'Alice',
+                        face: LoadoutGenerator.generateRandomFace(),
+                        isDriver: true,
+                        seatPosition: 1,
+                        dayTrait: 'scary',
+                        nightTrait: 'scary',
+                        instrument: 'vocal-guitar', // driver MUST be vocal-guitar
+                        happiness: 100
+                    },
+                    {
+                        name: 'Bob',
+                        face: LoadoutGenerator.generateRandomFace(),
+                        seatPosition: 2,
+                        dayTrait: 'scary',
+                        nightTrait: 'scary',
+                        instrument: 'rhythm',
+                        happiness: 100
+                    },
+                    {
+                        name: 'Casey',
+                        face: LoadoutGenerator.generateRandomFace(),
+                        seatPosition: 3,
+                        dayTrait: 'scary',
+                        nightTrait: 'scary',
+                        instrument: 'uke',
+                        happiness: 100
+                    },
+                    {
+                        name: 'Danielle',
+                        face: LoadoutGenerator.generateRandomFace(),
+                        seatPosition: 4,
+                        dayTrait: 'scary',
+                        nightTrait: 'scary',
+                        instrument: 'melodica',
+                        happiness: 100
+                    }
+                ]
+            }
+        } as GameSceneConfig);
     }
 
     private createLoadingbar() {
