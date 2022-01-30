@@ -259,6 +259,21 @@
                 "type": "image",
                 "key": "vocal-guitar",
                 "url": "./assets/images/guitarandmic.png"
+            },
+            {
+                "type": "image",
+                "key": "hammer",
+                "url": "./assets/images/hammerbutton.png"
+            },
+            {
+                "type": "image",
+                "key": "screwdriver",
+                "url": "./assets/images/screwdriverbutton.png"
+            },
+            {
+                "type": "image",
+                "key": "wrench",
+                "url": "./assets/images/wrenchbutton.png"
             }
         ]
     }

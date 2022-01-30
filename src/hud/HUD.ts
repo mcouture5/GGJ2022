@@ -26,7 +26,17 @@ class CharacterCard extends Phaser.GameObjects.Container {
         }).setOrigin(0, 0));
 
         // Instrument
-        this.add(new Phaser.GameObjects.Sprite(this.scene, 255, 80, character.instrument).setOrigin(0, 0).setScale(character.instrument === 'uke' ? 0.55 : 0.7));
+        this.add(new Phaser.GameObjects.Sprite(this.scene, 255, 60, character.instrument).setOrigin(0, 0).setScale(character.instrument === 'uke' ? 0.45 : character.skill ? 0.55 : 0.75));
+
+        // Skill
+        if (character.skill) {
+            this.add(new Phaser.GameObjects.Text(this.scene, 225, 150, 'Emergency Skill:', {
+                fontFamily: 'Octanis',
+                fontSize: '1rem',
+                color: '#fff'
+            }).setOrigin(0, 0));
+            this.add(new Phaser.GameObjects.Sprite(this.scene, 325, 145, character.skill).setOrigin(0, 0).setScale(0.35));
+        }
 
         //Traits
         this.add(new Phaser.GameObjects.Text(this.scene, 225, 180, 'Traits:', {

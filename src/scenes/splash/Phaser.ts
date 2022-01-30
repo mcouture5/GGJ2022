@@ -1,4 +1,4 @@
-import { BACKGROUND_RBG } from '../../constants';
+import { BACKGROUND_COLOR, BACKGROUND_RBG } from '../../constants';
 
 const { r, g, b } = BACKGROUND_RBG;
 
@@ -7,6 +7,9 @@ export class PhaserSplash extends Phaser.Scene {
         super({
             key: 'PhaserSplash'
         });
+    }
+    preload() {
+        this.cameras.main.setBackgroundColor(BACKGROUND_COLOR);
     }
     create() {
         let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'phaser').setOrigin(0.5, 0.5);

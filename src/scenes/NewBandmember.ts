@@ -1,7 +1,7 @@
 import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
 import { CharacterState, GameScene, GameState } from './GameScene';
 import {MusicTracks, TRACK_NAMES, TrackName} from '../MusicTracks';
-import LoadoutGenerator from '../LoadoutGenerator';
+import LoadoutGenerator, { SKILLS } from '../LoadoutGenerator';
 import { Choice, CONVERSATION_COMPLETE, RESPONSE } from '../objects/Conversation';
 
 // configuration object passed into init()
@@ -65,9 +65,10 @@ export class NewBandmember extends Phaser.Scene {
                                 let seatPosition = this.findOpenSeatPosition(
                                     this.gameState.characters);
                                 let instrument = this.findOpenInstrument(this.gameState.characters);
+                                let skill = this.findOpenSkill(this.gameState.characters);
                                 // generate random character state
                                 let characterState = LoadoutGenerator.loadoutToRandomCharacterState(
-                                    this.bandmember, seatPosition, instrument);
+                                    this.bandmember, seatPosition, instrument, skill);
                                 // add new bandmember to the party
                                 this.gameState.characters.push(characterState);
                                 // conversation needs a custom statusMessage based on what just happened
@@ -149,5 +150,17 @@ export class NewBandmember extends Phaser.Scene {
             return true;
         });
         return availableInstruments[Phaser.Math.Between(0, availableInstruments.length - 1)];
+    }
+    
+    private findOpenSkill(characters: CharacterState[]): string {
+        let availableSkills = SKILLS.filter((skill) => {
+            for (let character of characters) {
+                if (character.skill === skill) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        return availableSkills[Phaser.Math.Between(0, availableSkills.length - 1)];
     }
 }

@@ -47,6 +47,7 @@ export interface CharacterState {
     dayTrait: string;
     nightTrait: string;
     instrument: TrackName;
+    skill: string;
     // starts at 100. maxes at 100. rage quits at 0. leading up to first gig, decreases by 1 every second in unhappy
     // situation and increases by 1 every second in a happy situation. leading up to second gig, decreases/increases by
     // 2 every second. leading up to the third gig, 3 every second. etc. up to a max of 5.
@@ -89,6 +90,13 @@ export class GameScene extends Phaser.Scene {
     private music: MusicTracks;
     private morningSound: Phaser.Sound.BaseSound;
     private nightSound: Phaser.Sound.BaseSound;
+
+    private emergencySkill: string;
+    private emergencyAt: number;
+    private emergencyTimer: Phaser.Time.TimerEvent;
+    private emergencySprite: Phaser.GameObjects.Sprite;
+    private brokenAmount: number;
+    private breakingTimer: Phaser.Time.TimerEvent;
 
     private gameOver: boolean;
 
@@ -214,6 +222,15 @@ export class GameScene extends Phaser.Scene {
             delay: 10000,
             loop: true
         });
+
+        this.emergencyTimer = this.time.addEvent({
+            callback: () => {
+                this.emergency();
+            },
+            callbackScope: this,
+            delay: 10000
+        });
+
         this.gameOver = false;
     }
 
@@ -227,6 +244,7 @@ export class GameScene extends Phaser.Scene {
             characterContainer.update();
             this.updateHappiness(characterContainer, this.getAdjacentTrait(characterContainer));
         }
+        this.checkEmergency();
         this.gameState.bandHappiness = this.gameState.characters.reduce((a, b) => a + b.happiness, 0);
         this.hud.update();
 
@@ -237,6 +255,10 @@ export class GameScene extends Phaser.Scene {
         // Lose conditions
         if (!this.gameOver && this.gameState.bandHappiness === 0 || this.gameState.wallet.get() <= 0) {
             this.gameOver = true;
+            this.dayNightTimer.destroy();
+            this.walletTimer.destroy();
+            this.emergencyTimer.destroy();
+            this.breakingTimer.destroy();
             // fade out camera and music
             this.cameras.main.fadeOut(2750, 0, 0, 0);
             this.music.fadeOut(this, 2750);
@@ -367,6 +389,59 @@ export class GameScene extends Phaser.Scene {
         } else if (gigNumMod3 === 0) {
             // 3rd gig
             return 0.2;
+        }
+    }
+
+    private emergency() {
+        let skills = this.gameState.characters.filter(c => c.skill).map(c => c.skill);
+        let skill = Phaser.Utils.Array.GetRandom(skills);
+        let randoSeat = Phaser.Utils.Array.GetRandom([2,3,4,5]);
+        this.emergencyAt = randoSeat;
+        this.emergencySkill = skill;
+        console.log(this.emergencyAt, this.emergencySkill);
+        switch (this.emergencyAt) {
+            case 2:
+                this.emergencySprite = this.add.sprite(735, 550, skill).setDepth(100).setScale(0.5);
+                break;
+            case 3:
+                this.emergencySprite = this.add.sprite(835, 550, skill).setDepth(100).setScale(0.5);
+                break;
+            case 4:
+                this.emergencySprite = this.add.sprite(905, 550, skill).setDepth(100).setScale(0.5);
+                break;
+            case 5:
+                this.emergencySprite = this.add.sprite(1280, 580, skill).setDepth(100).setScale(0.5);
+                break;
+        }
+        this.brokenAmount = 100;
+        this.breakingTimer = this.time.addEvent({
+            callback: () => {
+                this.gameState.wallet.subtract(5, 'Vehicle repairs');
+            },
+            callbackScope: this,
+            delay: 3000,
+            loop: true
+        });
+    }
+    private checkEmergency() {
+        if (!this.emergencySkill) return;
+        let skills = this.gameState.characters.filter(c => c.seatPosition === this.emergencyAt && c.skill === this.emergencySkill);
+        let fixing = skills.length > 0;
+        if (fixing) {
+            this.brokenAmount -=0.75;
+            this.emergencySprite.setAlpha(this.brokenAmount / 100);
+        }
+        if (this.brokenAmount <= 0) {
+            this.emergencySprite.destroy();
+            this.breakingTimer.destroy();
+            this.emergencySkill = '';
+            this.emergencyTimer = this.time.addEvent({
+                callback: () => {
+                    this.emergency();
+                },
+                callbackScope: this,
+                delay: (Math.random() * 10000) + 10000
+            });
         }
     }
 

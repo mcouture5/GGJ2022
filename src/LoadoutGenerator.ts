@@ -23,6 +23,7 @@ export const BodyChoices = {
 
 export const TRAITS = ['hat', 'safety', 'scary', 'party', 'hungry', 'friendly', 'fast', 'slippery'];
 export const STARTING_TRAITS = Phaser.Utils.Array.Shuffle([...TRAITS]).slice(0, 4);
+export const SKILLS = ['hammer', 'screwdriver', 'wrench'];
 
 const nameConfig: Config = {
     dictionaries: [NAMES, NAMES],
@@ -96,11 +97,12 @@ class LoadoutGeneratorImpl {
             instrument: 'vocal-guitar', // driver MUST be vocal-guitar
             happiness: 100,
             isAngry: false,
-            isLonely: false
+            isLonely: false,
+            skill: ''
         };
     }
 
-    public loadoutToRandomCharacterState(loadout: Loadout, seatPosition: number, instrument: TrackName): CharacterState {
+    public loadoutToRandomCharacterState(loadout: Loadout, seatPosition: number, instrument: TrackName, skill: string): CharacterState {
         return {
             name: loadout.name,
             face: loadout.face,
@@ -110,12 +112,17 @@ class LoadoutGeneratorImpl {
             instrument: instrument,
             happiness: 100,
             isAngry: false,
-            isLonely: false
+            isLonely: false,
+            skill: skill
         };
     }
 
     public randomTrait(): string {
         return Phaser.Utils.Array.GetRandom(TRAITS);
+    }
+
+    public randomSkill(): string {
+        return Phaser.Utils.Array.GetRandom(SKILLS);
     }
 
     private getRandom(arr: any[]) {

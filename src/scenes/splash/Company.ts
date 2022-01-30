@@ -1,4 +1,4 @@
-import { BACKGROUND_RBG } from '../../constants';
+import { BACKGROUND_COLOR, BACKGROUND_RBG } from '../../constants';
 
 const { r, g, b } = BACKGROUND_RBG;
 
@@ -7,6 +7,9 @@ export class Company extends Phaser.Scene {
         super({
             key: 'Company'
         });
+    }
+    preload() {
+        this.cameras.main.setBackgroundColor(BACKGROUND_COLOR);
     }
     create() {
         setTimeout(() => {

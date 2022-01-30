@@ -3,7 +3,7 @@ import { CharacterState, GameScene, GameSceneConfig } from './GameScene';
 
 import { CONVERSATION_COMPLETE } from '../objects/Conversation';
 import { Form, SIGNED_EVENT } from '../objects/editor/Form';
-import LoadoutGenerator from '../LoadoutGenerator';
+import LoadoutGenerator, { SKILLS } from '../LoadoutGenerator';
 import {TRACK_NAMES} from "../MusicTracks";
 const { r, g, b } = BACKGROUND_RBG;
 
@@ -153,8 +153,9 @@ export class CharacterCreation extends Phaser.Scene {
             let randoSeatPosition = 2;
             let availableInstruments = TRACK_NAMES.filter(trackName => trackName !== 'vocal-guitar');
             let randoInstrument = availableInstruments[Phaser.Math.Between(0, availableInstruments.length - 1)];
+            let randoSkill = Phaser.Utils.Array.GetRandom(SKILLS);
             let rando: CharacterState = LoadoutGenerator.loadoutToRandomCharacterState(randoLoadout, randoSeatPosition,
-                randoInstrument);
+                randoInstrument, randoSkill);
             // stop music just in case fade isn't complete yet
             this.music.stop();
             // switch to GameScene
