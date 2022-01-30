@@ -1,6 +1,6 @@
-import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
+import { DISPLAY_SIZE } from '../constants';
 import { CharacterState, GameScene, GameState } from './GameScene';
-import {MusicTracks, TRACK_NAMES, TrackName} from '../MusicTracks';
+import {TRACK_NAMES, TrackName} from '../MusicTracks';
 import LoadoutGenerator, { SKILLS } from '../LoadoutGenerator';
 import { Choice, CONVERSATION_COMPLETE, RESPONSE } from '../objects/Conversation';
 
