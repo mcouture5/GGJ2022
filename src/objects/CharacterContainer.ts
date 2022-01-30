@@ -42,6 +42,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     private faceTint: number;
     private angrySound: Phaser.Sound.BaseSound;
     private angrySoundTimer: Phaser.Time.TimerEvent;
+    private rageQuitTween: Phaser.Tweens.Tween;
 
     constructor(options: CharacterContainerOptions) {
         super(options.scene);
@@ -103,12 +104,12 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 characterContainer.stopAnimations();
                 // while dragging, raise container and instrument above everything, show circle, hide body, increase
                 // scale, and remove any flipping
-                this.scene.children.bringToTop(characterContainer);
-                this.scene.children.bringToTop(characterContainer.instrumentSprite);
+                characterContainer.scene.children.bringToTop(characterContainer);
+                characterContainer.scene.children.bringToTop(characterContainer.instrumentSprite);
                 characterContainer.circle.setFillStyle(0xffffff, 1);
                 characterContainer.passenger.setAlpha(0);
                 characterContainer.setScale(1.5, 1.5);
-                this.setFlipX(false);
+                characterContainer.setFlipX(false);
             });
             this.scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
                 characterContainer.x = dragX;
@@ -149,8 +150,9 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
                 characterContainer.isDragging = false;
                 // restore original Z-order, hide circle, show body, restore original scale, restore any flipping
-                this.scene.children.moveBelow(characterContainer, this.trailer);
-                this.scene.children.moveAbove(characterContainer.instrumentSprite, this.truck);
+                characterContainer.scene.children.moveBelow(characterContainer, characterContainer.trailer);
+                characterContainer.scene.children.moveAbove(characterContainer.instrumentSprite,
+                    characterContainer.truck);
                 characterContainer.circle.setFillStyle(0xffffff, 0);
                 characterContainer.passenger.setAlpha(1);
                 characterContainer.setScale(1, 1);
@@ -165,7 +167,31 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         this.instrumentSprite.setPosition(this.x, this.y);
         this.instrumentSprite.setScale(this.scaleX * INSTRUMENT_SCALE_FACTOR, this.scaleY * INSTRUMENT_SCALE_FACTOR);
 
-        if (this.characterState.isAngry) {
+        // if rock bottom and not driver, rage quit
+        let isRageQuit = this.characterState.happiness <= 0 && !this.characterState.isDriver;
+        if (isRageQuit) {
+            if (!this.isDragging && !this.rageQuitTween) {
+                this.stopAnimations();
+                this.angrySound && this.angrySound.play();
+                this.rageQuitTween = this.scene.add.tween({
+                    targets: this,
+                    x: Phaser.Math.Between(0, 1) === 0 ? -2000 : 2000,
+                    y: -2000,
+                    angle: 360,
+                    ease: 'Linear',
+                    duration: 3000,
+                    onComplete: () => {
+                        // remove this character from the band
+                        this.characterStates.splice(this.characterStates.indexOf(this.characterState), 1);
+                        // destroy this container and its managed instrumentSprite
+                        this.instrumentSprite.destroy();
+                        this.destroy();
+                    }
+                });
+            }
+        }
+
+        if (this.characterState.isAngry && !isRageQuit) {
             if (!this.isDragging && !this.angryTweenX) {
                 this.preTweenX = this.x;
                 this.x -= 3;
@@ -202,12 +228,12 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             }
         }
 
-        if (this.characterState.isLonely) {
+        if (this.characterState.isLonely && !isRageQuit) {
             if (!this.isDragging && !this.lonelyTimer) {
                 this.preFlipX = this.passenger.flipX;
                 this.lonelyTimer = this.scene.time.addEvent({
                     callback: () => this.toggleFlipX(),
-                    delay: 2000,
+                    delay: Phaser.Math.Between(2000, 2500),
                     loop: true
                 });
                 this.faceTint = 0x8888ff;
