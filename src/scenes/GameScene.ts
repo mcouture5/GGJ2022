@@ -56,6 +56,8 @@ export interface CharacterState {
     isAngry: boolean;
     // whether the character is currently lonely
     isLonely: boolean;
+    // if character has rage quit
+    isRageQuit: boolean;
 }
 
 export const enum MajorEvent {
@@ -284,6 +286,10 @@ export class GameScene extends Phaser.Scene {
     
     private updateHappiness(character: CharacterContainer, otherTrait: string): void {
         let characterState = character.characterState;
+        if (characterState.isRageQuit) {
+            characterState.happiness = 0;
+            return;
+        }
         let thisCharTrait = this.isDay ? characterState.dayTrait : characterState.nightTrait;
         let happinessDelta = 0.04 * INTERACTIONS[thisCharTrait][otherTrait];
         if (happinessDelta < 0) {
@@ -395,7 +401,7 @@ export class GameScene extends Phaser.Scene {
     private emergency() {
         // Kill a previous emergency if its happening...
         this.emergencyFixed();
-        let skills = this.gameState.characters.filter(c => c.skill).map(c => c.skill);
+        let skills = this.gameState.characters.filter(c => c.skill && !c.isRageQuit).map(c => c.skill);
         let skill = Phaser.Utils.Array.GetRandom(skills);
 
         // If no skill, no emergency
@@ -421,7 +427,7 @@ export class GameScene extends Phaser.Scene {
         this.brokenAmount = 100;
         this.breakingTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(10, 'Vehicle repairs');
+                this.gameState.wallet.subtract(5, 'Vehicle repairs');
             },
             callbackScope: this,
             delay: 3000,

@@ -98,6 +98,7 @@ class LoadoutGeneratorImpl {
             happiness: 100,
             isAngry: false,
             isLonely: false,
+            isRageQuit: false,
             skill: ''
         };
     }
@@ -113,6 +114,7 @@ class LoadoutGeneratorImpl {
             happiness: 100,
             isAngry: false,
             isLonely: false,
+            isRageQuit: false,
             skill: skill
         };
     }
