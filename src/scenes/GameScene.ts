@@ -37,7 +37,8 @@ export interface CharacterState {
     face: FaceConfig;
     // defaults to false
     isDriver?: boolean;
-    // TODO: establish a numbering system for the seat positions
+    // seat 1 is the driver's seat. seat 2 is shotgun. seat 3 is the first truckbed seat. seat 4 is the second truckbed
+    // seat. seat 5 is the trailer.
     seatPosition: number;
     dayTrait: string;
     nightTrait: string;
