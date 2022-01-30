@@ -164,7 +164,7 @@ export class GameScene extends Phaser.Scene {
         this.dayOverlay = this.add.sprite(centerX, centerY, 'dayoverlay').setOrigin(0.5, 0.5).setAlpha(1);
         this.nightOverlay = this.add.sprite(centerX, centerY, 'nightoverlay').setOrigin(0.5, 0.5).setAlpha(0);
 
-        // set up day/night cycles. 6 transitions 30 seconds apart, creating 3 in-game days that elapse in 3 irl
+        // set up day/night cycles. 6 transitions 30 seconds apart, creating 3 in-game days that elapse in 1.5 irl
         // minutes. the last transition marks the end of the last night and triggers a major event
         // (gig or new band member).
         this.isDay = true;
@@ -176,7 +176,7 @@ export class GameScene extends Phaser.Scene {
                     this.switchToDay();
                 }
             },
-            delay: 30000,
+            delay: 15000,
             repeat: 5
         });
 
@@ -206,7 +206,7 @@ export class GameScene extends Phaser.Scene {
         // Money check timer
         this.walletTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(10, 'Gasoline');
+                this.gameState.wallet.subtract(5, 'Gasoline');
             },
             callbackScope: this,
             delay: 10000,
@@ -246,7 +246,7 @@ export class GameScene extends Phaser.Scene {
     private updateHappiness(character: CharacterContainer, otherTrait: string): void {
         let characterState = character.characterState;
         let thisCharTrait = this.isDay ? characterState.dayTrait : characterState.nightTrait;
-        let happinessDelta = INTERACTIONS[thisCharTrait][otherTrait];
+        let happinessDelta = 0.04 * INTERACTIONS[thisCharTrait][otherTrait];
         if (happinessDelta < 0) {
             characterState.isAngry = otherTrait !== 'alone';
             characterState.isLonely = otherTrait === 'alone';

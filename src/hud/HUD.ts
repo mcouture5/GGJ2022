@@ -34,8 +34,18 @@ class CharacterCard extends Phaser.GameObjects.Container {
             fontSize: '1rem',
             color: '#fff'
         }).setOrigin(0, 0));
-        this.add(new Phaser.GameObjects.Sprite(this.scene, 275, 195, character.dayTrait).setOrigin(0, 0).setScale(0.35));
-        this.add(new Phaser.GameObjects.Sprite(this.scene, 335, 195, character.nightTrait).setOrigin(0, 0).setScale(0.35));
+        this.add(new Phaser.GameObjects.Sprite(this.scene, 275, 200, character.dayTrait).setOrigin(0, 0).setScale(0.35));
+        this.add(new Phaser.GameObjects.Text(this.scene, 297, 180, character.dayTrait.charAt(0).toUpperCase() + character.dayTrait.slice(1), {
+            fontFamily: 'Octanis',
+            fontSize: '1rem',
+            color: '#fff'
+        }).setOrigin(0.5, 0));
+        this.add(new Phaser.GameObjects.Sprite(this.scene, 335, 200, character.nightTrait).setOrigin(0, 0).setScale(0.35));
+        this.add(new Phaser.GameObjects.Text(this.scene, 357, 180, character.nightTrait.charAt(0).toUpperCase() + character.nightTrait.slice(1), {
+            fontFamily: 'Octanis',
+            fontSize: '1rem',
+            color: '#fff'
+        }).setOrigin(0.5, 0));
 
         // Mood
         this.add(new Phaser.GameObjects.Rectangle(this.scene, 50, 260, 315, 20, 0xffffff, 1).setOrigin(0, 0));
