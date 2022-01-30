@@ -42,7 +42,11 @@
             "to": "leave"
         },
         "leave": {
-            "text": "... You can leave now."
+            "text": "Be careful out there too. Lots of real weirdos in this town. Just make sure to keep your friends happy and you will be okay.",
+            "to": "leave_please"
+        },
+        "leave_please": {
+            "text": "...you can leave now."
         }
     },
     "speaker": "Harold Jones"

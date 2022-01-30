@@ -33,6 +33,18 @@ export class CharacterCreation extends Phaser.Scene {
     preload() {
         this.load.pack('character', './assets/face_parts.json');
         this.load.pack('icons', './assets/icons.json');
+        // Inject Input into the HTML cause Phaser destroys the references
+        let container = document.getElementById('inputs');
+        let nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.id = 'character-name-input';
+        nameInput.setAttribute('maxlength', '64');
+        container.appendChild(nameInput);
+        let bandNameInput = document.createElement("input");
+        bandNameInput.type = "text";
+        bandNameInput.id = 'band-name-input';
+        bandNameInput.setAttribute('maxlength', '48');
+        container.appendChild(bandNameInput);
     }
 
     create() {

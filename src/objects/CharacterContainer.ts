@@ -366,11 +366,13 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     private instrumentToAngrySoundVolume(instrument: TrackName): number {
         switch (instrument) {
             case "rhythm":
+                return 0.15;
             case "melodica":
-                return 0.25;
+                return 0.35;
             case "uke":
+                return 0.25;
             case "ocarina":
-                return 0.5;
+                return 0.15;
             default:
                 throw new Error('unexpected instrument=' + instrument);
         }

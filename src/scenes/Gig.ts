@@ -63,7 +63,8 @@ export class Gig extends Phaser.Scene {
                 x: DISPLAY_SIZE.width,
                 duration: 500,
                 onComplete: () => {
-                    let convo = this.add.conversation(800, 600, 'gig_best').setPosition(40, 40);
+                    let convoKey = this.getConvo(performance);
+                    let convo = this.add.conversation(800, 600, convoKey).setPosition(40, 40);
                     convo.setTemplateData({
                         income: '' + income
                     });
@@ -152,6 +153,19 @@ export class Gig extends Phaser.Scene {
         return 'excellent';
     };
     
+    private getConvo(performance: PerformanceRating): string {
+        switch(performance) {
+            case 'poor':
+                return 'gig_bad';
+            case 'okay':
+                return 'gig_okay';
+            case 'good':
+                return 'gig_okay';
+            case 'excellent':
+                return 'gig_best';
+        }
+    }
+
     private getIncome(performance: PerformanceRating): number {
         switch(performance) {
             case 'poor':
