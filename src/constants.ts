@@ -34,7 +34,7 @@ export const INTERACTIONS = {
         party: 0, // +1
         hungry: 0,
         friendly: 0,
-        fast: -1,
+        fast: -2,
         slippery: 0,
         alone: -1
     },
@@ -45,14 +45,14 @@ export const INTERACTIONS = {
         party: 0,
         hungry: 0,
         friendly: 0,
-        fast: -2,
-        slippery: -2,
+        fast: -3,
+        slippery: -3,
         alone: -2
     },
     scary: {
         hat: 0,
         safety: 0,
-        scary: -2,
+        scary: -3,
         party: 0,
         hungry: 0,
         friendly: 0,
@@ -64,18 +64,18 @@ export const INTERACTIONS = {
         hat: 0, // +1
         safety: 0,
         scary: 0,
-        party: -1,
+        party: -2,
         hungry: 0,
         friendly: 0,
         fast: 0,
         slippery: 0,
-        alone: -2
+        alone: -3
     },
     hungry: {
         hat: 0,
         safety: 0,
         scary: 0,
-        party: -1,
+        party: -2,
         hungry: 0,
         friendly: 0,
         fast: 0,
@@ -85,7 +85,7 @@ export const INTERACTIONS = {
     friendly: {
         hat: 0,
         safety: 0,
-        scary: -2,
+        scary: -3,
         party: 0, // +1
         hungry: 0,
         friendly: 0,
@@ -94,14 +94,14 @@ export const INTERACTIONS = {
         alone: -2
     },
     fast: {
-        hat: -1,
-        safety: -1,
+        hat: -2,
+        safety: -2,
         scary: 0, // +1
         party: 0,
         hungry: 0,
         friendly: 0,
         fast: 0,
-        slippery: -1,
+        slippery: -2,
         alone: 0
     },
     slippery: {
@@ -112,7 +112,7 @@ export const INTERACTIONS = {
         hungry: 0,
         friendly: 0,
         fast: 0,
-        slippery: -1,
+        slippery: -2,
         alone: -1
     },
 };

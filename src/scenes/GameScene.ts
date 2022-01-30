@@ -1,4 +1,4 @@
-import { BACKGROUND_RBG, DISPLAY_SIZE } from '../constants';
+import { BACKGROUND_RBG, DISPLAY_SIZE, INTERACTIONS } from '../constants';
 import { MusicTracks, TrackName } from '../MusicTracks';
 import { GigConfig } from './Gig';
 import LoadoutGenerator from "../LoadoutGenerator";
@@ -201,12 +201,34 @@ export class GameScene extends Phaser.Scene {
 
         for (let characterContainer of this.characterContainers) {
             characterContainer.update();
+            this.updateHappiness(characterContainer, this.getAdjacentTrait(characterContainer, this.characterContainers));
         }
         this.hud.update();
 
         this.truckTire1.angle -= 15;
         this.truckTire2.angle -= 15;
         this.trailerTire.angle -= 15;
+    }
+    
+    private getAdjacentTrait(character, characters): string {
+        let opposite = [0, 2, 1, 4, 3, 0];
+        // placeholder character to end algorithm with 'alone' as trait
+        let oppositeCharacter = {characterState: {dayTrait: 'alone', nightTrait: 'alone'}};
+        for (let characterState of characters) {
+            if (characterState.characterState.seatPosition === opposite[character.characterState.seatPosition]) {
+                oppositeCharacter = characterState;
+            }
+        }
+        console.log("asdf ", oppositeCharacter);
+        return this.isDay ? oppositeCharacter.characterState.dayTrait : oppositeCharacter.characterState.nightTrait;
+    }
+    
+    private updateHappiness(character, otherTrait) {
+        let thisCharTrait = this.isDay ? character.characterState.dayTrait : character.characterState.nightTrait;
+        console.log(character);
+        console.log(INTERACTIONS, thisCharTrait, otherTrait);
+        character.characterState.happiness += INTERACTIONS[thisCharTrait][otherTrait];
+        character.characterState.happiness = Math.max(0, Math.min(character.characterState.happiness, 100));
     }
 
     private switchToNight(): void {
