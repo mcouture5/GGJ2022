@@ -35,6 +35,10 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     private graphics: Phaser.GameObjects.Graphics;
 
     private isDragging: boolean;
+    private angryTweenX: Phaser.Tweens.Tween;
+    private preTweenX: number;
+    private lonelyTimer: Phaser.Time.TimerEvent;
+    private faceTint: number;
 
     constructor(options: CharacterContainerOptions) {
         super(options.scene);
@@ -87,6 +91,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
             this.scene.input.on('dragstart', (pointer, characterContainer: this) => {
                 characterContainer.isDragging = true;
+                characterContainer.stopAnimations();
                 // while dragging, raise container and instrument above everything, show circle, hide body, increase
                 // scale, and remove any flipping
                 this.scene.children.bringToTop(characterContainer);
@@ -150,6 +155,52 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     update(): void {
         this.instrumentSprite.setPosition(this.x, this.y);
         this.instrumentSprite.setScale(this.scaleX * INSTRUMENT_SCALE_FACTOR, this.scaleY * INSTRUMENT_SCALE_FACTOR);
+
+        if (this.characterState.isAngry) {
+            if (!this.isDragging && !this.angryTweenX) {
+                this.preTweenX = this.x;
+                this.x -= 3;
+                this.angryTweenX = this.scene.add.tween({
+                    targets: this,
+                    x: this.preTweenX + 3,
+                    ease: Phaser.Math.Easing.Elastic.Out,
+                    duration: Phaser.Math.Between(100, 150),
+                    yoyo: true,
+                    loop: -1,
+                    onComplete: () => {
+                        this.x = this.preTweenX;
+                    }
+                });
+                this.faceTint = 0xff7777;
+                this.face.setTint(this.faceTint);
+            }
+        } else if (this.angryTweenX) {
+            this.angryTweenX && this.angryTweenX.stop(0);
+            this.angryTweenX = null;
+            if (this.faceTint === 0xff7777) {
+                this.faceTint = null;
+                this.face.clearTint();
+            }
+        }
+
+        if (this.characterState.isLonely) {
+            if (!this.isDragging && !this.lonelyTimer) {
+                this.lonelyTimer = this.scene.time.addEvent({
+                    callback: () => this.toggleFlipX(),
+                    delay: 2000,
+                    loop: true
+                });
+                this.faceTint = 0x8888ff;
+                this.face.setTint(this.faceTint);
+            }
+        } else if (this.lonelyTimer) {
+            this.lonelyTimer && this.lonelyTimer.remove();
+            this.lonelyTimer = null;
+            if (this.faceTint === 0x8888ff) {
+                this.faceTint = null;
+                this.face.clearTint();
+            }
+        }
 
         // DEBUG BOUNDING BOXES
         let debug = false;
@@ -217,7 +268,16 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         //this.y = centerY + 300;
     }
 
-    private setFlipX(flipX: boolean) {
+    private stopAnimations(): void {
+        this.angryTweenX && this.angryTweenX.stop(0);
+        this.angryTweenX = null;
+        this.lonelyTimer && this.lonelyTimer.remove();
+        this.lonelyTimer = null;
+        this.face.clearTint();
+        this.faceTint = null;
+    }
+
+    private setFlipX(flipX: boolean): void {
         if (flipX) {
             this.passenger.flipX = true;
             this.face.setOrigin(0.3, 0.5);
@@ -233,6 +293,10 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             let instrumentAngle = this.instrumentToAngle(this.characterState.instrument);
             this.instrumentSprite.setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle);
         }
+    }
+
+    private toggleFlipX(): void {
+        this.setFlipX(!this.passenger.flipX);
     }
 
     private instrumentToOrigin(instrument: TrackName, flipX?: boolean): {x: number, y: number} {
