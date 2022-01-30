@@ -5,6 +5,7 @@ import LoadoutGenerator from "../LoadoutGenerator";
 import {CharacterContainer} from "../objects/CharacterContainer";
 import HUD from '../hud/HUD';
 import { getTruckFontSize } from '../utils';
+import Wallet from '../objects/Wallet';
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
 const DAY_NIGHT_FADE_MILLIS = 1000;
@@ -28,6 +29,8 @@ export interface GameState {
     // human randomness.
     majorEventsLeft?: MajorEvent[];
     bandName: string;
+    // Your wallet.
+    wallet: Wallet;
 }
 
 export interface CharacterState {
@@ -93,7 +96,8 @@ export class GameScene extends Phaser.Scene {
             {
                 dayNum: 1,
                 gigNum: 1,
-                majorEventsLeft: MAJOR_EVENTS.slice()
+                majorEventsLeft: MAJOR_EVENTS.slice(),
+                wallet: new Wallet(100)
             },
             config.gameState
         );
@@ -219,14 +223,11 @@ export class GameScene extends Phaser.Scene {
                 oppositeCharacter = characterState;
             }
         }
-        console.log("asdf ", oppositeCharacter);
         return this.isDay ? oppositeCharacter.characterState.dayTrait : oppositeCharacter.characterState.nightTrait;
     }
     
     private updateHappiness(character, otherTrait) {
         let thisCharTrait = this.isDay ? character.characterState.dayTrait : character.characterState.nightTrait;
-        console.log(character);
-        console.log(INTERACTIONS, thisCharTrait, otherTrait);
         character.characterState.happiness += INTERACTIONS[thisCharTrait][otherTrait];
         character.characterState.happiness = Math.max(0, Math.min(character.characterState.happiness, 100));
     }

@@ -30,11 +30,19 @@
         "vehicle": {
             "text": "This one's a beaut too! Brand new, only 100 miles, top safety ratings, what a deal!",
             "choices": [
-                { "text": "For free??", "to": "leave" }
+                { "text": "For free??", "to": "deserve" }
             ]
         },
+        "deserve": {
+            "text": "Yup! We make sure every new contractee here at Broken Record Inc. gets what they deserve.",
+            "to": "warning"
+        },
+        "warning": {
+            "text": "You know what, I like you. Remind me of myself when I was your age. Here's a few bucks to get you started. Don't lose it all though, or it's game over for you.",
+            "to": "leave"
+        },
         "leave": {
-            "text": "Yup! We make sure every new contractee here at Broken Record Inc. gets what they deserve. Be on your way now."
+            "text": "... You can leave now."
         }
     },
     "speaker": "Harold Jones"

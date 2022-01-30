@@ -58,7 +58,7 @@ class CharacterCard extends Phaser.GameObjects.Container {
     }
 
     public update() {
-        this.mood.setW(((this.character.happiness) / 100) * 305);
+        this.mood.width = (((this.character.happiness) / 100) * 305);
     }
 }
 
