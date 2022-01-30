@@ -427,7 +427,7 @@ export class GameScene extends Phaser.Scene {
         this.brokenAmount = 100;
         this.breakingTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(10, 'Vehicle repairs');
+                this.gameState.wallet.subtract(5, 'Vehicle repairs');
             },
             callbackScope: this,
             delay: 3000,
