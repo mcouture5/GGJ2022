@@ -279,6 +279,11 @@
                 "type": "image",
                 "key": "help",
                 "url": "./assets/images/helppage.png"
+            },
+            {
+                "type": "image",
+                "key": "credits",
+                "url": "./assets/images/credits.png"
             }
         ]
     }

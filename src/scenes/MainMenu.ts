@@ -10,6 +10,7 @@ export class MainMenu extends Phaser.Scene {
     private grass: Phaser.GameObjects.TileSprite;
     private road: Phaser.GameObjects.Sprite;
     private help: Phaser.GameObjects.Sprite;
+    private credits: Phaser.GameObjects.Sprite;
 
     constructor() {
         super({
@@ -30,6 +31,12 @@ export class MainMenu extends Phaser.Scene {
         this.help.setInteractive({ useHandCursor: true });
         this.help.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
             this.help.setAlpha(0);
+        });
+
+        this.credits = this.add.sprite(0, 0, 'credits').setOrigin(0).setAlpha(0).setDepth(100);
+        this.credits.setInteractive({ useHandCursor: true });
+        this.credits.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+            this.credits.setAlpha(0);
         });
 
         let textContainer = this.add.container(20, 20);
@@ -83,7 +90,19 @@ export class MainMenu extends Phaser.Scene {
             fontSize: '3rem',
             color: '#000'
         }).setOrigin(0.5, 0.5);
-        buttonContainer.add([startButton, startText, helpButton, helpText]);
+        
+        let creditsButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 300, 220, 105, 0xffffff, 1);
+        creditsButton.setInteractive({ useHandCursor: true });
+        creditsButton.on('pointerup', () => {
+            this.credits.setAlpha(1);
+        });
+        let creditsText = new Phaser.GameObjects.Text(this.scene.scene, 0, 300, 'Credits', {
+            fontFamily: 'Ace',
+            fontSize: '4rem',
+            color: '#000'
+        }).setOrigin(0.5, 0.5);
+
+        buttonContainer.add([startButton, startText, helpButton, helpText, creditsButton, creditsText]);
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;
