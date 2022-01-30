@@ -397,6 +397,9 @@ export class GameScene extends Phaser.Scene {
         this.emergencyFixed();
         let skills = this.gameState.characters.filter(c => c.skill).map(c => c.skill);
         let skill = Phaser.Utils.Array.GetRandom(skills);
+
+        // If no skill, no emergency
+        if (!skill) return;
         let randoSeat = Phaser.Utils.Array.GetRandom([2,3,4,5]);
         this.emergencyAt = randoSeat;
         this.emergencySkill = skill;
