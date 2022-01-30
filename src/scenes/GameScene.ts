@@ -376,6 +376,7 @@ export class GameScene extends Phaser.Scene {
      */
     private switchToMajorEvent(majorEvent: MajorEvent): void {
         this.emergencyFixed();
+        this.gameState.characters = this.gameState.characters.filter(c => !c.isRageQuit);
         this.scene.start(majorEvent, {
             gameState: this.gameState
         } as GigConfig);
