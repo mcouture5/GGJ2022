@@ -1,0 +1,56 @@
+{
+    "icons": {
+        "files": [
+            {
+                "type": "image",
+                "key": "day",
+                "url": "./assets/images/icons/day.png"
+            },
+            {
+                "type": "image",
+                "key": "fast",
+                "url": "./assets/images/icons/fast.png"
+            },
+            {
+                "type": "image",
+                "key": "friendly",
+                "url": "./assets/images/icons/friendly.png"
+            },
+            {
+                "type": "image",
+                "key": "hat",
+                "url": "./assets/images/icons/hat.png"
+            },
+            {
+                "type": "image",
+                "key": "hungry",
+                "url": "./assets/images/icons/hungry.png"
+            },
+            {
+                "type": "image",
+                "key": "night",
+                "url": "./assets/images/icons/night.png"
+            },
+            {
+                "type": "image",
+                "key": "party",
+                "url": "./assets/images/icons/party.png"
+            },
+            {
+                "type": "image",
+                "key": "safety",
+                "url": "./assets/images/icons/safety.png"
+            },
+            {
+                "type": "image",
+                "key": "scary",
+                "url": "./assets/images/icons/scary.png"
+            },
+            {
+                "type": "image",
+                "key": "slippery",
+                "url": "./assets/images/icons/slippery.png"
+            }
+        ]
+    }
+}

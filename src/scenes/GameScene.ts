@@ -76,6 +76,7 @@ export class GameScene extends Phaser.Scene {
 
     private gameState: GameState;
     private dayNightTimer: Phaser.Time.TimerEvent;
+    private walletTimer: Phaser.Time.TimerEvent;
     private isDay: boolean;
 
     private truckShakeTween: Phaser.Tweens.Tween;
@@ -196,6 +197,17 @@ export class GameScene extends Phaser.Scene {
         // HUD
         this.hud = new HUD(this, this.gameState);
         this.add.existing(this.hud);
+
+        // Money check timer
+        this.walletTimer = this.time.addEvent({
+            callback: () => {
+                this.gameState.wallet.subtract(1);
+                this.add.kaching(centerX - 430, centerY-30, 1);
+            },
+            callbackScope: this,
+            delay: 1000,
+            loop: true
+        });
     }
 
     update(): void {
@@ -213,7 +225,7 @@ export class GameScene extends Phaser.Scene {
         this.truckTire2.angle -= 15;
         this.trailerTire.angle -= 15;
     }
-    
+
     private getAdjacentTrait(character, characters): string {
         let opposite = [0, 2, 1, 4, 3, 0];
         // placeholder character to end algorithm with 'alone' as trait

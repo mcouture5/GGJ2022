@@ -30,6 +30,11 @@ export class CharacterCreation extends Phaser.Scene {
         this.loadout = LoadoutGenerator.generateRandomLoadout(true);
     }
 
+    preload() {
+        this.load.pack('character', './assets/face_parts.json');
+        this.load.pack('icons', './assets/icons.json');
+    }
+
     create() {
         this.cameras.main.fadeIn(1250, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {

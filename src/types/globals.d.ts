@@ -27,10 +27,12 @@ declare interface IConversation extends Phaser.GameObjects.Container {
 declare interface IEditor extends Phaser.GameObjects.Container {
     setValue: (part: FacePart) => void;
 }
+declare interface IKaching extends Phaser.GameObjects.Container {}
 
 declare namespace Phaser.GameObjects {
     interface GameObjectFactory {
         conversation(w: number, h: number, key: string, speaker?: string): IConversation;
         editor(w: number, h: number, sprite: Phaser.GameObjects.Sprite, part: string, loadout: Loadout, useColorPicker?: boolean): IEditor;
+        kaching(x: number, y: number, amount: number, gain?: boolean): IKaching;
     }
 }
