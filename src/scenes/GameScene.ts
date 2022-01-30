@@ -189,7 +189,7 @@ export class GameScene extends Phaser.Scene {
                 }
             },
             delay: 15000,
-            repeat: 5
+            repeat: 3
         });
 
         // do not pause sounds on blur
@@ -218,7 +218,7 @@ export class GameScene extends Phaser.Scene {
         // Money check timer
         this.walletTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(10, 'Gasoline');
+                this.gameState.wallet.subtract(15, 'Gasoline');
             },
             callbackScope: this,
             delay: 10000,
@@ -329,7 +329,7 @@ export class GameScene extends Phaser.Scene {
         this.gameState.dayNum++;
 
         // if this is the "4th day" (day after the 3rd modulo day), STOP and trigger major event
-        if (this.gameState.dayNum % 3 === 1) {
+        if (this.gameState.dayNum % 2 === 1) {
             this.triggerMajorEvent();
             return;
         }
@@ -429,7 +429,7 @@ export class GameScene extends Phaser.Scene {
         this.brokenAmount = 100;
         this.breakingTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(10, 'Vehicle repairs');
+                this.gameState.wallet.subtract(15, 'Vehicle repairs');
             },
             callbackScope: this,
             delay: 3000,
