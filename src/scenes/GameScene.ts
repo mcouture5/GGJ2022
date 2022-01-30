@@ -115,7 +115,7 @@ export class GameScene extends Phaser.Scene {
                 dayNum: 1,
                 gigNum: 1,
                 nextMajorEvent: MajorEvent.NewBandmember,
-                wallet: new Wallet(700)
+                wallet: new Wallet(550)
             },
             config.gameState
         );
