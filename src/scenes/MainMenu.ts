@@ -9,6 +9,7 @@ export class MainMenu extends Phaser.Scene {
     private hills: Phaser.GameObjects.TileSprite;
     private grass: Phaser.GameObjects.TileSprite;
     private road: Phaser.GameObjects.Sprite;
+    private help: Phaser.GameObjects.Sprite;
 
     constructor() {
         super({
@@ -25,6 +26,11 @@ export class MainMenu extends Phaser.Scene {
         this.grass = this.add.tileSprite(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass').setOrigin(0);
         this.road = this.add.sprite(0, 0 + 45, 'road').setOrigin(0);
 
+        this.help = this.add.sprite(0, 0, 'help').setOrigin(0).setAlpha(0).setDepth(100);
+        this.help.setInteractive({ useHandCursor: true });
+        this.help.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+            this.help.setAlpha(0);
+        });
 
         let textContainer = this.add.container(20, 20);
         let texts = [
@@ -66,7 +72,18 @@ export class MainMenu extends Phaser.Scene {
             fontSize: '6rem',
             color: '#000'
         }).setOrigin(0.5, 0.5);
-        buttonContainer.add([startButton, startText]);
+        
+        let helpButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 150, 250, 105, 0xffffff, 1);
+        helpButton.setInteractive({ useHandCursor: true });
+        helpButton.on('pointerup', () => {
+            this.help.setAlpha(1);
+        });
+        let helpText = new Phaser.GameObjects.Text(this.scene.scene, 0, 150, 'How To Play', {
+            fontFamily: 'Ace',
+            fontSize: '3rem',
+            color: '#000'
+        }).setOrigin(0.5, 0.5);
+        buttonContainer.add([startButton, startText, helpButton, helpText]);
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;

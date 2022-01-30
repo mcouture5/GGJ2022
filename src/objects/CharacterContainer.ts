@@ -394,7 +394,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             case "rhythm":
                 return 0.15;
             case "melodica":
-                return 0.35;
+                return 0.15;
             case "uke":
                 return 0.25;
             case "ocarina":

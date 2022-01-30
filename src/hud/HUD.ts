@@ -1,6 +1,6 @@
 import { DISPLAY_SIZE } from "../constants";
 import LoadoutGenerator from "../LoadoutGenerator";
-import { TrackKey } from "../MusicTracks";
+import { TrackKey, TrackName } from "../MusicTracks";
 import { CharacterState, GameState } from "../scenes/GameScene";
 
 class CharacterCard extends Phaser.GameObjects.Container {
@@ -26,7 +26,9 @@ class CharacterCard extends Phaser.GameObjects.Container {
         }).setOrigin(0, 0));
 
         // Instrument
-        this.add(new Phaser.GameObjects.Sprite(this.scene, 255, 60, character.instrument).setOrigin(0, 0).setScale(character.instrument === 'uke' ? 0.45 : character.skill ? 0.55 : 0.75));
+        this.add(new Phaser.GameObjects.Sprite(this.scene, 255, this.getInstrumentPotision(character.instrument), character.instrument)
+            .setOrigin(0, 0)
+            .setScale(character.instrument === 'uke' ? 0.45 : character.skill ? 0.55 : 0.75));
 
         // Skill
         if (character.skill) {
@@ -63,6 +65,13 @@ class CharacterCard extends Phaser.GameObjects.Container {
         this.add(this.mood);
     }
     
+    getInstrumentPotision(instrument: TrackName) {
+        if (instrument === 'melodica') {
+            return 70;
+        }
+        return 60;
+    }
+
     getFontSize(text: string) {
         if (!text) return '1rem';
         if (text.length < 30) {

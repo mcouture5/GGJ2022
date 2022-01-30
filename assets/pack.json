@@ -274,6 +274,11 @@
                 "type": "image",
                 "key": "wrench",
                 "url": "./assets/images/wrenchbutton.png"
+            },
+            {
+                "type": "image",
+                "key": "help",
+                "url": "./assets/images/helppage.png"
             }
         ]
     }

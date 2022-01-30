@@ -257,8 +257,7 @@ export class GameScene extends Phaser.Scene {
             this.gameOver = true;
             this.dayNightTimer.destroy();
             this.walletTimer.destroy();
-            this.emergencyTimer.destroy();
-            this.breakingTimer.destroy();
+            this.emergencyFixed();
             // fade out camera and music
             this.cameras.main.fadeOut(2750, 0, 0, 0);
             this.music.fadeOut(this, 2750);
@@ -370,6 +369,7 @@ export class GameScene extends Phaser.Scene {
      * Switches to the provided major event ({@link MajorEvent#Gig} or {@link MajorEvent#NewBandmember}).
      */
     private switchToMajorEvent(majorEvent: MajorEvent): void {
+        this.emergencyFixed();
         this.scene.start(majorEvent, {
             gameState: this.gameState
         } as GigConfig);
@@ -393,6 +393,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     private emergency() {
+        // Kill a previous emergency if its happening...
+        this.emergencyFixed();
         let skills = this.gameState.characters.filter(c => c.skill).map(c => c.skill);
         let skill = Phaser.Utils.Array.GetRandom(skills);
         let randoSeat = Phaser.Utils.Array.GetRandom([2,3,4,5]);
@@ -432,9 +434,7 @@ export class GameScene extends Phaser.Scene {
             this.emergencySprite.setAlpha(this.brokenAmount / 100);
         }
         if (this.brokenAmount <= 0) {
-            this.emergencySprite.destroy();
-            this.breakingTimer.destroy();
-            this.emergencySkill = '';
+            this.emergencyFixed();
             this.emergencyTimer = this.time.addEvent({
                 callback: () => {
                     this.emergency();
@@ -443,6 +443,11 @@ export class GameScene extends Phaser.Scene {
                 delay: (Math.random() * 10000) + 10000
             });
         }
+    }
+    private emergencyFixed() {
+        this.emergencySprite && this.emergencySprite.destroy();
+        this.breakingTimer && this.breakingTimer.destroy();
+        this.emergencySkill = '';
     }
 
     /**
