@@ -208,7 +208,7 @@ export class GameScene extends Phaser.Scene {
         // Money check timer
         this.walletTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(5, 'Gasoline');
+                this.gameState.wallet.subtract(20, 'Gasoline');
             },
             callbackScope: this,
             delay: 10000,
