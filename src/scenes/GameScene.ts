@@ -171,7 +171,7 @@ export class GameScene extends Phaser.Scene {
                     this.switchToDay();
                 }
             },
-            delay: 5000, // TODO: make this 30 seconds when we're done testing things
+            delay: 30000,
             repeat: 5
         });
 
