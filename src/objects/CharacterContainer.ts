@@ -43,6 +43,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     private angrySound: Phaser.Sound.BaseSound;
     private angrySoundTimer: Phaser.Time.TimerEvent;
     private rageQuitTween: Phaser.Tweens.Tween;
+    private rageQuitTween2: Phaser.Tweens.Tween;
 
     constructor(options: CharacterContainerOptions) {
         super(options.scene);
@@ -184,15 +185,30 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 this.characterState.isRageQuit = true;
                 this.stopAnimations();
                 this.angrySound && this.angrySound.play();
+                let x1, x2;
+                if (Phaser.Math.Between(0, 1) === 0) {
+                    x1 = -2000;
+                    x2 = 2000;
+                } else {
+                    x1 = 2000;
+                    x2 = -2000;
+                }
                 this.rageQuitTween = this.scene.add.tween({
                     targets: this,
-                    x: Phaser.Math.Between(0, 1) === 0 ? -2000 : 2000,
+                    x: x1,
                     y: -2000,
                     angle: 360,
                     ease: 'Linear',
                     duration: 3000
                 });
-                this.instrumentSprite.setAlpha(0);
+                this.rageQuitTween2 = this.scene.add.tween({
+                    targets: this.instrumentSprite,
+                    x: x2,
+                    y: -2000,
+                    angle: 360,
+                    ease: 'Linear',
+                    duration: 3000
+                });
             }
         }
 
