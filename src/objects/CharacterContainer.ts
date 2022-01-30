@@ -50,8 +50,13 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         this.circle = this.scene.add.circle(-5, -5, 40, 0xffffff, 0);
         this.add(this.circle);
-        this.passenger = this.scene.add.sprite(0, 0, 'passenger');
+
+        let faceColor = this.characterState.face.head.tint;
+        let bodyColor = this.findComplementaryColor(faceColor.r, faceColor.g, faceColor.b);
+        let bodyColorHex = this.rgbToHex(bodyColor.r, bodyColor.g, bodyColor.b);
+        this.passenger = this.scene.add.sprite(0, 0, 'passenger').setTint(bodyColorHex);
         this.add(this.passenger);
+
         this.face = LoadoutGenerator.createFaceSprite(this.scene, this.characterState.face).setScale(0.1, 0.1)
             .setOrigin(0.45, 0.5);
         this.add(this.face);
@@ -264,5 +269,17 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             default:
                 throw new Error('unexpected instrument=' + instrument);
         }
+    }
+
+    private findComplementaryColor(r: number, g: number, b: number): {r: number, g: number, b: number} {
+        return {
+            r: 255 - r,
+            g: 255 - g,
+            b: 255 - b
+        };
+    }
+
+    private rgbToHex(r: number, g: number, b: number): number {
+        return (1 << 24) + (r << 16) + (g << 8) + b;
     }
 }
