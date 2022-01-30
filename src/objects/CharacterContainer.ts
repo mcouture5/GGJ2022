@@ -87,7 +87,8 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         // only enable drag/drop and angrySound if not the driver
         if (!this.characterState.isDriver) {
-            this.angrySound = this.scene.sound.add(this.characterState.instrument + '-angry', {volume: 0.5});
+            let angrySoundVolume = this.instrumentToAngrySoundVolume(this.characterState.instrument);
+            this.angrySound = this.scene.sound.add(this.characterState.instrument + '-angry', {volume: angrySoundVolume});
 
             this.setInteractive({
                 hitArea: new Phaser.Geom.Rectangle(-DRAG_BOX.width / 2 + DRAG_BOX.x, -DRAG_BOX.height / 2 + DRAG_BOX.x,
@@ -357,6 +358,19 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 return flipX ? -45 : 45;
             case "rhythm":
                 return flipX ? 30 : -30;
+            default:
+                throw new Error('unexpected instrument=' + instrument);
+        }
+    }
+
+    private instrumentToAngrySoundVolume(instrument: TrackName): number {
+        switch (instrument) {
+            case "rhythm":
+            case "melodica":
+                return 0.25;
+            case "uke":
+            case "ocarina":
+                return 0.5;
             default:
                 throw new Error('unexpected instrument=' + instrument);
         }
