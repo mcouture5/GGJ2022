@@ -25,9 +25,8 @@ export interface GameState {
     // which gig are we driving to or currently playing at. defaults to 1. the first gig is gig 1. the second gig is
     // gig 2.
     gigNum?: number;
-    // the major events left. defaults to a copy of the MAJOR_EVENTS list. makes the CPU randomness feel more like
-    // human randomness.
-    majorEventsLeft?: MajorEvent[];
+    // the next major event. defaults to MajorEvent.NewBandmember.
+    nextMajorEvent?: MajorEvent;
     bandName: string;
     // Your wallet.
     wallet: Wallet;
@@ -101,7 +100,7 @@ export class GameScene extends Phaser.Scene {
             {
                 dayNum: 1,
                 gigNum: 1,
-                majorEventsLeft: MAJOR_EVENTS.slice(),
+                nextMajorEvent: MajorEvent.NewBandmember,
                 wallet: new Wallet(100)
             },
             config.gameState
@@ -319,20 +318,12 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             // stop music just in case fade isn't complete yet
             this.music.stop();
-            // if only one major event left, switch to that
-            if (this.gameState.majorEventsLeft.length === 1) {
-                let majorEvent = this.gameState.majorEventsLeft[0];
-                // restore majorEventsLeft back to 2 events
-                this.gameState.majorEventsLeft = MAJOR_EVENTS.slice();
-                this.switchToMajorEvent(majorEvent);
-            }
-            // else, randomly pick one
-            else {
-                let majorEventIndex = Phaser.Math.Between(0, 1);
-                let majorEvent = this.gameState.majorEventsLeft[majorEventIndex];
-                // remove 1 event from majorEventsLeft
-                this.gameState.majorEventsLeft.splice(majorEventIndex, 1);
-                this.switchToMajorEvent(majorEvent);
+            if (this.gameState.nextMajorEvent === MajorEvent.NewBandmember) {
+                this.gameState.nextMajorEvent = MajorEvent.Gig;
+                this.switchToMajorEvent(MajorEvent.NewBandmember);
+            } else {
+                this.gameState.nextMajorEvent = MajorEvent.NewBandmember;
+                this.switchToMajorEvent(MajorEvent.Gig);
             }
         });
     }
