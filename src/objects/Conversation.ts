@@ -27,6 +27,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
     private conversation: { [key: string]: IConversationObject };
     private speaker: string;
     private activeConvo: IConversationObject;
+    private templateData: {[key: string]: string};
 
     private bubble: Phaser.GameObjects.Shape;
     private speakerTitle: Phaser.GameObjects.Text;
@@ -80,6 +81,10 @@ export default class Conversation extends Phaser.GameObjects.Container implement
                 this.advanceConversation('icebreaker');
             }
         });
+    }
+
+    setTemplateData(templateData: {[key: string]: string}): void {
+        this.templateData = templateData;
     }
 
     /**
@@ -139,6 +144,7 @@ export default class Conversation extends Phaser.GameObjects.Container implement
         if (this.activeConvo) {
             this.removeChoices();
             this.speech = this.activeConvo.text;
+            this.replaceTemplateVars();
             this.printText();
         } else {
             this.shutup();
@@ -173,6 +179,14 @@ export default class Conversation extends Phaser.GameObjects.Container implement
             });
         } else {
             this.pauseConversation();
+        }
+    }
+
+    private replaceTemplateVars(): void {
+        if (this.templateData) {
+            for (let templateVarName of Object.keys(this.templateData)) {
+                this.speech = this.speech.replace('%' + templateVarName, this.templateData[templateVarName]);
+            }
         }
     }
 }

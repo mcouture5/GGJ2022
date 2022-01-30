@@ -53,6 +53,36 @@ export class NewBandmember extends Phaser.Scene {
                         convo.begin();
                         convo.on(RESPONSE, (choice: Choice) => {
                             this.isJoining = choice.data.answer === 'yes';
+                            if (this.isJoining) {
+                                // if party is full, kick someone out first
+                                let tossedCharacterName: string = null;
+                                if (this.gameState.characters.length >= 4) {
+                                    let tossThisCharacter = Phaser.Math.Between(1, 3);
+                                    tossedCharacterName = this.gameState.characters[tossThisCharacter].name;
+                                    this.gameState.characters.splice(tossThisCharacter, 1);
+                                }
+                                // find open seat position and open instrument for them
+                                let seatPosition = this.findOpenSeatPosition(
+                                    this.gameState.characters);
+                                let instrument = this.findOpenInstrument(this.gameState.characters);
+                                // generate random character state
+                                let characterState = LoadoutGenerator.loadoutToRandomCharacterState(
+                                    this.bandmember, seatPosition, instrument);
+                                // add new bandmember to the party
+                                this.gameState.characters.push(characterState);
+                                // conversation needs a custom statusMessage based on what just happened
+                                if (tossedCharacterName) {
+                                    convo.setTemplateData({
+                                        statusMessage: '\n\n[ ' + tossedCharacterName +
+                                            ' was kicked out of the band to make room for ' + this.bandmember.name + '. ]'
+                                    });
+                                } else {
+                                    convo.setTemplateData({
+                                        statusMessage: '\n\n[ ' + this.bandmember.name +
+                                            ' joined the band. ]'
+                                    });
+                                }
+                            }
                         });
                         convo.on(CONVERSATION_COMPLETE, () => {
                             this.tweens.add({
@@ -74,23 +104,6 @@ export class NewBandmember extends Phaser.Scene {
                                         duration: 350,
                                         onComplete: () => {
                                             this.music.stop();
-                                            // if new bandmember is joining...
-                                            if (this.isJoining) {
-                                                // if party is full, kick someone out first
-                                                if (this.gameState.characters.length >= 4) {
-                                                    let tossThisCharacter = Phaser.Math.Between(1, 3);
-                                                    this.gameState.characters.splice(tossThisCharacter, 1);
-                                                }
-                                                // find open seat position and open instrument for them
-                                                let seatPosition = this.findOpenSeatPosition(
-                                                    this.gameState.characters);
-                                                let instrument = this.findOpenInstrument(this.gameState.characters);
-                                                // generate random character state
-                                                let characterState = LoadoutGenerator.loadoutToRandomCharacterState(
-                                                    this.bandmember, seatPosition, instrument);
-                                                // add new bandmember to the party
-                                                this.gameState.characters.push(characterState);
-                                            }
                                             // switch back to GameScene
                                             this.scene.start('GameScene', {gameState: this.gameState});
                                         }

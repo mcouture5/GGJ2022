@@ -8,7 +8,7 @@
             ]
         },
         "welcome": {
-            "text": "Alright!"
+            "text": "Alright! %statusMessage"
         },
         "no_thanks": {
             "text": "Fine."

@@ -22,6 +22,7 @@ declare interface Loadout {
 
 declare interface IConversation extends Phaser.GameObjects.Container {
     begin: () => void;
+    setTemplateData(templateData: {[key: string]: string}): void;
 }
 declare interface IEditor extends Phaser.GameObjects.Container {
     setValue: (part: FacePart) => void;
