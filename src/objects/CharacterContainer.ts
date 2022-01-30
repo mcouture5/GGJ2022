@@ -26,10 +26,11 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
     private truck: Phaser.GameObjects.RenderTexture;
     private trailer: Phaser.GameObjects.Sprite;
-    private characterState: CharacterState;
+    public characterState: CharacterState;
     private characterStates: CharacterState[];
     private circle: Phaser.GameObjects.Arc;
     private passenger: Phaser.GameObjects.Sprite;
+    private face: Phaser.GameObjects.RenderTexture;
     private instrumentSprite: Phaser.GameObjects.Sprite;
     private graphics: Phaser.GameObjects.Graphics;
 
@@ -49,21 +50,26 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         this.circle = this.scene.add.circle(-5, -5, 40, 0xffffff, 0);
         this.add(this.circle);
-        this.passenger = this.scene.add.sprite(0, 0, 'passenger');
-        this.add(this.passenger);
-        let face = LoadoutGenerator.createFaceSprite(this.scene, this.characterState.face).setScale(0.1, 0.1)
-            .setOrigin(0.45, 0.5);
-        this.add(face);
 
-        this.moveToSeatPosition(this.characterState.seatPosition);
+        let faceColor = this.characterState.face.head.tint;
+        let bodyColor = this.findComplementaryColor(faceColor.r, faceColor.g, faceColor.b);
+        let bodyColorHex = this.rgbToHex(bodyColor.r, bodyColor.g, bodyColor.b);
+        this.passenger = this.scene.add.sprite(0, 0, 'passenger').setTint(bodyColorHex);
+        this.add(this.passenger);
+
+        this.face = LoadoutGenerator.createFaceSprite(this.scene, this.characterState.face).setScale(0.1, 0.1)
+            .setOrigin(0.45, 0.5);
+        this.add(this.face);
 
         // have to keep track of instrumentSprite separately in order to boost its Z-order above the truck sprite
         let instrumentOrigin = this.instrumentToOrigin(this.characterState.instrument);
         let instrumentAngle = this.instrumentToAngle(this.characterState.instrument);
-        this.instrumentSprite = this.scene.add.sprite(0, 0, this.characterState.instrument).setPosition(this.x, this.y)
+        this.instrumentSprite = this.scene.add.sprite(0, 0, this.characterState.instrument)
             .setScale(INSTRUMENT_SCALE_FACTOR, INSTRUMENT_SCALE_FACTOR)
-            .setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle).setDepth(1);
+            .setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle);
         this.scene.children.moveAbove(this.instrumentSprite, this.truck);
+
+        this.moveToSeatPosition(this.characterState.seatPosition);
 
         // add this container to the scene. move it below the trailer sprite
         this.scene.add.existing(this);
@@ -81,13 +87,14 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
             this.scene.input.on('dragstart', (pointer, characterContainer: this) => {
                 characterContainer.isDragging = true;
-                // while dragging, raise container and instrument above everything, show circle, hide body, and
-                // increase scale
+                // while dragging, raise container and instrument above everything, show circle, hide body, increase
+                // scale, and remove any flipping
                 this.scene.children.bringToTop(characterContainer);
                 this.scene.children.bringToTop(characterContainer.instrumentSprite);
                 characterContainer.circle.setFillStyle(0xffffff, 1);
                 characterContainer.passenger.setAlpha(0);
                 characterContainer.setScale(1.5, 1.5);
+                this.setFlipX(false);
             });
             this.scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
                 characterContainer.x = dragX;
@@ -127,12 +134,15 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 }
 
                 characterContainer.isDragging = false;
-                // restore original Z-order, hide circle, show body, and restore original scale
+                // restore original Z-order, hide circle, show body, restore original scale, restore any flipping
                 this.scene.children.moveBelow(characterContainer, this.trailer);
                 this.scene.children.moveAbove(characterContainer.instrumentSprite, this.truck);
                 characterContainer.circle.setFillStyle(0xffffff, 0);
                 characterContainer.passenger.setAlpha(1);
                 characterContainer.setScale(1, 1);
+                if (characterContainer.characterState.seatPosition === 5) {
+                    characterContainer.setFlipX(true);
+                }
             });
         }
     }
@@ -177,6 +187,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         let centerX = DISPLAY_SIZE.width / 2;
         let centerY = DISPLAY_SIZE.height / 2;
+        this.setFlipX(false);
         switch (seatPosition) {
             case 1:
                 this.x = centerX - 280;
@@ -195,43 +206,80 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 this.y = centerY - 35;
                 break;
             case 5:
-                this.x = centerX + 330;
+                this.x = centerX + 310;
                 this.y = centerY - 20;
+                this.setFlipX(true);
                 break;
+            default:
+                throw new Error('unexpected seatPosition=' + seatPosition);
         }
 
         //this.y = centerY + 300;
     }
 
-    private instrumentToOrigin(instrument: TrackName): {x: number, y: number} {
+    private setFlipX(flipX: boolean) {
+        if (flipX) {
+            this.passenger.flipX = true;
+            this.face.setOrigin(0.3, 0.5);
+            this.instrumentSprite.flipX = true;
+            let instrumentOrigin = this.instrumentToOrigin(this.characterState.instrument, true);
+            let instrumentAngle = this.instrumentToAngle(this.characterState.instrument, true);
+            this.instrumentSprite.setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle);
+        } else {
+            this.passenger.flipX = false;
+            this.face.setOrigin(0.45, 0.5);
+            this.instrumentSprite.flipX = false;
+            let instrumentOrigin = this.instrumentToOrigin(this.characterState.instrument);
+            let instrumentAngle = this.instrumentToAngle(this.characterState.instrument);
+            this.instrumentSprite.setOrigin(instrumentOrigin.x, instrumentOrigin.y).setAngle(instrumentAngle);
+        }
+    }
+
+    private instrumentToOrigin(instrument: TrackName, flipX?: boolean): {x: number, y: number} {
+        let x: number = null;
         switch (instrument) {
             case "melodica":
                 return {x: 0.5, y: -0.1};
             case "ocarina":
-                return {x: 0.7, y: -0.3};
+                x = flipX ? 0.3 : 0.7;
+                return {x: x, y: -0.3};
             case "rhythm":
                 return {x: 0.5, y: 0.1};
             case "uke":
-                return {x: 0.4, y: 0.2};
+                x = flipX ? 0.6 : 0.4;
+                return {x: x, y: 0.2};
             case "vocal-guitar":
-                return {x: 0.4, y: 0.1};
+                x = flipX ? 0.6 : 0.4;
+                return {x: x, y: 0.1};
             default:
                 throw new Error('unexpected instrument=' + instrument);
         }
     }
 
-    private instrumentToAngle(instrument: TrackName): number {
+    private instrumentToAngle(instrument: TrackName, flipX?: boolean): number {
         switch (instrument) {
             case "melodica":
             case "uke":
             case "vocal-guitar":
                 return 0;
             case "ocarina":
-                return 45;
+                return flipX ? -45 : 45;
             case "rhythm":
-                return -30;
+                return flipX ? 30 : -30;
             default:
                 throw new Error('unexpected instrument=' + instrument);
         }
+    }
+
+    private findComplementaryColor(r: number, g: number, b: number): {r: number, g: number, b: number} {
+        return {
+            r: 255 - r,
+            g: 255 - g,
+            b: 255 - b
+        };
+    }
+
+    private rgbToHex(r: number, g: number, b: number): number {
+        return (1 << 24) + (r << 16) + (g << 8) + b;
     }
 }
