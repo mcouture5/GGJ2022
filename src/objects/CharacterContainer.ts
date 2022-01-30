@@ -38,7 +38,10 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     private angryTweenX: Phaser.Tweens.Tween;
     private preTweenX: number;
     private lonelyTimer: Phaser.Time.TimerEvent;
+    private preFlipX: boolean;
     private faceTint: number;
+    private angrySound: Phaser.Sound.BaseSound;
+    private angrySoundTimer: Phaser.Time.TimerEvent;
 
     constructor(options: CharacterContainerOptions) {
         super(options.scene);
@@ -79,8 +82,13 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         this.scene.add.existing(this);
         this.scene.children.moveBelow(this, this.trailer);
 
-        // only enable dragging and dropping if not the driver
+        // set up angrySound only if we're the driver
+
+
+        // only enable drag/drop and angrySound if not the driver
         if (!this.characterState.isDriver) {
+            this.angrySound = this.scene.sound.add(this.characterState.instrument + '-angry', {volume: 0.5});
+
             this.setInteractive({
                 hitArea: new Phaser.Geom.Rectangle(-DRAG_BOX.width / 2 + DRAG_BOX.x, -DRAG_BOX.height / 2 + DRAG_BOX.x,
                     DRAG_BOX.width, DRAG_BOX.height),
@@ -171,12 +179,22 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                         this.x = this.preTweenX;
                     }
                 });
+                if (this.angrySound) {
+                    this.angrySound.play();
+                    this.angrySoundTimer = this.scene.time.addEvent({
+                        callback: () => this.angrySound.play(),
+                        delay: Phaser.Math.Between(5000, 10000),
+                        loop: true
+                    });
+                }
                 this.faceTint = 0xff7777;
                 this.face.setTint(this.faceTint);
             }
         } else if (this.angryTweenX) {
             this.angryTweenX && this.angryTweenX.stop(0);
             this.angryTweenX = null;
+            this.angrySoundTimer && this.angrySoundTimer.remove();
+            this.angrySoundTimer = null;
             if (this.faceTint === 0xff7777) {
                 this.faceTint = null;
                 this.face.clearTint();
@@ -185,6 +203,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         if (this.characterState.isLonely) {
             if (!this.isDragging && !this.lonelyTimer) {
+                this.preFlipX = this.passenger.flipX;
                 this.lonelyTimer = this.scene.time.addEvent({
                     callback: () => this.toggleFlipX(),
                     delay: 2000,
@@ -196,6 +215,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         } else if (this.lonelyTimer) {
             this.lonelyTimer && this.lonelyTimer.remove();
             this.lonelyTimer = null;
+            this.setFlipX(this.preFlipX);
             if (this.faceTint === 0x8888ff) {
                 this.faceTint = null;
                 this.face.clearTint();
@@ -269,10 +289,17 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     }
 
     private stopAnimations(): void {
-        this.angryTweenX && this.angryTweenX.stop(0);
-        this.angryTweenX = null;
-        this.lonelyTimer && this.lonelyTimer.remove();
-        this.lonelyTimer = null;
+        if (this.angryTweenX) {
+            this.angryTweenX && this.angryTweenX.stop(0);
+            this.angryTweenX = null;
+            this.angrySoundTimer && this.angrySoundTimer.remove();
+            this.angrySoundTimer = null;
+        }
+        if (this.lonelyTimer) {
+            this.lonelyTimer && this.lonelyTimer.remove();
+            this.lonelyTimer = null;
+            this.setFlipX(this.preFlipX);
+        }
         this.face.clearTint();
         this.faceTint = null;
     }
