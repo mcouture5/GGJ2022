@@ -185,7 +185,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                         // remove this character from the band
                         this.characterStates.splice(this.characterStates.indexOf(this.characterState), 1);
                         // notify the HUD
-                        this.scene.events.emit('characterChange');
+                        //this.scene.events.emit('characterChange');
                         // destroy this container and its managed instrumentSprite
                         this.instrumentSprite.destroy();
                         this.destroy();
