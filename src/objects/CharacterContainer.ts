@@ -28,6 +28,8 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     private trailer: Phaser.GameObjects.Sprite;
     private characterState: CharacterState;
     private characterStates: CharacterState[];
+    private circle: Phaser.GameObjects.Arc;
+    private passenger: Phaser.GameObjects.Sprite;
     private instrumentSprite: Phaser.GameObjects.Sprite;
     private graphics: Phaser.GameObjects.Graphics;
 
@@ -45,8 +47,10 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
         this.graphics = this.scene.add.graphics();
 
-        let passenger = this.scene.add.sprite(0, 0, 'passenger');
-        this.add(passenger);
+        this.circle = this.scene.add.circle(-5, -5, 40, 0xffffff, 0);
+        this.add(this.circle);
+        this.passenger = this.scene.add.sprite(0, 0, 'passenger');
+        this.add(this.passenger);
         let face = LoadoutGenerator.createFaceSprite(this.scene, this.characterState.face).setScale(0.1, 0.1)
             .setOrigin(0.45, 0.5);
         this.add(face);
@@ -77,9 +81,13 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
             this.scene.input.on('dragstart', (pointer, characterContainer: this) => {
                 characterContainer.isDragging = true;
-                // while dragging, raise container above the truck sprite
-                this.scene.children.moveAbove(characterContainer, this.truck);
-                this.scene.children.moveAbove(characterContainer.instrumentSprite, characterContainer);
+                // while dragging, raise container and instrument above everything, show circle, hide body, and
+                // increase scale
+                this.scene.children.bringToTop(characterContainer);
+                this.scene.children.bringToTop(characterContainer.instrumentSprite);
+                characterContainer.circle.setFillStyle(0xffffff, 1);
+                characterContainer.passenger.setAlpha(0);
+                characterContainer.setScale(1.5, 1.5);
             });
             this.scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
                 characterContainer.x = dragX;
@@ -119,9 +127,12 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 }
 
                 characterContainer.isDragging = false;
-                // restore original Z-order
+                // restore original Z-order, hide circle, show body, and restore original scale
                 this.scene.children.moveBelow(characterContainer, this.trailer);
                 this.scene.children.moveAbove(characterContainer.instrumentSprite, this.truck);
+                characterContainer.circle.setFillStyle(0xffffff, 0);
+                characterContainer.passenger.setAlpha(1);
+                characterContainer.setScale(1, 1);
             });
         }
     }
