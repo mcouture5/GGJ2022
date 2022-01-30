@@ -401,7 +401,7 @@ export class GameScene extends Phaser.Scene {
     private emergency() {
         // Kill a previous emergency if its happening...
         this.emergencyFixed();
-        let skills = this.gameState.characters.filter(c => c.skill).map(c => c.skill);
+        let skills = this.gameState.characters.filter(c => c.skill && !c.isRageQuit).map(c => c.skill);
         let skill = Phaser.Utils.Array.GetRandom(skills);
 
         // If no skill, no emergency
