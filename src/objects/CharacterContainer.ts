@@ -2,7 +2,6 @@ import {CharacterState} from "../scenes/GameScene";
 import LoadoutGenerator from "../LoadoutGenerator";
 import {DISPLAY_SIZE} from "../constants";
 import {TrackName} from "../MusicTracks";
-import HUD from "../hud/HUD";
 
 const INSTRUMENT_SCALE_FACTOR = 0.25;
 const DRAG_BOX = {x: -5, y: -5, width: 55, height: 80};
@@ -84,9 +83,6 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         this.scene.add.existing(this);
         this.scene.children.moveBelow(this, this.trailer);
 
-        // set up angrySound only if we're the driver
-
-
         // only enable drag/drop and angrySound if not the driver
         if (!this.characterState.isDriver) {
             let angrySoundVolume = this.instrumentToAngrySoundVolume(this.characterState.instrument);
@@ -101,6 +97,9 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
             });
 
             this.scene.input.on('dragstart', (pointer, characterContainer: this) => {
+                if (characterContainer.characterState.isRageQuit) {
+                    return;
+                }
                 characterContainer.isDragging = true;
                 characterContainer.stopAnimations();
                 // while dragging, raise container and instrument above everything, show circle, hide body, increase
@@ -113,10 +112,16 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                 characterContainer.setFlipX(false);
             });
             this.scene.input.on('drag', (pointer, characterContainer: this, dragX: number, dragY: number) => {
+                if (characterContainer.characterState.isRageQuit) {
+                    return;
+                }
                 characterContainer.x = dragX;
                 characterContainer.y = dragY;
             });
             this.scene.input.on('dragend', (pointer, characterContainer: this, dropped: boolean) => {
+                if (characterContainer.characterState.isRageQuit) {
+                    return;
+                }
                 // 'dragend' has tons of duplicate events. STOP if we've already handled this.
                 if (!characterContainer.isDragging) {
                     return;
@@ -165,6 +170,10 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     }
 
     update(): void {
+        if (this.characterState.isRageQuit) {
+            return;
+        }
+
         this.instrumentSprite.setPosition(this.x, this.y);
         this.instrumentSprite.setScale(this.scaleX * INSTRUMENT_SCALE_FACTOR, this.scaleY * INSTRUMENT_SCALE_FACTOR);
 
@@ -172,6 +181,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
         let isRageQuit = this.characterState.happiness <= 0 && !this.characterState.isDriver;
         if (isRageQuit) {
             if (!this.isDragging && !this.rageQuitTween) {
+                this.characterState.isRageQuit = true;
                 this.stopAnimations();
                 this.angrySound && this.angrySound.play();
                 this.rageQuitTween = this.scene.add.tween({
@@ -180,17 +190,9 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
                     y: -2000,
                     angle: 360,
                     ease: 'Linear',
-                    duration: 3000,
-                    onComplete: () => {
-                        // remove this character from the band
-                        this.characterStates.splice(this.characterStates.indexOf(this.characterState), 1);
-                        // notify the HUD
-                        //this.scene.events.emit('characterChange');
-                        // destroy this container and its managed instrumentSprite
-                        this.instrumentSprite.destroy();
-                        this.destroy();
-                    }
+                    duration: 3000
                 });
+                this.instrumentSprite.setAlpha(0);
             }
         }
 
@@ -276,7 +278,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
     seatPositionIsOpen(seatPosition: number): boolean {
         for (let characterState of this.characterStates) {
-            if (characterState.seatPosition === seatPosition) {
+            if (characterState.seatPosition === seatPosition && !characterState.isRageQuit) {
                 return false;
             }
         }
@@ -284,6 +286,10 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
     }
 
     moveToSeatPosition(seatPosition: number): void {
+        if (this.characterState.isRageQuit) {
+            return;
+        }
+
         this.characterState.seatPosition = seatPosition;
 
         let centerX = DISPLAY_SIZE.width / 2;

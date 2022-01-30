@@ -56,6 +56,8 @@ export interface CharacterState {
     isAngry: boolean;
     // whether the character is currently lonely
     isLonely: boolean;
+    // if character has rage quit
+    isRageQuit: boolean;
 }
 
 export const enum MajorEvent {
@@ -284,6 +286,10 @@ export class GameScene extends Phaser.Scene {
     
     private updateHappiness(character: CharacterContainer, otherTrait: string): void {
         let characterState = character.characterState;
+        if (characterState.isRageQuit) {
+            characterState.happiness = 0;
+            return;
+        }
         let thisCharTrait = this.isDay ? characterState.dayTrait : characterState.nightTrait;
         let happinessDelta = 0.04 * INTERACTIONS[thisCharTrait][otherTrait];
         if (happinessDelta < 0) {
