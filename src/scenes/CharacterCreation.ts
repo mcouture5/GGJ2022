@@ -39,9 +39,7 @@ export class CharacterCreation extends Phaser.Scene {
         this.cameras.main.fadeIn(1250, 0, 0, 0);
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {
             setTimeout(() => {
-                // DEBUG - comment for dev
                 this.introduceCreation();
-                // DEBUG
             }, 500);
         });
         let bg = this.add
@@ -63,12 +61,6 @@ export class CharacterCreation extends Phaser.Scene {
 
         this.overlay = this.add.rectangle(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 0x000000, 0.65).setOrigin(0, 0).setAlpha(0).setDepth(5);
         this.conversation = this.add.conversation(800, 600, 'character_creation').setDepth(50).setPosition(80, 80);
-
-        // DEBUG - uncomment for dev
-        //let form = new Form(this, this.loadout).setDepth(50).setPosition(DISPLAY_SIZE.width / 2 - 350, DISPLAY_SIZE.height / 2 - 450);
-        //this.add.existing(form);
-        //form.on(SIGNED_EVENT, () => this.beginGame());
-        // DEBUG
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;

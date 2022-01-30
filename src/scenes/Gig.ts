@@ -51,8 +51,8 @@ export class Gig extends Phaser.Scene {
             spotlights.add(spotlight);
         }
 
-        // TODO: Calculate this from the happiness
-        let income = 100;
+        let performance = this.getPerformance(this.gameState.bandHappiness);
+        let income = this.getIncome(performance);
 
         setTimeout(() => {
             let recordManager = this.add.sprite(DISPLAY_SIZE.width * 2, DISPLAY_SIZE.height, 'manager', 0)
@@ -68,7 +68,7 @@ export class Gig extends Phaser.Scene {
                         income: '' + income
                     });
                     convo.on(CONVERSATION_COMPLETE, () => {
-                        this.gameState.wallet.add(income);
+                        this.gameState.wallet.add(income, 'Gig Income');
                         this.tweens.add({
                             targets: recordManager,
                             x: DISPLAY_SIZE.width * 2,
@@ -131,11 +131,37 @@ export class Gig extends Phaser.Scene {
     private gigNumToFullVolume(gigNum: any): number {
         let gigNumMod3 = gigNum % 3;
         if (gigNumMod3 === 1) { // 1st gig
-            return 0.65;
+            return 0.45;
         } else if (gigNumMod3 === 2) { // 2nd gig
             return 1;
         } else if (gigNumMod3 === 0) { // 3rd gig
             return 0.75;
+        }
+    }
+
+    private getPerformance(performance: number): PerformanceRating {
+        if (performance < 100) {
+            return 'poor';
+        }
+        if (performance < 200) {
+            return 'okay';
+        }
+        if (performance < 300) {
+            return 'good';
+        }
+        return 'excellent';
+    };
+    
+    private getIncome(performance: PerformanceRating): number {
+        switch(performance) {
+            case 'poor':
+                return 100;
+            case 'okay':
+                return 250;
+            case 'good':
+                return 500;
+            case 'excellent':
+                return 1000;
         }
     }
 }

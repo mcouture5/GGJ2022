@@ -20,6 +20,8 @@ declare interface Loadout {
     nightTrait: string;
 }
 
+declare type PerformanceRating = 'poor' | 'okay' | 'good' | 'excellent';
+
 declare interface IConversation extends Phaser.GameObjects.Container {
     begin: () => void;
     setTemplateData(templateData: {[key: string]: string}): void;
@@ -33,6 +35,6 @@ declare namespace Phaser.GameObjects {
     interface GameObjectFactory {
         conversation(w: number, h: number, key: string, speaker?: string): IConversation;
         editor(w: number, h: number, sprite: Phaser.GameObjects.Sprite, part: string, loadout: Loadout, useColorPicker?: boolean): IEditor;
-        kaching(x: number, y: number, amount: number, gain?: boolean): IKaching;
+        kaching(amount: number, reason: string, gain?: boolean): IKaching;
     }
 }

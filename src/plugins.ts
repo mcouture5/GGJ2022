@@ -28,8 +28,8 @@ Phaser.GameObjects.GameObjectFactory.register(
 
 Phaser.GameObjects.GameObjectFactory.register(
     'kaching',
-    function (this: Phaser.GameObjects.GameObjectFactory, x: number, y: number, amount: number, gain?: boolean) {
-        const kaching = new Kaching(this.scene, x, y, amount, gain);
+    function (this: Phaser.GameObjects.GameObjectFactory, amount: number, reason: string, gain?: boolean) {
+        const kaching = new Kaching(this.scene, amount, reason, gain);
         this.displayList.add(kaching);
         return kaching;
     }

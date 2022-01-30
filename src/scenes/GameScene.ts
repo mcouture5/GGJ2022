@@ -31,6 +31,8 @@ export interface GameState {
     bandName: string;
     // Your wallet.
     wallet: Wallet;
+    // The average happiness of the band.
+    bandHappiness: number;
 }
 
 export interface CharacterState {
@@ -205,17 +207,12 @@ export class GameScene extends Phaser.Scene {
         // Money check timer
         this.walletTimer = this.time.addEvent({
             callback: () => {
-                this.gameState.wallet.subtract(1);
-                this.add.kaching(centerX - 430, centerY-30, 1);
+                this.gameState.wallet.subtract(10, 'Gasoline');
             },
             callbackScope: this,
-            delay: 1000,
+            delay: 10000,
             loop: true
         });
-
-        // DEBUG
-        // this.scene.start('Gig', { gameState: this.gameState } as GigConfig);
-        // DEBUG
     }
 
     update(): void {
@@ -227,6 +224,7 @@ export class GameScene extends Phaser.Scene {
             characterContainer.update();
             this.updateHappiness(characterContainer, this.getAdjacentTrait(characterContainer));
         }
+        this.gameState.bandHappiness = this.gameState.characters.reduce((a, b) => a + b.happiness, 0);
         this.hud.update();
 
         this.truckTire1.angle -= 15;

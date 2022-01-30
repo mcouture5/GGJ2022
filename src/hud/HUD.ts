@@ -67,11 +67,13 @@ export default class HUD extends Phaser.GameObjects.Container {
     private characterCards: Phaser.GameObjects.Container[];
     private walletBg: Phaser.GameObjects.Rectangle;
     private walletText: Phaser.GameObjects.Text;
+    private checkQueue: boolean;
 
     constructor(scene: Phaser.Scene, gameState: GameState) {
         super(scene);
         this.gameState = gameState;
         this.characterCards = [];
+        this.checkQueue = true;
         this.createCharacterCards();
         
         // Wallet
@@ -100,11 +102,23 @@ export default class HUD extends Phaser.GameObjects.Container {
         let str = '$' + money;
         this.walletBg.width = str.length * 16 + 20;
         this.walletText.setText(str);
+        this.checkQueue && this.checkWalletQueue();
     }
 
     public characterChange () {
         this.characterCards.forEach(card => card.destroy());
         this.characterCards = [];
         this.createCharacterCards();
+    }
+
+    private checkWalletQueue() {
+        let queuedKache = this.gameState.wallet.getNextQueue();
+        if (queuedKache) {
+            this.checkQueue = false;
+            this.scene.add.kaching(queuedKache.amount, queuedKache.reason, queuedKache.gain);
+            setTimeout(() => {
+                this.checkQueue = true;
+            }, 2200);
+        }
     }
 }
