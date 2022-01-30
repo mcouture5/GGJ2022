@@ -191,8 +191,8 @@ export class GameScene extends Phaser.Scene {
             this.music.fadeIn(this, fullVolume, fadeMillis);
         }
         // set up sound effects
-        this.morningSound = this.sound.add('morning', { volume: 0.07 });
-        this.nightSound = this.sound.add('night', { volume: 1 });
+        this.morningSound = this.sound.add('morning', { volume: 0.04 });
+        this.nightSound = this.sound.add('night', { volume: 0.7 });
 
         // HUD
         this.hud = new HUD(this, this.gameState);
@@ -208,6 +208,10 @@ export class GameScene extends Phaser.Scene {
             delay: 1000,
             loop: true
         });
+
+        // DEBUG
+        // this.scene.start('Gig', { gameState: this.gameState } as GigConfig);
+        // DEBUG
     }
 
     update(): void {

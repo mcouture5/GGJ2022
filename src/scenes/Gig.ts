@@ -1,6 +1,11 @@
 import {BACKGROUND_RBG, DISPLAY_SIZE} from '../constants';
+import LoadoutGenerator from '../LoadoutGenerator';
 import { MusicTracks } from '../MusicTracks';
+import { CONVERSATION_COMPLETE } from '../objects/Conversation';
 import { GameScene, GameState } from './GameScene';
+
+const FIGURES = ['orangespotlight', 'pinkspotlight', 'bluespotlight', 'greenspotlight'];
+const TINTS = [0xfec975, 0xff74a3, 0x74aaff, 0x74ff78];
 
 // configuration object passed into init()
 export interface GigConfig {
@@ -22,13 +27,64 @@ export class Gig extends Phaser.Scene {
         this.gameState = config.gameState;
     }
 
-    create(): void {
-        let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'mainmenu').setOrigin(0.5, 0.5);
-        bg.displayWidth = DISPLAY_SIZE.width;
-        bg.displayHeight = DISPLAY_SIZE.height;
+    preload() {
+        this.load.pack('gig', './assets/gig.json');
+        this.load.json('gig_bad', './assets/conversations/gig_bad.json');
+        this.load.json('gig_okay', './assets/conversations/gig_okay.json');
+        this.load.json('gig_best', './assets/conversations/gig_best.json');
+    }
 
-        let buttonContainer = this.add.container(250, 440);
-        let continueButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 207, 105, 0xffffff, 1);
+    create(): void {
+        let bg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'gig').setOrigin(0.5, 0.5);
+        bg.displayWidth = DISPLAY_SIZE.width + 66;
+        bg.displayHeight = DISPLAY_SIZE.height + 66;
+
+        let spotlights = this.add.container(DISPLAY_SIZE.width / 2, DISPLAY_SIZE.height / 2 + 125); 
+        for (let i = 0; i < this.gameState.characters.length; i++) {
+            let xPos = (i * 160) - this.gameState.characters.length * 40;
+            let character = this.gameState.characters[i];
+            let figure = this.add.sprite(xPos, 0, FIGURES[i]).setOrigin(1, 1);
+            spotlights.add(figure);
+            let portrait = LoadoutGenerator.createFaceSprite(this, character.face).setScale(0.13).setOrigin(0.5).setPosition(xPos - 66, -211).setAlpha(0.85);
+            spotlights.add(portrait);
+            let spotlight = this.add.sprite(xPos, -4, 'spotlight').setOrigin(1, 1).setAlpha(0.3).setTint(TINTS[i]);
+            spotlights.add(spotlight);
+        }
+
+        // TODO: Calculate this from the happiness
+        let income = 100;
+
+        setTimeout(() => {
+            let recordManager = this.add.sprite(DISPLAY_SIZE.width * 2, DISPLAY_SIZE.height, 'manager', 0)
+                .setOrigin(1, 1)
+                .setDepth(10);
+            this.tweens.add({
+                targets: recordManager,
+                x: DISPLAY_SIZE.width,
+                duration: 500,
+                onComplete: () => {
+                    let convo = this.add.conversation(800, 600, 'gig_best').setPosition(40, 40);
+                    convo.setTemplateData({
+                        income: '' + income
+                    });
+                    convo.on(CONVERSATION_COMPLETE, () => {
+                        this.gameState.wallet.add(income);
+                        this.tweens.add({
+                            targets: recordManager,
+                            x: DISPLAY_SIZE.width * 2,
+                            duration: 500,
+                            onComplete: () => {
+                                buttonContainer.setAlpha(1);
+                            }
+                        });
+                    });
+                    convo.begin();
+                }
+            });
+        }, 1000);
+
+        let buttonContainer = this.add.container(250, 840).setAlpha(0);
+        let continueButton = new Phaser.GameObjects.Rectangle(this.scene.scene, 0, 0, 320, 105, 0xffffff, 1);
         continueButton.setInteractive({ useHandCursor: true });
         continueButton.on('pointerup', () => {
             // fade out camera and music
@@ -75,7 +131,7 @@ export class Gig extends Phaser.Scene {
     private gigNumToFullVolume(gigNum: any): number {
         let gigNumMod3 = gigNum % 3;
         if (gigNumMod3 === 1) { // 1st gig
-            return 0.75;
+            return 0.65;
         } else if (gigNumMod3 === 2) { // 2nd gig
             return 1;
         } else if (gigNumMod3 === 0) { // 3rd gig

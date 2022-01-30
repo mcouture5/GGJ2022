@@ -60,7 +60,10 @@ export class Form extends Phaser.GameObjects.Container {
         let signHere = new Phaser.GameObjects.Sprite(this.scene, 47, 817, 'signhere').setOrigin(0, 0);
         signHere.setInteractive({ useHandCursor: true });
         signHere.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+            // DEBUG
+            //this.emit(SIGNED_EVENT);
             this.onSign();
+            // DEBUG
         });
         this.add(signHere).destroyables.push(signHere);
         document.getElementById('game').addEventListener('click', this.gameclick);

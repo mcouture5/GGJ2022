@@ -124,7 +124,7 @@
             {
                 "type": "audio",
                 "key": "coin",
-                "url": "assets/sounds/coin-3.mp3"
+                "url": "assets/sounds/coin-4.mp3"
             }
         ]
     },
@@ -139,11 +139,6 @@
                 "type": "image",
                 "key": "phaser",
                 "url": "./assets/images/phaser.png"
-            },
-            {
-                "type": "image",
-                "key": "mainmenu",
-                "url": "./assets/images/mainmenu.jpg"
             },
             {
                 "type": "image",
