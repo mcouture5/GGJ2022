@@ -50,6 +50,10 @@ export interface CharacterState {
     // situation and increases by 1 every second in a happy situation. leading up to second gig, decreases/increases by
     // 2 every second. leading up to the third gig, 3 every second. etc. up to a max of 5.
     happiness: number;
+    // whether the character is currently angry about something
+    isAngry: boolean;
+    // whether the character is currently lonely
+    isLonely: boolean;
 }
 
 export const enum MajorEvent {
@@ -217,7 +221,7 @@ export class GameScene extends Phaser.Scene {
 
         for (let characterContainer of this.characterContainers) {
             characterContainer.update();
-            this.updateHappiness(characterContainer, this.getAdjacentTrait(characterContainer, this.characterContainers));
+            this.updateHappiness(characterContainer, this.getAdjacentTrait(characterContainer));
         }
         this.hud.update();
 
@@ -226,22 +230,31 @@ export class GameScene extends Phaser.Scene {
         this.trailerTire.angle -= 15;
     }
 
-    private getAdjacentTrait(character, characters): string {
+    private getAdjacentTrait(character: CharacterContainer): string {
         let opposite = [0, 2, 1, 4, 3, 0];
         // placeholder character to end algorithm with 'alone' as trait
-        let oppositeCharacter = {characterState: {dayTrait: 'alone', nightTrait: 'alone'}};
-        for (let characterState of characters) {
-            if (characterState.characterState.seatPosition === opposite[character.characterState.seatPosition]) {
+        let oppositeCharacter = {dayTrait: 'alone', nightTrait: 'alone'};
+        for (let characterState of this.gameState.characters) {
+            if (characterState.seatPosition === opposite[character.characterState.seatPosition]) {
                 oppositeCharacter = characterState;
             }
         }
-        return this.isDay ? oppositeCharacter.characterState.dayTrait : oppositeCharacter.characterState.nightTrait;
+        return this.isDay ? oppositeCharacter.dayTrait : oppositeCharacter.nightTrait;
     }
     
-    private updateHappiness(character, otherTrait) {
-        let thisCharTrait = this.isDay ? character.characterState.dayTrait : character.characterState.nightTrait;
-        character.characterState.happiness += INTERACTIONS[thisCharTrait][otherTrait];
-        character.characterState.happiness = Math.max(0, Math.min(character.characterState.happiness, 100));
+    private updateHappiness(character: CharacterContainer, otherTrait: string): void {
+        let characterState = character.characterState;
+        let thisCharTrait = this.isDay ? characterState.dayTrait : characterState.nightTrait;
+        let happinessDelta = INTERACTIONS[thisCharTrait][otherTrait];
+        if (happinessDelta < 0) {
+            characterState.isAngry = otherTrait !== 'alone';
+            characterState.isLonely = otherTrait === 'alone';
+        } else {
+            characterState.isAngry = false;
+            characterState.isLonely = false;
+        }
+        characterState.happiness += happinessDelta;
+        characterState.happiness = Math.max(0, Math.min(characterState.happiness, 100));
     }
 
     private switchToNight(): void {

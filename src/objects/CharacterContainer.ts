@@ -26,7 +26,7 @@ export class CharacterContainer extends Phaser.GameObjects.Container {
 
     private truck: Phaser.GameObjects.RenderTexture;
     private trailer: Phaser.GameObjects.Sprite;
-    private characterState: CharacterState;
+    public characterState: CharacterState;
     private characterStates: CharacterState[];
     private circle: Phaser.GameObjects.Arc;
     private passenger: Phaser.GameObjects.Sprite;

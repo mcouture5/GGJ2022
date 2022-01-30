@@ -94,7 +94,9 @@ class LoadoutGeneratorImpl {
             dayTrait: loadout.dayTrait,
             nightTrait: loadout.nightTrait,
             instrument: 'vocal-guitar', // driver MUST be vocal-guitar
-            happiness: 100
+            happiness: 100,
+            isAngry: false,
+            isLonely: false
         };
     }
 
@@ -106,7 +108,9 @@ class LoadoutGeneratorImpl {
             dayTrait: loadout.dayTrait,
             nightTrait: loadout.nightTrait,
             instrument: instrument,
-            happiness: 100
+            happiness: 100,
+            isAngry: false,
+            isLonely: false
         };
     }
 
