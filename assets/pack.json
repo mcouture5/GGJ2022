@@ -1,0 +1,290 @@
+{
+    "audio": {
+        "files": [
+            {
+                "type": "audio",
+                "key": "morning",
+                "url": "assets/sounds/morning.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "night",
+                "url": "assets/sounds/night.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "melodica-angry",
+                "url": "assets/sounds/melodica-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "ocarina-angry",
+                "url": "assets/sounds/ocarina-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "rhythm-angry",
+                "url": "assets/sounds/rhythm-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "uke-angry",
+                "url": "assets/sounds/uke-angry.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "uke-angry-2",
+                "url": "assets/sounds/uke-angry-2.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-melodica",
+                "url": "assets/sounds/duality-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-ocarina",
+                "url": "assets/sounds/duality-ocarina.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-new-bandmember",
+                "url": "assets/sounds/duality-new-bandmember.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-rhythm",
+                "url": "assets/sounds/duality-rhythm.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-uke",
+                "url": "assets/sounds/duality-uke.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "duality-vocal-guitar",
+                "url": "assets/sounds/duality-vocal-guitar.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-melodica",
+                "url": "assets/sounds/today-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-ocarina",
+                "url": "assets/sounds/today-ocarina.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-rhythm",
+                "url": "assets/sounds/today-rhythm.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-uke",
+                "url": "assets/sounds/today-uke.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "today-vocal-guitar",
+                "url": "assets/sounds/today-vocal-guitar.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-melodica",
+                "url": "assets/sounds/scootch-over-melodica.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-ocarina",
+                "url": "assets/sounds/scootch-over-ocarina.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-rhythm",
+                "url": "assets/sounds/scootch-over-rhythm.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-uke",
+                "url": "assets/sounds/scootch-over-uke.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "scootch-over-vocal-guitar",
+                "url": "assets/sounds/scootch-over-vocal-guitar.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "broken-records",
+                "url": "assets/sounds/broken-records-office.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "coin",
+                "url": "assets/sounds/coin-4.mp3"
+            }
+        ]
+    },
+    "images": {
+        "files": [
+            {
+                "type": "image",
+                "key": "company",
+                "url": "./assets/images/company.png"
+            },
+            {
+                "type": "image",
+                "key": "phaser",
+                "url": "./assets/images/phaser.png"
+            },
+            {
+                "type": "image",
+                "key": "manager",
+                "url": "./assets/images/shady.png"
+            },
+            {
+                "type": "image",
+                "key": "dayoverlay",
+                "url": "./assets/images/dayoverlay.png"
+            },
+            {
+                "type": "image",
+                "key": "grass",
+                "url": "./assets/images/grass.png"
+            },
+            {
+                "type": "image",
+                "key": "hills",
+                "url": "./assets/images/hills.png"
+            },
+            {
+                "type": "image",
+                "key": "mountains",
+                "url": "./assets/images/mountains.png"
+            },
+            {
+                "type": "image",
+                "key": "nightoverlay",
+                "url": "./assets/images/nightoverlay.png"
+            },
+            {
+                "type": "image",
+                "key": "road",
+                "url": "./assets/images/road.png"
+            },
+            {
+                "type": "image",
+                "key": "sky",
+                "url": "./assets/images/sky.png"
+            },
+            {
+                "type": "image",
+                "key": "office",
+                "url": "./assets/images/grungyoffice.png"
+            },
+            {
+                "type": "image",
+                "key": "desk",
+                "url": "./assets/images/desk.png"
+            },
+            {
+                "type": "image",
+                "key": "contract",
+                "url": "./assets/images/contract.png"
+            },
+            {
+                "type": "image",
+                "key": "signhere",
+                "url": "./assets/images/signhere.png"
+            },
+            {
+                "type": "image",
+                "key": "signed",
+                "url": "./assets/images/contractstamp.png"
+            },
+            {
+                "type": "image",
+                "key": "truck",
+                "url": "./assets/images/truck.png"
+            },
+            {
+                "type": "image",
+                "key": "trailer",
+                "url": "./assets/images/trailer.png"
+            },
+            {
+                "type": "image",
+                "key": "tire",
+                "url": "./assets/images/tire.png"
+            },
+            {
+                "type": "image",
+                "key": "trailertire",
+                "url": "./assets/images/trailertire.png"
+            },
+            {
+                "type": "image",
+                "key": "bus_stop",
+                "url": "./assets/images/busstop.png"
+            },
+            {
+                "type": "image",
+                "key": "passenger",
+                "url": "./assets/images/passanger.png"
+            },
+            {
+                "type": "image",
+                "key": "rhythm",
+                "url": "./assets/images/drumsticks.png"
+            },
+            {
+                "type": "image",
+                "key": "melodica",
+                "url": "./assets/images/harmonica.png"
+            },
+            {
+                "type": "image",
+                "key": "ocarina",
+                "url": "./assets/images/ocarina.png"
+            },
+            {
+                "type": "image",
+                "key": "uke",
+                "url": "./assets/images/ukulele.png"
+            },
+            {
+                "type": "image",
+                "key": "vocal-guitar",
+                "url": "./assets/images/guitarandmic.png"
+            },
+            {
+                "type": "image",
+                "key": "hammer",
+                "url": "./assets/images/hammerbutton.png"
+            },
+            {
+                "type": "image",
+                "key": "screwdriver",
+                "url": "./assets/images/screwdriverbutton.png"
+            },
+            {
+                "type": "image",
+                "key": "wrench",
+                "url": "./assets/images/wrenchbutton.png"
+            },
+            {
+                "type": "image",
+                "key": "help",
+                "url": "./assets/images/helppage.png"
+            },
+            {
+                "type": "image",
+                "key": "credits",
+                "url": "./assets/images/credits.png"
+            }
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "...",
+            "to": "disappointment"
+        },
+        "disappointment": {
+            "text": "You really let me down there. I trusted you, and you failed me.",
+            "to": "fired"
+        },
+        "fired": {
+            "text": "I've never actually had to fire anyone from Broken Record, but... we are going to have to let you go.",
+            "to": "bye"
+        },
+        "bye": {
+            "text": "Next time, try to keep your band mates happy, okay?"
+        }
+    },
+    "speaker": "Harold Jones"
+}

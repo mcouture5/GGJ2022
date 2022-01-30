@@ -1,0 +1,17 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "Not too bad. You are getting pretty good at this. Looks like you made a few new fans tonight too.",
+            "to": "money"
+        },
+        "money": {
+            "text": "You ended up bringing in $%income. That should be enough to get you to your next gig.",
+            "choices": [
+                { "text": "Thanks.", "to": "bye" }
+            ]
+        },
+        "bye": {
+            "text": "See you next time."
+        }
+    }
+}

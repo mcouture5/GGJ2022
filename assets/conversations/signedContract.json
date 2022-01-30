@@ -1,0 +1,53 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "Alright! Let me just enter this into our database here and we can get you on your way!",
+            "to": "database"
+        },
+        "database" : {
+            "text": "... BEEP BOOP BEEP ...",
+            "to": "database_more"
+        },
+        "database_more" : {
+            "text": "... BEEP BEEP ...",
+            "choices": [
+                { "text": "Are you making those noises?", "to": "caught_noise" },
+                { "text": "( This guy is weird )", "to": "keep_entering" }
+            ]
+        },
+        "caught_noise": {
+            "text": "NO! STOP ASKING SO MANY QUESTIONS!",
+            "to": "keep_entering"
+        },
+        "keep_entering": {
+            "text": "... ... and BEEP. Done!",
+            "to": "done_database"
+        },
+        "done_database": {
+            "text": "You're all set! Looks like it's your lucky day! We just happen to have a spare vehicle for you.",
+            "to": "vehicle"
+        },
+        "vehicle": {
+            "text": "This one's a beaut too! Brand new, only 100 miles, top safety ratings, what a deal!",
+            "choices": [
+                { "text": "For free??", "to": "deserve" }
+            ]
+        },
+        "deserve": {
+            "text": "Yup! We make sure every new contractee here at Broken Record Inc. gets what they deserve.",
+            "to": "warning"
+        },
+        "warning": {
+            "text": "You know what, I like you. Remind me of myself when I was your age. Here's a few bucks to get you started. Don't lose it all though, or it's game over for you.",
+            "to": "leave"
+        },
+        "leave": {
+            "text": "Be careful out there too. Lots of real weirdos in this town. Just make sure to keep your friends happy and you will be okay.",
+            "to": "leave_please"
+        },
+        "leave_please": {
+            "text": "...you can leave now."
+        }
+    },
+    "speaker": "Harold Jones"
+}

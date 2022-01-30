@@ -1,0 +1,46 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "Oh hi, didn't see you there...",
+            "choices": [
+                { "text": "Hi!", "to": "sketchy_intro" },
+                { "text": "Pretty sure you did...", "to": "introduction_caught" }
+            ]
+        },
+        "introduction_caught": {
+            "text": "No I didn't.",
+            "to": "introduction_caught_next"
+        },
+        "introduction_caught_next": {
+            "text": "Anyway...",
+            "to": "sketchy_intro"
+        },
+        "sketchy_intro": {
+            "text": "Allow me to introduce myself. Name's Harold. Harold Jones. CEO of Broken Record Inc.",
+            "to": "sales_pitch"
+        },
+        "sales_pitch": {
+            "text": "We here at Broken Record always look for the latest and greatest upcoming talents in the biz.",
+            "to": "sales_pitch2"
+        },
+        "sales_pitch2": {
+            "text": "I heard you are looking to start a band!",
+            "choices": [
+                { "text": "Sure am!", "to": "sign_this_form" },
+                { "text": "Where did you hear that from?", "to": "sales_pitch_response" }
+            ]
+        },
+        "sales_pitch_response": {
+            "text": "...",
+            "to": "sales_pitch_response_again"
+        },
+        "sales_pitch_response_again": {
+            "text": "... ...",
+            "to": "sign_this_form"
+        },
+        "sign_this_form": {
+            "text": "Well, go ahead and fill out this form here and we can get started!"
+        }
+    },
+    "speaker": "Harold Jones"
+}

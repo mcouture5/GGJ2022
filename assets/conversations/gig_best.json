@@ -1,0 +1,17 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "You tore the house down! I knew you had it in you! I am so proud of you.",
+            "to": "money"
+        },
+        "money": {
+            "text": "You ended up bringing in a staggering $%income. Well done!",
+            "choices": [
+                { "text": "Sweet!!", "to": "bye" }
+            ]
+        },
+        "bye": {
+            "text": "Keep up the good work!"
+        }
+    }
+}

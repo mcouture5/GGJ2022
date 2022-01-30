@@ -1,0 +1,36 @@
+{
+    "gig": {
+        "files": [
+            {
+                "type": "image",
+                "key": "gig",
+                "url": "./assets/images/gigbackground.png"
+            },
+            {
+                "type": "image",
+                "key": "spotlight",
+                "url": "./assets/images/spotlight.png"
+            },
+            {
+                "type": "image",
+                "key": "orangespotlight",
+                "url": "./assets/images/orangespotlight.png"
+            },
+            {
+                "type": "image",
+                "key": "pinkspotlight",
+                "url": "./assets/images/pinkspotlight.png"
+            },
+            {
+                "type": "image",
+                "key": "bluespotlight",
+                "url": "./assets/images/bluespotlight.png"
+            },
+            {
+                "type": "image",
+                "key": "greenspotlight",
+                "url": "./assets/images/greenspotlight.png"
+            }
+        ]
+    }
+}

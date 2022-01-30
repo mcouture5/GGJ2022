@@ -1,0 +1,17 @@
+{
+    "conversation": {
+        "icebreaker": {
+            "text": "Wow, that was awful. Please don't make me regret bringing you on board...",
+            "to": "money"
+        },
+        "money": {
+            "text": "You ended up bringing in a meager $%income. Pitiful.",
+            "choices": [
+                { "text": "Ouch...", "to": "bye" }
+            ]
+        },
+        "bye": {
+            "text": "Yeah. See you next time, maybe."
+        }
+    }
+}
