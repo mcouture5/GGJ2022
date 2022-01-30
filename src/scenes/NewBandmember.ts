@@ -12,7 +12,7 @@ export interface NewBandmemberConfig {
 export class NewBandmember extends Phaser.Scene {
 
     private gameState: GameState;
-    private music: MusicTracks;
+    private music: Phaser.Sound.BaseSound;
     private portrait: Phaser.GameObjects.RenderTexture;
     private bandmember: Loadout;
     private isJoining: boolean;
@@ -62,7 +62,12 @@ export class NewBandmember extends Phaser.Scene {
                                 alpha: this.isJoining ? 0 : 1,
                                 duration: 350,
                                 onComplete: () => {
-                                    this.music.fadeOut(this, 350);
+                                    this.add.tween({
+                                        targets: this.music,
+                                        volume: 0,
+                                        ease: 'Linear',
+                                        duration: 350
+                                    });
                                     this.tweens.add({
                                         targets: overlay,
                                         alpha: 0,
@@ -100,62 +105,14 @@ export class NewBandmember extends Phaser.Scene {
 
         // do not pause sounds on blur
         this.sound.pauseOnBlur = false;
-        // start playing music tracks if not already set up. fade it in.
-        if (!this.music || !this.music.isPlaying()) {
-            let fullVolume = this.gigNumToFullVolume(this.gameState.gigNum);
-            let fadeMillis = 350;
-            this.music = new MusicTracks({
-                sound: this.sound,
-                songName: GameScene.gigNumToSongName(this.gameState.gigNum),
-                trackFlags: this.charactersToTrackFlags(this.gameState.characters)
-            });
-            this.music.play(this.gigNumToSoundConfig(this.gameState.gigNum));
-            this.music.fadeIn(this, fullVolume, fadeMillis);
+        // start playing music tracks if not already playing. DO NOT fade it in.
+        if (!this.music || !this.music.isPlaying) {
+            this.music = this.sound.add('duality-new-bandmember', { volume: 0.3, loop: true });
+            this.music.play();
         }
     }
 
     update(): void {}
-
-    /**
-     * Converts a gigNum into the appropriate music full volume.
-     */
-    private gigNumToFullVolume(gigNum: any): number {
-        let gigNumMod3 = gigNum % 3;
-        if (gigNumMod3 === 1) { // 1st gig
-            return 0.75;
-        } else if (gigNumMod3 === 2) { // 2nd gig
-            return 1;
-        } else if (gigNumMod3 === 0) { // 3rd gig
-            return 0.75;
-        }
-    }
-
-    /**
-     * The same as {@link GameScene#charactersToTrackFlags}, except it turns off "vocal-guitar".
-     */
-    private charactersToTrackFlags(characters: CharacterState[]): {[key in TrackName]?: boolean} {
-        let trackFlags = GameScene.charactersToTrackFlags(characters);
-        trackFlags['vocal-guitar'] = false;
-        return trackFlags;
-    }
-
-    /**
-     * Converts a gigNum into the appropriate {@link Phaser#Types#Sound#SoundConfig}.
-     */
-    private gigNumToSoundConfig(gigNum: number): Phaser.Types.Sound.SoundConfig {
-        let gigNumMod3 = gigNum % 3;
-        if (gigNumMod3 === 1) { // 1st gig
-            return undefined;
-        } else if (gigNumMod3 === 2) { // 2nd gig
-            return {
-                seek: 9 // "today" has only vocal-guitar for first 9 seconds
-            };
-        } else if (gigNumMod3 === 0) { // 3rd gig
-            return {
-                seek: 13 // "scootch-over" has only vocal-guitar for first 13 seconds
-            };
-        }
-    }
 
     private findOpenSeatPosition(characters: CharacterState[]): number {
         let availableSeatPositions = [1,2,3,4,5].filter((seatPosition) => {
