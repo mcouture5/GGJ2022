@@ -4,6 +4,7 @@ import { GigConfig } from './Gig';
 import LoadoutGenerator from "../LoadoutGenerator";
 import {CharacterContainer} from "../objects/CharacterContainer";
 import HUD from '../hud/HUD';
+import { getTruckFontSize } from '../utils';
 
 const NIGHT_OVERLAY_ALPHA = 0.26; // matches dayOverlay's built-in alpha
 const DAY_NIGHT_FADE_MILLIS = 1000;
@@ -62,7 +63,7 @@ export class GameScene extends Phaser.Scene {
     private characterContainers: CharacterContainer[];
     private trailer: Phaser.GameObjects.Sprite;
     private trailerTire: Phaser.GameObjects.Sprite;
-    private truck: Phaser.GameObjects.Sprite;
+    private truck: Phaser.GameObjects.RenderTexture;
     private truckTire1: Phaser.GameObjects.Sprite;
     private truckTire2: Phaser.GameObjects.Sprite;
     private dayOverlay: Phaser.GameObjects.Sprite;
@@ -110,7 +111,17 @@ export class GameScene extends Phaser.Scene {
         this.trailer = this.add.sprite(centerX + 226, centerY, 'trailer').setOrigin(0.5, 0.5);
         this.trailerTire = this.add.sprite(centerX + 230, centerY + 55, 'trailertire').setOrigin(0.5, 0.5);
 
-        this.truck = this.add.sprite(centerX - 230, centerY, 'truck').setOrigin(0.5, 0.5);
+        let graffitiTruck = new Phaser.GameObjects.RenderTexture(this, 0, 0, 537, 162).setOrigin(0, 0);
+        let truck = new Phaser.GameObjects.Sprite(this, 0, 0, 'truck').setOrigin(0, 0);
+        let text = new Phaser.GameObjects.Text(this, 150, 80, this.gameState.bandName, {
+            fontFamily: 'Ace',
+            fontSize: getTruckFontSize(this.gameState.bandName),
+            color: '#fff',
+            wordWrap: { width: 230, useAdvancedWrap: true }
+        }).setOrigin(0, 0);
+        graffitiTruck.draw([truck, text]).setOrigin(0.5, 0.5).setPosition(centerX - 230, centerY);
+        this.truck = this.add.existing(graffitiTruck);
+        //this.truck = this.add.sprite(centerX - 230, centerY, 'truck').setOrigin(0.5, 0.5);
         this.truckTire1 = this.add.sprite(centerX - 400, centerY + 55, 'tire').setOrigin(0.5, 0.5);
         this.truckTire2 = this.add.sprite(centerX - 90, centerY + 55, 'tire').setOrigin(0.5, 0.5);
 

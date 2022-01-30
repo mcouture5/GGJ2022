@@ -146,9 +146,9 @@ export class Form extends Phaser.GameObjects.Container {
             return '1.35rem';
         }
         if (text.length < 50) {
-            return '1rem';
+            return '0.85rem';
         }
-        return '0.65rem';
+        return '0.6rem';
     }
 
     gameclick(e) {

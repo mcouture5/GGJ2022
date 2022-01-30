@@ -17,14 +17,14 @@ export interface CharacterContainerOptions {
     // the lowest Z-order sprite for moving stuff below it
     trailer: Phaser.GameObjects.Sprite;
     // the highest Z-order sprite for moving stuff above it
-    truck: Phaser.GameObjects.Sprite;
+    truck: Phaser.GameObjects.RenderTexture;
     characterState: CharacterState;
     characterStates: CharacterState[];
 }
 
 export class CharacterContainer extends Phaser.GameObjects.Container {
 
-    private truck: Phaser.GameObjects.Sprite;
+    private truck: Phaser.GameObjects.RenderTexture;
     private trailer: Phaser.GameObjects.Sprite;
     private characterState: CharacterState;
     private characterStates: CharacterState[];
