@@ -12,6 +12,10 @@ export class MainMenu extends Phaser.Scene {
     private help: Phaser.GameObjects.Sprite;
     private credits: Phaser.GameObjects.Sprite;
 
+    private truck: Phaser.GameObjects.Sprite;
+    private truckTire1: Phaser.GameObjects.Sprite;
+    private truckTire2: Phaser.GameObjects.Sprite;
+
     constructor() {
         super({
             key: 'MainMenu'
@@ -26,6 +30,24 @@ export class MainMenu extends Phaser.Scene {
         this.hills = this.add.tileSprite(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'hills').setOrigin(0);
         this.grass = this.add.tileSprite(0, 0, DISPLAY_SIZE.width, DISPLAY_SIZE.height, 'grass').setOrigin(0);
         this.road = this.add.sprite(0, 0 + 45, 'road').setOrigin(0);
+
+        let centerX = DISPLAY_SIZE.width / 2 + 500;
+        let centerY = DISPLAY_SIZE.height / 2;
+        this.truck = this.add.sprite(centerX - 230, centerY, 'truck').setOrigin(0.5, 0.5);
+        this.truckTire1 = this.add.sprite(centerX - 400, centerY + 55, 'tire').setOrigin(0.5, 0.5);
+        this.truckTire2 = this.add.sprite(centerX - 90, centerY + 55, 'tire').setOrigin(0.5, 0.5);
+
+        // get truck shaking
+        this.truck.angle = -0.35;
+        this.tweens.add({
+            targets: [this.truck],
+            angle: 0.35,
+            ease: 'Linear',
+            duration: 350,
+            yoyo: true,
+            loop: -1 // infinite
+        });
+
 
         this.help = this.add.sprite(0, 0, 'help').setOrigin(0).setAlpha(0).setDepth(100);
         this.help.setInteractive({ useHandCursor: true });
@@ -128,5 +150,8 @@ export class MainMenu extends Phaser.Scene {
         this.mountains.tilePositionX -= 0.35;
         this.hills.tilePositionX -= 1.75;
         this.grass.tilePositionX -= 3.75;
+        this.truckTire1.angle -= 15;
+        this.truckTire2.angle -= 15;
+
     }
 }

@@ -434,8 +434,12 @@ export class GameScene extends Phaser.Scene {
         let fixing = skills.length > 0;
         if (fixing) {
             this.brokenAmount -=0.75;
-            this.emergencySprite.setAlpha(this.brokenAmount / 100);
+        } else {
+            if (this.brokenAmount < 100) {
+                this.brokenAmount += 0.25;
+            }
         }
+        this.emergencySprite.setAlpha(this.brokenAmount / 100);
         if (this.brokenAmount <= 0) {
             this.emergencyFixed();
             this.emergencyTimer = this.time.addEvent({
