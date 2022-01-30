@@ -105,9 +105,11 @@ export default class HUD extends Phaser.GameObjects.Container {
         this.checkQueue = true;
         this.createCharacterCards();
 
+        /*
         scene.events.on('characterChange', () => {
             this.characterChange();
         });
+         */
 
         // Wallet
         this.walletBg = new Phaser.GameObjects.Rectangle(scene, 40, 40, 5 * 16, 42, 0x000000, 0.35).setOrigin(0, 0);
