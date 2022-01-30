@@ -120,6 +120,11 @@
                 "type": "audio",
                 "key": "broken-records",
                 "url": "assets/sounds/broken-records-office.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "coin",
+                "url": "assets/sounds/coin-3.mp3"
             }
         ]
     },

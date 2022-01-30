@@ -65,12 +65,24 @@ class CharacterCard extends Phaser.GameObjects.Container {
 export default class HUD extends Phaser.GameObjects.Container {
     private gameState: GameState;
     private characterCards: Phaser.GameObjects.Container[];
+    private walletBg: Phaser.GameObjects.Rectangle;
+    private walletText: Phaser.GameObjects.Text;
 
     constructor(scene: Phaser.Scene, gameState: GameState) {
         super(scene);
         this.gameState = gameState;
         this.characterCards = [];
         this.createCharacterCards();
+        
+        // Wallet
+        this.walletBg = new Phaser.GameObjects.Rectangle(scene, 40, 40, 5 * 16, 42, 0x000000, 0.35).setOrigin(0, 0);
+        this.add(this.walletBg);
+        this.walletText = new Phaser.GameObjects.Text(scene, 50, 45, '' + this.gameState.wallet.get(), {
+            fontFamily: 'Digital',
+            fontSize: '2rem',
+            color: '#00FF00'
+        }).setOrigin(0, 0);
+        this.add(this.walletText);
     }
 
     private createCharacterCards() {
@@ -84,6 +96,10 @@ export default class HUD extends Phaser.GameObjects.Container {
 
     public update() {
         this.characterCards.forEach(card => card.update());
+        let money = this.gameState.wallet.get();
+        let str = '$' + money;
+        this.walletBg.width = str.length * 16 + 20;
+        this.walletText.setText(str);
     }
 
     public characterChange () {
