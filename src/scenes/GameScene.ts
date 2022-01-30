@@ -277,7 +277,8 @@ export class GameScene extends Phaser.Scene {
         // placeholder character to end algorithm with 'alone' as trait
         let oppositeCharacter = {dayTrait: 'alone', nightTrait: 'alone'};
         for (let characterState of this.gameState.characters) {
-            if (characterState.seatPosition === opposite[character.characterState.seatPosition]) {
+            if (characterState.seatPosition === opposite[character.characterState.seatPosition] &&
+                    !characterState.isRageQuit) {
                 oppositeCharacter = characterState;
             }
         }
